@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotz para Negocios — Únete desde el primer día</title>
+  <meta name="description" content="Llega a miles de personas que buscan qué hacer en Caracas. Registra tu negocio en Spotz.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@900,800,700,500&f[]=dm-sans@400,500&f[]=dm-mono@400,500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            orange: '#FF6B35',
+            navy:   '#004E89',
+            cream:  '#EFEFD0',
+            ink:    '#0D1B2A',
+            peach:  '#F7C59F',
+          },
+          fontFamily: {
+            display: ['Cabinet Grotesk', 'sans-serif'],
+            body:    ['DM Sans', 'sans-serif'],
+            mono:    ['DM Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'DM Sans', sans-serif; }
+
+    .input-field {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      outline: none;
+      width: 100%;
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: border-color 0.2s;
+    }
+    .input-field::placeholder { color: rgba(255,255,255,0.25); }
+    .input-field:focus { border-color: rgba(255,107,53,0.6); }
+
+    select.input-field option { background: #1a2535; color: white; }
+
+    .btn-primary {
+      background: #FF6B35;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover  { background: #ff5a20; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { background: #5a3020; color: rgba(255,255,255,0.4); cursor: not-allowed; }
+
+    .fade-in { animation: fadeUp 0.6s ease both; }
+    .fade-in-2 { animation-delay: 0.1s; }
+    .fade-in-3 { animation-delay: 0.2s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .field-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 8px;
+      display: block;
+    }
+  </style>
+</head>
+
+<body class="bg-ink text-white antialiased min-h-screen">
+
+<!-- NAV -->
+<nav class="px-6 py-4 flex items-center justify-between border-b border-white/[0.06]">
+  <a href="index.html" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+    <svg width="20" height="20" viewBox="0 0 80 80" fill="none">
+      <path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/>
+    </svg>
+    <span class="font-display font-black text-[17px] tracking-tight text-white">
+      Spot<span class="text-orange">z</span>
+    </span>
+  </a>
+  <a href="index.html" class="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-1.5">
+    ← Volver
+  </a>
+</nav>
+
+
+<!-- HEADER -->
+<div class="px-6 pt-12 pb-8 max-w-lg mx-auto">
+
+  <div class="fade-in font-mono text-[10px] tracking-[0.2em] text-orange uppercase mb-4">
+    Para negocios
+  </div>
+
+  <h1 class="fade-in font-display font-black text-4xl sm:text-5xl leading-[0.95] tracking-tight mb-5">
+    Llega a toda<br>
+    <span class="text-orange">Caracas.</span>
+  </h1>
+
+  <p class="fade-in fade-in-2 text-white/50 text-[16px] leading-relaxed mb-2">
+    Regístra tu negocio o experiencia en Spotz y aparece desde el primer día. Miles de personas buscando qué hacer en la ciudad verán lo que tienes para ofrecer.
+  </p>
+
+</div>
+
+
+<!-- FORM -->
+<div class="px-6 max-w-lg mx-auto pb-20">
+
+  <form id="business-form" class="fade-in fade-in-3 flex flex-col gap-5">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <!-- Nombre del negocio -->
+      <div class="sm:col-span-2">
+        <label class="field-label">Nombre del negocio *</label>
+        <input
+          id="business_name"
+          type="text"
+          placeholder="ej. La Candelaria Bistró"
+          required
+          class="input-field"
+        >
+      </div>
+
+      <!-- Nombre de contacto -->
+      <div>
+        <label class="field-label">Tu nombre *</label>
+        <input
+          id="contact_name"
+          type="text"
+          placeholder="Tu nombre"
+          required
+          class="input-field"
+        >
+      </div>
+
+      <!-- Correo -->
+      <div>
+        <label class="field-label">Correo de contacto *</label>
+        <input
+          id="contact_email"
+          type="email"
+          placeholder="hola@tunegocio.com"
+          required
+          autocomplete="email"
+          class="input-field"
+        >
+      </div>
+
+      <!-- Teléfono -->
+      <div class="sm:col-span-2">
+        <label class="field-label">WhatsApp / Teléfono</label>
+        <input
+          id="phone"
+          type="tel"
+          placeholder="+58 412 000 0000"
+          class="input-field"
+        >
+      </div>
+
+      <!-- Categoría -->
+      <div class="sm:col-span-2">
+        <label class="field-label">Categoría *</label>
+        <select id="category" required class="input-field appearance-none">
+          <option value="" disabled selected>Selecciona una categoría</option>
+          <option value="Gastronomía">🍽 Gastronomía</option>
+          <option value="Música">🎵 Música y Conciertos</option>
+          <option value="Arte">🎨 Arte y Cultura</option>
+          <option value="Fiesta">🎉 Fiestas y Eventos Sociales</option>
+          <option value="Deporte">⚽ Deporte y Fitness</option>
+          <option value="Teatro">🎭 Teatro y Espectáculos</option>
+          <option value="Cine">🎬 Cine</option>
+          <option value="Networking">🤝 Networking y Negocios</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <!-- Descripción -->
+      <div class="sm:col-span-2">
+        <label class="field-label">¿Qué ofreces? *</label>
+        <textarea
+          id="description"
+          rows="4"
+          placeholder="Cuéntanos qué tipo de experiencias o eventos organizas, qué hace especial tu negocio..."
+          required
+          class="input-field resize-none"
+          style="border-radius: 14px;"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button
+      id="submit-btn"
+      type="submit"
+      class="btn-primary w-full rounded-2xl py-4 text-white text-[16px] mt-2"
+    >
+      Registrar mi negocio en Spotz →
+    </button>
+
+    <p id="form-error" class="hidden text-red-400 text-sm text-center -mt-2"></p>
+
+    <p class="text-white/20 text-xs text-center leading-relaxed">
+      Sin costo durante el lanzamiento. Te contactamos para confirmar tu registro.
+    </p>
+
+  </form>
+
+  <!-- Success state -->
+  <div id="success-state" class="hidden fade-in">
+    <div class="bg-orange/10 border border-orange/25 rounded-2xl p-8 text-center">
+      <div class="text-4xl mb-4">🚀</div>
+      <p class="font-display font-black text-2xl text-white mb-2">¡Registro recibido!</p>
+      <p class="text-white/50 text-[15px] leading-relaxed mb-6">
+        Gracias por querer ser parte de Spotz. Te contactaremos pronto para confirmar tu presencia en la app desde el primer día.
+      </p>
+      <a href="index.html"
+         class="inline-block border border-white/15 rounded-xl px-6 py-3 text-sm text-white/60 hover:text-white transition-colors">
+        ← Volver al inicio
+      </a>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- FOOTER -->
+<footer class="px-6 py-8 border-t border-white/[0.06] text-center">
+  <p class="font-mono text-[10px] tracking-[0.12em] text-white/15 uppercase">
+    Spotz · Caracas · 2025 · spotz.online
+  </p>
+</footer>
+
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── Configuración Supabase (mismos valores que index.html) ──
+  const SUPABASE_URL      = 'https://yifijgmmrdpafmeknind.supabase.co/rest/v1/'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpZmlqZ21tcmRwYWZtZWtuaW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NTAyNjksImV4cCI6MjA5MTUyNjI2OX0.YMvZAX8BD8h8EHZHuG4H9HR17REkaW9awnZPY4WYtG4'
+
+  const { createClient } = supabase
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  const form      = document.getElementById('business-form')
+  const submitBtn = document.getElementById('submit-btn')
+  const errorEl   = document.getElementById('form-error')
+  const successEl = document.getElementById('success-state')
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const data = {
+      business_name: document.getElementById('business_name').value.trim(),
+      contact_name:  document.getElementById('contact_name').value.trim(),
+      email:         document.getElementById('contact_email').value.trim().toLowerCase(),
+      phone:         document.getElementById('phone').value.trim() || null,
+      category:      document.getElementById('category').value,
+      description:   document.getElementById('description').value.trim(),
+    }
+
+    submitBtn.disabled = true
+    submitBtn.textContent = 'Enviando...'
+    errorEl.classList.add('hidden')
+
+    const { error } = await db.from('business_interest').insert(data)
+
+    if (error) {
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Registrar mi negocio en Spotz →'
+      errorEl.textContent = 'Algo salió mal. Inténtalo de nuevo.'
+      errorEl.classList.remove('hidden')
+    } else {
+      form.classList.add('hidden')
+      successEl.classList.remove('hidden')
+    }
+  })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotz — Descubrí Caracas</title>
+  <meta name="description" content="La primera app para descubrir todos los eventos y experiencias de Caracas. Únete a la lista de espera y consigue acceso a todas las promociones exclusivas del lanzamiento.">
+  <meta property="og:title" content="Spotz — Descubrí Caracas">
+  <meta property="og:description" content="Acceso anticipado + promociones exclusivas de la semana de lanzamiento.">
+  <meta property="og:url" content="https://spotz.online">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@900,800,700,500&f[]=dm-sans@400,500&f[]=dm-mono@400,500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            orange:  '#FF6B35',
+            navy:    '#004E89',
+            cream:   '#EFEFD0',
+            ink:     '#0D1B2A',
+            ink2:    '#111D2C',
+            peach:   '#F7C59F',
+          },
+          fontFamily: {
+            display: ['Cabinet Grotesk', 'sans-serif'],
+            body:    ['DM Sans', 'sans-serif'],
+            mono:    ['DM Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'DM Sans', sans-serif; }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .glow-orange {
+      box-shadow: 0 0 80px rgba(255,107,53,0.15), 0 0 160px rgba(255,107,53,0.06);
+    }
+
+    .input-email {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-email::placeholder { color: rgba(255,255,255,0.3); }
+    .input-email:focus { border-color: rgba(255,107,53,0.6); }
+
+    .btn-primary {
+      background: #FF6B35;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover  { background: #ff5a20; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { background: #5a3020; color: rgba(255,255,255,0.4); cursor: not-allowed; }
+
+    .fade-in {
+      animation: fadeUp 0.7s ease both;
+    }
+    .fade-in-2 { animation-delay: 0.15s; }
+    .fade-in-3 { animation-delay: 0.3s; }
+    .fade-in-4 { animation-delay: 0.45s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body class="bg-ink text-white antialiased">
+
+<!-- ────────────────────────────────────────────────────────────
+     NAV
+──────────────────────────────────────────────────────────────── -->
+<nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between">
+  <div class="bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 flex items-center gap-2.5 border border-white/5">
+    <svg width="20" height="20" viewBox="0 0 80 80" fill="none">
+      <path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/>
+    </svg>
+    <span class="font-display font-900 text-[17px] tracking-tight text-white">
+      Spot<span class="text-orange">z</span>
+    </span>
+  </div>
+  <a href="comercios.html"
+     class="bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 text-sm font-medium text-white/60 hover:text-white border border-white/5 transition-colors">
+    Soy un negocio →
+  </a>
+</nav>
+
+
+<!-- ────────────────────────────────────────────────────────────
+     HERO
+──────────────────────────────────────────────────────────────── -->
+<section class="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 grid-bg overflow-hidden">
+
+  <!-- Glow background -->
+  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full pointer-events-none"
+       style="background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);"></div>
+
+  <div class="relative z-10 w-full max-w-lg text-center">
+
+    <!-- Badge -->
+    <div class="fade-in inline-flex items-center gap-2 mb-8">
+      <span class="font-mono text-[10px] tracking-[0.2em] text-orange uppercase">
+        Próximamente · Caracas, VE
+      </span>
+    </div>
+
+    <!-- Logo icon -->
+    <div class="fade-in fade-in-2 flex justify-center mb-6">
+      <svg width="56" height="56" viewBox="0 0 80 80" fill="none">
+        <path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/>
+      </svg>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="fade-in fade-in-2 font-display font-black text-[52px] sm:text-[64px] leading-[0.95] tracking-tight mb-6">
+      Todo Caracas,<br>
+      <span class="text-orange">en tu bolsillo.</span>
+    </h1>
+
+    <!-- Subheadline -->
+    <p class="fade-in fade-in-3 text-white/55 text-[17px] leading-relaxed mb-10 max-w-sm mx-auto">
+      La primera app para descubrir todos los eventos y experiencias de la ciudad.
+      Regístrate y sé el primero en acceder.
+    </p>
+
+    <!-- Benefit highlight -->
+    <div class="fade-in fade-in-3 inline-flex items-center gap-2 bg-orange/10 border border-orange/25 rounded-full px-4 py-2 mb-8">
+      <span class="text-orange text-sm">🎁</span>
+      <span class="text-orange text-sm font-medium">
+        Acceso a todas las promociones de la semana de lanzamiento
+      </span>
+    </div>
+
+    <!-- Email form -->
+    <form id="waitlist-form" class="fade-in fade-in-4 w-full">
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input
+          id="email-input"
+          type="email"
+          placeholder="tucorreo@email.com"
+          required
+          autocomplete="email"
+          class="input-email flex-1 rounded-2xl px-5 py-4 text-base"
+        >
+        <button
+          id="submit-btn"
+          type="submit"
+          class="btn-primary rounded-2xl px-6 py-4 text-white text-[15px] whitespace-nowrap"
+        >
+          Quiero acceso anticipado →
+        </button>
+      </div>
+      <p id="form-error" class="hidden mt-3 text-red-400 text-sm text-center"></p>
+    </form>
+
+    <!-- Success state (hidden) -->
+    <div id="success-state" class="hidden fade-in">
+      <div class="bg-orange/10 border border-orange/30 rounded-2xl p-6 text-center">
+        <div class="text-3xl mb-3">🎉</div>
+        <p class="font-display font-black text-xl text-white mb-1">¡Ya estás en la lista!</p>
+        <p class="text-white/55 text-sm">Te avisamos cuando abramos. Prepárate para las mejores experiencias de Caracas.</p>
+      </div>
+    </div>
+
+    <!-- Privacy note -->
+    <p class="fade-in fade-in-4 mt-4 text-white/25 text-xs">
+      Sin spam. Solo te avisamos cuando lancemos.
+    </p>
+
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30">
+    <div class="w-px h-8 bg-white/40"></div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────
+     BENEFICIOS DE ACCESO ANTICIPADO
+──────────────────────────────────────────────────────────────── -->
+<section class="px-6 py-20 max-w-lg mx-auto">
+
+  <div class="font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-4 text-center">
+    Acceso anticipado
+  </div>
+  <h2 class="font-display font-black text-3xl sm:text-4xl tracking-tight text-center mb-12">
+    ¿Qué incluye registrarse hoy?
+  </h2>
+
+  <div class="flex flex-col gap-4">
+
+    <div class="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-6 flex items-start gap-4">
+      <div class="text-2xl shrink-0">🎫</div>
+      <div>
+        <p class="font-display font-bold text-lg mb-1">Acceso antes que nadie</p>
+        <p class="text-white/45 text-sm leading-relaxed">
+          Eres de los primeros en usar Spotz cuando abramos. Los eventos más buscados de la ciudad, en tus manos primero.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-orange/[0.08] border border-orange/20 rounded-2xl p-6 flex items-start gap-4">
+      <div class="text-2xl shrink-0">🏷️</div>
+      <div>
+        <p class="font-display font-bold text-lg mb-1">Promociones exclusivas de lanzamiento</p>
+        <p class="text-white/45 text-sm leading-relaxed">
+          Los mejores comercios y experiencias de Caracas activarán descuentos y beneficios especiales solo para la lista de espera durante la semana de apertura.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-6 flex items-start gap-4">
+      <div class="text-2xl shrink-0">🤖</div>
+      <div>
+        <p class="font-display font-bold text-lg mb-1">Recomendaciones con AI</p>
+        <p class="text-white/45 text-sm leading-relaxed">
+          Un chat que conoce Caracas. Te sugiere qué hacer esta noche según tus gustos — conciertos, gastronomía, arte, fiestas y más.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────
+     SECTION NEGOCIOS
+──────────────────────────────────────────────────────────────── -->
+<section class="mx-4 mb-16 rounded-3xl overflow-hidden" style="background: #FF6B35;">
+  <div class="px-8 py-14 max-w-lg mx-auto text-center">
+
+    <div class="font-mono text-[10px] tracking-[0.2em] text-white/50 uppercase mb-4">
+      Para negocios
+    </div>
+
+    <h2 class="font-display font-black text-3xl sm:text-4xl leading-tight tracking-tight text-white mb-4">
+      ¿Tienes un comercio<br>o experiencia en Caracas?
+    </h2>
+    <p class="text-white/70 text-[16px] leading-relaxed mb-8">
+      Llega a miles de personas que buscan qué hacer en la ciudad.
+      Regístra tu negocio y aparece en Spotz desde el primer día.
+    </p>
+
+    <a href="comercios.html"
+       class="inline-block bg-ink text-white font-display font-black text-[15px] px-8 py-4 rounded-2xl hover:bg-ink/80 transition-colors tracking-tight">
+      Quiero estar en Spotz →
+    </a>
+
+    <p class="mt-5 text-white/40 text-xs">
+      Sin costo durante el lanzamiento.
+    </p>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────
+     FOOTER
+──────────────────────────────────────────────────────────────── -->
+<footer class="px-6 py-10 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 max-w-lg mx-auto w-full">
+  <div class="flex items-center gap-2">
+    <svg width="16" height="16" viewBox="0 0 80 80" fill="none">
+      <path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/>
+    </svg>
+    <span class="font-display font-black text-base tracking-tight">
+      Spot<span class="text-orange">z</span>
+    </span>
+  </div>
+  <p class="font-mono text-[10px] tracking-[0.12em] text-white/20 uppercase text-center">
+    Caracas · 2025 · spotz.online
+  </p>
+</footer>
+
+
+<!-- ────────────────────────────────────────────────────────────
+     SCRIPTS
+──────────────────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── Configuración Supabase ──────────────────────────────────
+  // Reemplaza estos valores con los de tu proyecto en supabase.com
+  const SUPABASE_URL      = 'https://yifijgmmrdpafmeknind.supabase.co/rest/v1/'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpZmlqZ21tcmRwYWZtZWtuaW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NTAyNjksImV4cCI6MjA5MTUyNjI2OX0.YMvZAX8BD8h8EHZHuG4H9HR17REkaW9awnZPY4WYtG4'
+
+  const { createClient } = supabase
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  // ── Formulario de lista de espera ───────────────────────────
+  const form       = document.getElementById('waitlist-form')
+  const emailInput = document.getElementById('email-input')
+  const submitBtn  = document.getElementById('submit-btn')
+  const errorEl    = document.getElementById('form-error')
+  const successEl  = document.getElementById('success-state')
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const email = emailInput.value.trim().toLowerCase()
+    if (!email) return
+
+    submitBtn.disabled = true
+    submitBtn.textContent = 'Guardando...'
+    errorEl.classList.add('hidden')
+
+    const { error } = await db.from('waitlist').insert({ email })
+
+    if (error) {
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Quiero acceso anticipado →'
+      errorEl.textContent = error.code === '23505'
+        ? '¡Este correo ya está en la lista! 🎉'
+        : 'Algo salió mal. Inténtalo de nuevo.'
+      errorEl.classList.remove('hidden')
+    } else {
+      form.classList.add('hidden')
+      successEl.classList.remove('hidden')
+    }
+  })
+</script>
+
+</body>
+</html>
