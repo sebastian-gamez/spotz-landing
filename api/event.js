@@ -61,14 +61,16 @@ function waUrl(raw) {
   return 'https://wa.me/' + String(raw).replace(/[^0-9]/g, '')
 }
 
-// SVG del rayo (favicon + logo)
+// SVG del rayo (favicon + logo). Naranja para fondos oscuros (topbar);
+// blanco para el banner de descarga (fondo naranja).
 const BOLT = '<svg width="22" height="22" viewBox="0 0 80 80" fill="none"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="' + ORANGE + '"/></svg>'
+const BOLT_WHITE = '<svg width="22" height="22" viewBox="0 0 80 80" fill="none"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#fff"/></svg>'
 const FAVICON = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="' + ORANGE + '"/></svg>')
 
 function downloadBanner() {
   return `
     <section class="dl">
-      <div class="dl-logo">${BOLT}<span class="wm">Spot<span style="color:${ORANGE}">z</span></span></div>
+      <div class="dl-logo">${BOLT_WHITE}<span class="wm">Spotz</span></div>
       <h2 class="dl-title">Descubre todos los planes de Caracas</h2>
       <p class="dl-sub">Eventos, conciertos y experiencias en un solo lugar. Recomendaciones con IA según tus gustos.</p>
       <div class="dl-btns">
