@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eliminar cuenta o datos — Spotz</title>
+  <meta name="description" content="Solicita la eliminación de tu cuenta de Spotz o el borrado de tus datos de navegación y gustos.">
+  <meta property="og:title" content="Eliminar cuenta o datos — Spotz">
+  <meta property="og:url" content="https://spotz.online/eliminar-cuenta">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z' fill='%23FF6B35'/%3E%3C/svg%3E">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    const SYSTEM_SANS = ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif']
+    tailwind.config = {
+      theme: { extend: {
+        colors: { orange: '#FF6B35', navy: '#004E89', ink: '#0D1B2A', ink2: '#111D2C' },
+        fontFamily: { display: SYSTEM_SANS, body: SYSTEM_SANS, sans: SYSTEM_SANS },
+      } }
+    }
+  </script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+           -webkit-font-smoothing: antialiased; }
+    input, select { color-scheme: dark; }
+  </style>
+</head>
+<body class="bg-ink text-white/90 min-h-screen">
+
+  <!-- Header -->
+  <header class="px-6 py-5 border-b border-white/[0.06]">
+    <a href="/" class="inline-flex items-center gap-2">
+      <svg width="20" height="20" viewBox="0 0 80 80" fill="none">
+        <path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/>
+      </svg>
+      <span class="font-display font-black text-lg tracking-tight">Spot<span class="text-orange">z</span></span>
+    </a>
+  </header>
+
+  <main class="max-w-md mx-auto px-6 py-12">
+    <h1 class="font-display font-black text-3xl tracking-tight mb-2">Eliminar cuenta o datos</h1>
+    <p class="text-white/55 text-[15px] leading-relaxed mb-8">
+      Verifica tu identidad con el correo y la contraseña de tu cuenta de Spotz.
+      Elige si quieres eliminar toda tu cuenta o solo borrar tus datos de navegación y gustos.
+    </p>
+
+    <form id="form" class="space-y-5">
+      <!-- Modo -->
+      <fieldset class="space-y-3">
+        <legend class="text-sm font-semibold text-white/80 mb-1">¿Qué quieres hacer?</legend>
+
+        <label class="flex gap-3 items-start p-3 rounded-xl border border-white/10 bg-white/[0.03] cursor-pointer">
+          <input type="radio" name="mode" value="account" class="mt-1 accent-[#FF6B35]" checked>
+          <span>
+            <span class="block text-[15px] text-white font-medium">Eliminar mi cuenta y todos mis datos</span>
+            <span class="block text-[13px] text-white/50 mt-0.5">Se borra tu perfil, favoritos, historial y la cuenta. Es permanente.</span>
+          </span>
+        </label>
+
+        <label class="flex gap-3 items-start p-3 rounded-xl border border-white/10 bg-white/[0.03] cursor-pointer">
+          <input type="radio" name="mode" value="data" class="mt-1 accent-[#FF6B35]">
+          <span>
+            <span class="block text-[15px] text-white font-medium">Borrar mis datos (conservar la cuenta)</span>
+            <span class="block text-[13px] text-white/50 mt-0.5">Limpia tu navegación, favoritos y gustos. Tu cuenta sigue activa.</span>
+          </span>
+        </label>
+      </fieldset>
+
+      <div>
+        <label class="block text-sm font-semibold text-white/80 mb-1.5" for="email">Correo</label>
+        <input id="email" name="email" type="email" autocomplete="email" required
+          class="w-full rounded-xl bg-white/[0.04] border border-white/12 px-4 py-3 text-[15px] outline-none focus:border-orange"
+          placeholder="tu@correo.com">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-white/80 mb-1.5" for="password">Contraseña</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required
+          class="w-full rounded-xl bg-white/[0.04] border border-white/12 px-4 py-3 text-[15px] outline-none focus:border-orange"
+          placeholder="••••••••">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-white/80 mb-1.5" for="reason">Motivo <span class="text-white/35 font-normal">(opcional)</span></label>
+        <select id="reason" name="reason"
+          class="w-full rounded-xl bg-white/[0.04] border border-white/12 px-4 py-3 text-[15px] outline-none focus:border-orange">
+          <option value="">Prefiero no decirlo</option>
+          <option>Ya no uso la app</option>
+          <option>Preocupaciones de privacidad</option>
+          <option>Demasiadas notificaciones</option>
+          <option>Problemas técnicos / errores</option>
+          <option>Creé otra cuenta</option>
+          <option>Otro</option>
+        </select>
+      </div>
+
+      <p id="formError" class="hidden text-[14px] text-red-400"></p>
+
+      <button id="submitBtn" type="submit"
+        class="w-full rounded-xl bg-orange text-white font-bold py-3.5 text-[15px] hover:opacity-90 transition disabled:opacity-50">
+        Continuar
+      </button>
+    </form>
+
+    <p class="text-white/35 text-[13px] leading-relaxed mt-6">
+      ¿Dudas? Escríbenos a <a href="mailto:somos.spotz@gmail.com" class="text-orange underline">somos.spotz@gmail.com</a>.
+      Consulta también nuestra <a href="/privacidad" class="text-orange underline">Política de Privacidad</a>.
+    </p>
+  </main>
+
+  <!-- Modal de confirmación -->
+  <div id="modal" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center px-5">
+    <div class="bg-ink2 border border-white/12 rounded-2xl max-w-sm w-full p-6">
+      <h2 id="modalTitle" class="font-display font-black text-xl mb-2">¿Estás seguro?</h2>
+      <p id="modalBody" class="text-white/65 text-[14px] leading-relaxed mb-4"></p>
+      <label class="block text-sm font-semibold text-white/80 mb-1.5">Escribe <span class="text-orange font-black">Borrar</span> para confirmar</label>
+      <input id="confirmInput" type="text" autocomplete="off"
+        class="w-full rounded-xl bg-white/[0.04] border border-white/12 px-4 py-3 text-[15px] outline-none focus:border-orange mb-2"
+        placeholder="Borrar">
+      <p id="modalError" class="hidden text-[14px] text-red-400 mb-2"></p>
+      <div class="flex gap-3 mt-2">
+        <button id="cancelBtn" type="button"
+          class="flex-1 rounded-xl border border-white/15 text-white/80 font-semibold py-3 text-[15px] hover:bg-white/5 transition">
+          Cancelar
+        </button>
+        <button id="confirmBtn" type="button" disabled
+          class="flex-1 rounded-xl bg-red-600 text-white font-bold py-3 text-[15px] hover:bg-red-500 transition disabled:opacity-40 disabled:cursor-not-allowed">
+          Borrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pantalla de éxito -->
+  <div id="done" class="hidden fixed inset-0 z-50 bg-ink flex items-center justify-center px-6 text-center">
+    <div class="max-w-sm">
+      <div class="text-5xl mb-4">✅</div>
+      <h2 id="doneTitle" class="font-display font-black text-2xl mb-2"></h2>
+      <p id="doneBody" class="text-white/60 text-[15px] leading-relaxed mb-6"></p>
+      <a href="/" class="inline-block rounded-xl bg-orange text-white font-bold px-6 py-3 text-[15px]">Volver al inicio</a>
+    </div>
+  </div>
+
+  <footer class="px-6 py-10 border-t border-white/[0.06] text-center">
+    <p class="font-mono text-[10px] tracking-[0.12em] text-white/20 uppercase">Spotz · Caracas · spotz.online</p>
+  </footer>
+
+  <script>
+    const $ = (id) => document.getElementById(id)
+    const form = $('form'), modal = $('modal'), done = $('done')
+    const confirmInput = $('confirmInput'), confirmBtn = $('confirmBtn')
+
+    function mode() { return form.querySelector('input[name=mode]:checked').value }
+    function creds() { return { email: $('email').value.trim(), password: $('password').value } }
+
+    function showFormError(msg) { const e = $('formError'); e.textContent = msg; e.classList.remove('hidden') }
+    function hideFormError() { $('formError').classList.add('hidden') }
+
+    // Paso 1: verificar credenciales → abrir modal.
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault()
+      hideFormError()
+      const { email, password } = creds()
+      if (!email || !password) { showFormError('Completa tu correo y contraseña.'); return }
+      $('submitBtn').disabled = true
+      $('submitBtn').textContent = 'Verificando…'
+      try {
+        const r = await fetch('/api/delete-account', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'verify', email, password }),
+        })
+        if (r.status === 401) { showFormError('Correo o contraseña incorrectos.'); return }
+        if (!r.ok) { showFormError('No pudimos verificar tus datos. Intenta de nuevo.'); return }
+        openModal()
+      } catch {
+        showFormError('Error de conexión. Intenta de nuevo.')
+      } finally {
+        $('submitBtn').disabled = false
+        $('submitBtn').textContent = 'Continuar'
+      }
+    })
+
+    function openModal() {
+      const isAccount = mode() === 'account'
+      $('modalTitle').textContent = isAccount ? 'Eliminar tu cuenta' : 'Borrar tus datos'
+      $('modalBody').textContent = isAccount
+        ? 'Vamos a eliminar de forma permanente tu cuenta de Spotz y todos tus datos (perfil, favoritos e historial). Esta acción no se puede deshacer.'
+        : 'Vamos a borrar tus datos de navegación, favoritos y gustos. Tu cuenta seguirá activa. Esta acción no se puede deshacer.'
+      confirmInput.value = ''
+      confirmBtn.disabled = true
+      $('modalError').classList.add('hidden')
+      modal.classList.remove('hidden')
+      confirmInput.focus()
+    }
+    function closeModal() { modal.classList.add('hidden') }
+
+    confirmInput.addEventListener('input', () => {
+      confirmBtn.disabled = confirmInput.value.trim().toLowerCase() !== 'borrar'
+    })
+    $('cancelBtn').addEventListener('click', closeModal)
+
+    // Paso 2: ejecutar el borrado.
+    confirmBtn.addEventListener('click', async () => {
+      confirmBtn.disabled = true
+      confirmBtn.textContent = 'Borrando…'
+      const { email, password } = creds()
+      try {
+        const r = await fetch('/api/delete-account', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'delete', email, password, mode: mode(),
+            reason: $('reason').value, confirm: confirmInput.value.trim(),
+          }),
+        })
+        const data = await r.json().catch(() => ({}))
+        if (!r.ok || !data.ok) {
+          const e = $('modalError')
+          e.textContent = r.status === 401 ? 'Correo o contraseña incorrectos.' : 'No se pudo completar. Intenta de nuevo o escríbenos.'
+          e.classList.remove('hidden')
+          confirmBtn.disabled = false
+          confirmBtn.textContent = 'Borrar'
+          return
+        }
+        closeModal()
+        const isAccount = data.mode === 'account'
+        $('doneTitle').textContent = isAccount ? 'Cuenta eliminada' : 'Datos borrados'
+        $('doneBody').textContent = isAccount
+          ? 'Tu cuenta y tus datos fueron eliminados de Spotz. Gracias por haber usado la app.'
+          : 'Tus datos de navegación y gustos fueron borrados. Tu cuenta sigue activa.'
+        done.classList.remove('hidden')
+      } catch {
+        const e = $('modalError')
+        e.textContent = 'Error de conexión. Intenta de nuevo.'
+        e.classList.remove('hidden')
+        confirmBtn.disabled = false
+        confirmBtn.textContent = 'Borrar'
+      }
+    })
+  </script>
+</body>
+</html>
