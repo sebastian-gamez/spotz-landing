@@ -311,15 +311,12 @@
   }
 
   async function loadCount() {
-    const { count, error } = await db.from('waitlist').select('*', { count: 'exact', head: true })
+    // Cuenta vía RPC SECURITY DEFINER (no expone los emails de la lista).
+    const { data, error } = await db.rpc('waitlist_count')
     if (error) { console.warn('contador:', error.message); render(0); return }
-    render(count ?? 0)
+    render(typeof data === 'number' ? data : 0)
   }
   loadCount()
-
-  db.channel('waitlist-realtime')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'waitlist' }, () => render(currentCount + 1, true))
-    .subscribe()
 
   // Form
   const form = document.getElementById('waitlist-form')
@@ -340,6 +337,7 @@
       errorEl.classList.remove('hidden')
     } else {
       form.classList.add('hidden'); successEl.classList.remove('hidden')
+      render(currentCount + 1, true)   // refleja al instante que el usuario se unió
     }
   })
 </script>
