@@ -6,7 +6,11 @@
   <title>Eliminar cuenta o datos — Spotz</title>
   <meta name="description" content="Solicita la eliminación de tu cuenta de Spotz o el borrado de tus datos de navegación y gustos.">
   <meta property="og:title" content="Eliminar cuenta o datos — Spotz">
+  <meta property="og:description" content="Elimina tu cuenta de Spotz y tus datos personales, sin instalar la app.">
   <meta property="og:url" content="https://spotz.online/eliminar-cuenta">
+  <meta property="og:image" content="https://spotz.online/assets/og.jpg">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://spotz.online/eliminar-cuenta">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z' fill='%23FF6B35'/%3E%3C/svg%3E">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -27,14 +31,19 @@
 </head>
 <body class="bg-ink text-white/90 min-h-screen">
 
-  <!-- Header -->
-  <header class="px-6 py-5 border-b border-white/[0.06]">
+  <!-- Header con conmutador entre los tres documentos legales. -->
+  <header class="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between gap-4 flex-wrap">
     <a href="/" class="inline-flex items-center gap-2">
-      <svg width="20" height="20" viewBox="0 0 80 80" fill="none">
+      <svg width="20" height="20" viewBox="0 0 80 80" fill="none" aria-hidden="true">
         <path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/>
       </svg>
       <span class="font-display font-black text-lg tracking-tight">Spot<span class="text-orange">z</span></span>
     </a>
+    <nav class="flex gap-1 p-1 rounded-2xl bg-white/[0.07] text-[12px]">
+      <a href="/privacidad"      class="px-3 py-1.5 rounded-xl text-white/55 hover:text-white transition">Privacidad</a>
+      <a href="/terminos"        class="px-3 py-1.5 rounded-xl text-white/55 hover:text-white transition">Términos</a>
+      <a href="/eliminar-cuenta" class="px-3 py-1.5 rounded-xl bg-white/[0.13] text-white font-bold" aria-current="page">Eliminar cuenta</a>
+    </nav>
   </header>
 
   <main class="max-w-md mx-auto px-6 py-12">
@@ -103,7 +112,7 @@
     </form>
 
     <p class="text-white/35 text-[13px] leading-relaxed mt-6">
-      ¿Dudas? Escríbenos a <a href="mailto:somos.spotz@gmail.com" class="text-orange underline">somos.spotz@gmail.com</a>.
+      ¿Dudas? Escríbenos a <a href="mailto:hola@spotz.online" class="text-orange underline">hola@spotz.online</a>.
       Consulta también nuestra <a href="/privacidad" class="text-orange underline">Política de Privacidad</a>.
     </p>
   </main>

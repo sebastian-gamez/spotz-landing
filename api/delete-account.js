@@ -25,8 +25,13 @@ const ACCOUNT_TABLES = [
 ]
 // Subconjunto que se borra cuando solo se limpian DATOS (navegación + gustos),
 // conservando la cuenta. No toca orders/tickets/notifications ni el perfil base.
+// Ojo: `user_taste_profile` guarda lo que el asistente dedujo del usuario
+// (presupuesto, con quién sale, zona, dieta) y se reinyecta en cada
+// conversación. Sin borrarlo, "eliminar mis datos" dejaba justo lo más
+// personal en su sitio.
 const DATA_TABLES = [
   'chat_request_log', 'chat_sessions', 'event_views', 'user_favorites',
+  'user_taste_profile',
 ]
 
 function send(res, status, body) {

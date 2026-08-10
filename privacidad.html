@@ -8,6 +8,9 @@
   <meta property="og:title" content="Política de Privacidad — Spotz">
   <meta property="og:description" content="Cómo Spotz trata tus datos personales.">
   <meta property="og:url" content="https://spotz.online/privacidad">
+  <meta property="og:image" content="https://spotz.online/assets/og.jpg">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://spotz.online/privacidad">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z' fill='%23FF6B35'/%3E%3C/svg%3E">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,19 +31,62 @@
 </head>
 <body class="bg-ink text-white/90">
 
-  <!-- Header -->
-  <header class="px-6 py-5 border-b border-white/[0.06]">
+  <!-- Header con conmutador: los tres documentos legales se conocen entre sí.
+       Antes el único camino de salida era el logo. -->
+  <header class="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between gap-4 flex-wrap">
     <a href="/" class="inline-flex items-center gap-2">
-      <svg width="20" height="20" viewBox="0 0 80 80" fill="none">
+      <svg width="20" height="20" viewBox="0 0 80 80" fill="none" aria-hidden="true">
         <path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/>
       </svg>
       <span class="font-display font-black text-lg tracking-tight">Spot<span class="text-orange">z</span></span>
     </a>
+    <nav class="flex gap-1 p-1 rounded-2xl bg-white/[0.07] text-[12px]">
+      <a href="/privacidad"      class="px-3 py-1.5 rounded-xl bg-white/[0.13] text-white font-bold" aria-current="page">Privacidad</a>
+      <a href="/terminos"        class="px-3 py-1.5 rounded-xl text-white/55 hover:text-white transition">Términos</a>
+      <a href="/eliminar-cuenta" class="px-3 py-1.5 rounded-xl text-white/55 hover:text-white transition">Eliminar cuenta</a>
+    </nav>
   </header>
 
-  <main class="max-w-2xl mx-auto px-6 py-12">
+  <div class="max-w-5xl mx-auto px-6 py-12 lg:grid lg:grid-cols-[190px_1fr] lg:gap-10">
+
+    <!-- Índice lateral: con 12 secciones, el scroll no es una forma de navegar.
+         Además permite enlazar "ver §6" desde la app o desde soporte. -->
+    <aside class="hidden lg:block sticky top-24 self-start">
+      <p class="font-mono text-[9px] tracking-[0.14em] text-white/30 mb-3">EN ESTA PÁGINA</p>
+      <nav class="flex flex-col gap-2 border-l border-white/10 pl-3 text-[11px]">
+        <a href="#recopilamos"     class="text-white/50 hover:text-orange transition">1 · Qué recopilamos</a>
+        <a href="#uso"             class="text-white/50 hover:text-orange transition">2 · Cómo lo usamos</a>
+        <a href="#lista-de-espera" class="text-white/50 hover:text-orange transition">3 · Lista de espera</a>
+        <a href="#ia"              class="text-white/50 hover:text-orange transition">4 · El chat con IA</a>
+        <a href="#terceros"        class="text-white/50 hover:text-orange transition">5 · Proveedores</a>
+        <a href="#permisos"        class="text-white/50 hover:text-orange transition">6 · Permisos</a>
+        <a href="#conservacion"    class="text-white/50 hover:text-orange transition">7 · Conservación</a>
+        <a href="#eliminar-cuenta" class="text-white/50 hover:text-orange transition">8 · Eliminar tu cuenta</a>
+        <a href="#seguridad"       class="text-white/50 hover:text-orange transition">9 · Seguridad</a>
+        <a href="#menores"         class="text-white/50 hover:text-orange transition">10 · Menores</a>
+        <a href="#cambios"         class="text-white/50 hover:text-orange transition">11 · Cambios</a>
+        <a href="#contacto"        class="text-white/50 hover:text-orange transition">12 · Contacto</a>
+      </nav>
+    </aside>
+
+    <main class="max-w-2xl">
     <h1 class="font-display font-black text-3xl sm:text-4xl tracking-tight mb-2">Política de Privacidad</h1>
-    <p class="text-white/40 text-sm mb-10">Última actualización: 5 de junio de 2026</p>
+    <p class="text-white/40 text-sm mb-8">
+      Vigente desde el 5 de junio de 2026
+      <span class="ml-2 px-2 py-0.5 rounded-md bg-white/[0.08] font-mono text-[10px] align-middle">v1.1</span>
+    </p>
+
+    <!-- Resumen: es lo único de la página que un usuario real va a leer. -->
+    <div class="rounded-2xl p-5 mb-8" style="background:rgba(255,107,53,0.09); border:1px solid rgba(255,107,53,0.25);">
+      <p class="font-mono text-[10px] tracking-[0.14em] mb-3" style="color:#FFB694">EN 30 SEGUNDOS</p>
+      <ul class="space-y-1.5 text-white/85 text-[14px] leading-relaxed">
+        <li>· Pedimos tu correo, tus preferencias y —si lo permites— tu ubicación aproximada.</li>
+        <li>· No vendemos tus datos ni los usamos para publicidad de terceros.</li>
+        <li>· Lo que escribes en el chat se procesa con un proveedor de IA, junto a tu nombre de pila y tus gustos.</li>
+        <li>· Puedes borrar tu cuenta y todos tus datos <a href="/eliminar-cuenta" class="text-orange underline">desde aquí</a>, cuando quieras.</li>
+      </ul>
+      <p class="text-white/45 text-[12px] italic mt-3">Este resumen no sustituye al texto completo.</p>
+    </div>
 
     <div class="space-y-9 text-[15px] leading-relaxed text-white/75">
 
@@ -49,7 +95,7 @@
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">1. Información que recopilamos</h2>
+        <h2 id="recopilamos" class="font-display font-bold text-xl text-white mb-3">1. Información que recopilamos</h2>
         <p class="mb-3">Recopilamos la mínima información necesaria para que el Servicio funcione:</p>
         <ul class="list-disc pl-5 space-y-2">
           <li><strong>Datos de la cuenta:</strong> tu correo electrónico, una contraseña (almacenada de forma cifrada, nunca en texto plano) y, opcionalmente, un nombre visible y una foto de perfil.</li>
@@ -60,7 +106,7 @@
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">2. Cómo usamos tu información</h2>
+        <h2 id="uso" class="font-display font-bold text-xl text-white mb-3">2. Cómo usamos tu información</h2>
         <ul class="list-disc pl-5 space-y-2">
           <li>Crear y gestionar tu cuenta y autenticarte.</li>
           <li>Mostrarte eventos, recomendaciones personalizadas y eventos cercanos.</li>
@@ -71,51 +117,72 @@
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">3. Proveedores y terceros</h2>
-        <p>Nos apoyamos en proveedores que procesan datos en nuestro nombre, bajo sus propias medidas de seguridad, únicamente para prestar el Servicio (por ejemplo, <strong>Supabase</strong> para autenticación y base de datos, y servicios de mapas para mostrar ubicaciones). La app puede mostrar enlaces de contacto de locales (WhatsApp, Instagram); al usarlos sales hacia plataformas de terceros con sus propias políticas.</p>
+        <h2 id="lista-de-espera" class="font-display font-bold text-xl text-white mb-3">3. Lista de espera</h2>
+        <p class="mb-3">Si te registras en la lista de espera de <strong>spotz.online</strong>, guardamos únicamente tu correo electrónico y la fecha de registro. Lo usamos para un solo fin: avisarte cuando la app esté disponible y enviarte las promociones de lanzamiento.</p>
+        <p class="mb-3">No lo compartimos con terceros, no lo usamos para publicidad y no lo añadimos a ninguna otra lista. Puedes pedir que borremos tu dirección en cualquier momento escribiendo a <a href="mailto:hola@spotz.online" class="text-orange underline">hola@spotz.online</a>, y cada correo que te enviemos incluirá un enlace para darte de baja.</p>
+        <p>Si no llegamos a lanzar el servicio, eliminaremos la lista completa.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">4. Permisos del dispositivo</h2>
+        <h2 id="ia" class="font-display font-bold text-xl text-white mb-3">4. El chat con IA</h2>
+        <p class="mb-3">Cuando usas el chat, tu mensaje se envía a un proveedor de inteligencia artificial para poder entenderlo y devolverte recomendaciones. Usamos <strong>OpenRouter</strong>, que enruta la petición a <strong>Anthropic</strong> (modelo Claude). Ambos son proveedores establecidos fuera de Venezuela y tratan los datos bajo sus propias políticas.</p>
+        <p class="mb-3">Junto a tu mensaje enviamos el contexto necesario para que la respuesta sea útil: la lista de experiencias disponibles, la fecha y hora, <strong>tu nombre de pila</strong>, las categorías que te interesan, los eventos que has guardado como favoritos y las preferencias que el asistente haya aprendido de ti. <strong>No enviamos</strong> tu correo, tu apellido, tu teléfono, tu fecha de nacimiento ni tu ubicación.</p>
+        <p class="mb-3"><strong>No guardamos el texto de la conversación en nuestros servidores.</strong> El historial vive en tu teléfono mientras la app está abierta y desaparece al cerrarla. Lo que sí conservamos es un registro técnico de cada petición (sin el contenido del mensaje) para evitar abusos, y un <strong>perfil de preferencias</strong> que el asistente deduce de lo que le cuentas —por ejemplo tu presupuesto habitual, con quién sueles salir, tu zona o restricciones de dieta— que reutilizamos para no volver a preguntártelo en cada conversación.</p>
+        <p>Ese perfil se borra al eliminar tu cuenta. No usamos tus conversaciones para entrenar modelos ni las compartimos con fines publicitarios.</p>
+      </section>
+
+      <section>
+        <h2 id="terceros" class="font-display font-bold text-xl text-white mb-3">5. Proveedores y terceros</h2>
+        <p>Nos apoyamos en proveedores que procesan datos en nuestro nombre, bajo sus propias medidas de seguridad, únicamente para prestar el Servicio: <strong>Supabase</strong> para autenticación y base de datos, <strong>Vercel</strong> para alojar el sitio web, servicios de mapas para mostrar ubicaciones, y <strong>OpenRouter</strong> y <strong>Anthropic</strong> para el chat con IA (ver la sección 4). No usamos herramientas de analítica de terceros. La app puede mostrar enlaces de contacto de locales (WhatsApp, Instagram); al usarlos sales hacia plataformas de terceros con sus propias políticas.</p>
+      </section>
+
+      <section>
+        <h2 id="permisos" class="font-display font-bold text-xl text-white mb-3">6. Permisos del dispositivo</h2>
         <p>La app puede solicitar el permiso de <strong>ubicación</strong> (para eventos cercanos) y de <strong>galería/fotos</strong> (si eliges una foto de perfil). Puedes negar o revocar estos permisos en cualquier momento desde los ajustes de tu teléfono; algunas funciones podrían limitarse.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">5. Conservación de los datos</h2>
-        <p>Conservamos tu información mientras tu cuenta esté activa. Si eliminas tu cuenta, borramos tus datos personales asociados, salvo lo que debamos retener por obligaciones legales.</p>
+        <h2 id="conservacion" class="font-display font-bold text-xl text-white mb-3">7. Conservación de los datos</h2>
+        <p>Conservamos tu información mientras tu cuenta esté activa. Si eliminas tu cuenta, borramos tus datos personales asociados. Algunos registros de uso (por ejemplo, qué eventos se vieron o se buscaron) se conservan de forma <strong>anónima</strong>, ya desvinculados de tu identidad, para entender qué funciona en el Servicio.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">6. Eliminación de tu cuenta y tus datos</h2>
-        <p class="mb-3">Puedes solicitar la eliminación de tu cuenta y de tus datos personales en cualquier momento:</p>
+        <h2 id="eliminar-cuenta" class="font-display font-bold text-xl text-white mb-3">8. Eliminación de tu cuenta y tus datos</h2>
+        <p class="mb-3">Puedes eliminar tu cuenta y tus datos personales en cualquier momento:</p>
         <ul class="list-disc pl-5 space-y-2">
-          <li>Escribiendo a <a href="mailto:hola@spotz.online" class="text-orange underline">hola@spotz.online</a> desde el correo asociado a tu cuenta, con el asunto "Eliminar cuenta".</li>
+          <li><strong>Desde la web:</strong> en <a href="/eliminar-cuenta" class="text-orange underline">spotz.online/eliminar-cuenta</a>, sin necesidad de instalar la app.</li>
+          <li><strong>Por correo:</strong> escribiendo a <a href="mailto:hola@spotz.online" class="text-orange underline">hola@spotz.online</a> desde la dirección asociada a tu cuenta.</li>
         </ul>
-        <p class="mt-3">Procesaremos la solicitud y eliminaremos tu cuenta junto con tus datos personales (correo, perfil, favoritos y preferencias) en un plazo razonable.</p>
+        <p class="mt-3">Al eliminar la cuenta borramos tu correo, tu perfil, tus favoritos, tus preferencias y el perfil que el asistente había aprendido de ti. Los registros de uso que conservemos quedan desvinculados de tu identidad.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">7. Seguridad</h2>
+        <h2 id="seguridad" class="font-display font-bold text-xl text-white mb-3">9. Seguridad</h2>
         <p>Aplicamos medidas razonables para proteger tu información (cifrado en tránsito, contraseñas con hash, control de acceso). Ningún sistema es 100% infalible, pero trabajamos para mantener tus datos seguros.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">8. Menores de edad</h2>
-        <p>El Servicio no está dirigido a menores de 13 años. No recopilamos conscientemente datos de menores de esa edad.</p>
+        <h2 id="menores" class="font-display font-bold text-xl text-white mb-3">10. Menores de edad</h2>
+        <p>El Servicio está dirigido a mayores de 18 años: el catálogo incluye bares, vida nocturna y experiencias con consumo de alcohol. No recopilamos conscientemente datos de menores de esa edad; si detectamos una cuenta de un menor, la eliminaremos.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">9. Cambios en esta política</h2>
+        <h2 id="cambios" class="font-display font-bold text-xl text-white mb-3">11. Cambios en esta política</h2>
         <p>Podemos actualizar esta Política de Privacidad. Publicaremos la versión vigente en esta página e indicaremos la fecha de última actualización.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">10. Contacto</h2>
+        <h2 id="contacto" class="font-display font-bold text-xl text-white mb-3">12. Contacto</h2>
         <p>Para cualquier consulta sobre tu privacidad o tus datos, escríbenos a <a href="mailto:hola@spotz.online" class="text-orange underline">hola@spotz.online</a>.</p>
       </section>
 
+      <section>
+        <p class="text-white/50 text-[13px]">Ver también los <a href="/terminos" class="text-orange underline">Términos y Condiciones</a>.</p>
+      </section>
+
     </div>
-  </main>
+    </main>
+  </div>
 
   <footer class="px-6 py-10 border-t border-white/[0.06] text-center">
     <p class="font-mono text-[10px] tracking-[0.12em] text-white/20 uppercase">Spotz · Caracas · spotz.online</p>

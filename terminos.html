@@ -8,6 +8,9 @@
   <meta property="og:title" content="Términos y Condiciones — Spotz">
   <meta property="og:description" content="El acuerdo de uso de la app Spotz.">
   <meta property="og:url" content="https://spotz.online/terminos">
+  <meta property="og:image" content="https://spotz.online/assets/og.jpg">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://spotz.online/terminos">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z' fill='%23FF6B35'/%3E%3C/svg%3E">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,96 +31,134 @@
 </head>
 <body class="bg-ink text-white/90">
 
-  <!-- Header -->
-  <header class="px-6 py-5 border-b border-white/[0.06]">
+  <!-- Header con conmutador entre los tres documentos legales. -->
+  <header class="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between gap-4 flex-wrap">
     <a href="/" class="inline-flex items-center gap-2">
-      <svg width="20" height="20" viewBox="0 0 80 80" fill="none">
+      <svg width="20" height="20" viewBox="0 0 80 80" fill="none" aria-hidden="true">
         <path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/>
       </svg>
       <span class="font-display font-black text-lg tracking-tight">Spot<span class="text-orange">z</span></span>
     </a>
+    <nav class="flex gap-1 p-1 rounded-2xl bg-white/[0.07] text-[12px]">
+      <a href="/privacidad"      class="px-3 py-1.5 rounded-xl text-white/55 hover:text-white transition">Privacidad</a>
+      <a href="/terminos"        class="px-3 py-1.5 rounded-xl bg-white/[0.13] text-white font-bold" aria-current="page">Términos</a>
+      <a href="/eliminar-cuenta" class="px-3 py-1.5 rounded-xl text-white/55 hover:text-white transition">Eliminar cuenta</a>
+    </nav>
   </header>
 
-  <main class="max-w-2xl mx-auto px-6 py-12">
+  <div class="max-w-5xl mx-auto px-6 py-12 lg:grid lg:grid-cols-[190px_1fr] lg:gap-10">
+
+    <aside class="hidden lg:block sticky top-24 self-start">
+      <p class="font-mono text-[9px] tracking-[0.14em] text-white/30 mb-3">EN ESTA PÁGINA</p>
+      <nav class="flex flex-col gap-2 border-l border-white/10 pl-3 text-[11px]">
+        <a href="#aceptacion"      class="text-white/50 hover:text-orange transition">1 · Aceptación</a>
+        <a href="#servicio"        class="text-white/50 hover:text-orange transition">2 · El servicio</a>
+        <a href="#cuenta"          class="text-white/50 hover:text-orange transition">3 · Tu cuenta</a>
+        <a href="#uso"             class="text-white/50 hover:text-orange transition">4 · Uso permitido</a>
+        <a href="#terceros"        class="text-white/50 hover:text-orange transition">5 · Contenido de terceros</a>
+        <a href="#pagos"           class="text-white/50 hover:text-orange transition">6 · Compras y pagos</a>
+        <a href="#propiedad"       class="text-white/50 hover:text-orange transition">7 · Propiedad intelectual</a>
+        <a href="#privacidad"      class="text-white/50 hover:text-orange transition">8 · Privacidad</a>
+        <a href="#garantias"       class="text-white/50 hover:text-orange transition">9 · Garantías</a>
+        <a href="#responsabilidad" class="text-white/50 hover:text-orange transition">10 · Responsabilidad</a>
+        <a href="#modificaciones"  class="text-white/50 hover:text-orange transition">11 · Modificaciones</a>
+        <a href="#ley"             class="text-white/50 hover:text-orange transition">12 · Ley aplicable</a>
+        <a href="#contacto"        class="text-white/50 hover:text-orange transition">13 · Contacto</a>
+      </nav>
+    </aside>
+
+    <main class="max-w-2xl">
     <h1 class="font-display font-black text-3xl sm:text-4xl tracking-tight mb-2">Términos y Condiciones</h1>
-    <p class="text-white/40 text-sm mb-10">Última actualización: 4 de junio de 2026</p>
+    <p class="text-white/40 text-sm mb-8">Vigente desde el 5 de junio de 2026<span class="ml-2 px-2 py-0.5 rounded-md bg-white/[0.08] font-mono text-[10px] align-middle">v1.1</span></p>
+
+    <div class="rounded-2xl p-5 mb-8" style="background:rgba(255,107,53,0.09); border:1px solid rgba(255,107,53,0.25);">
+      <p class="font-mono text-[10px] tracking-[0.14em] mb-3" style="color:#FFB694">EN 30 SEGUNDOS</p>
+      <ul class="space-y-1.5 text-white/85 text-[14px] leading-relaxed">
+        <li>· Spotz es un directorio: te ayuda a descubrir eventos y experiencias en Caracas.</li>
+        <li>· No organizamos los eventos ni somos parte de lo que contratas con el local.</li>
+        <li>· La información la publican los propios locales; puede cambiar sin aviso.</li>
+        <li>· Puedes irte cuando quieras y <a href="/eliminar-cuenta" class="text-orange underline">borrar tu cuenta</a> en un minuto.</li>
+      </ul>
+      <p class="text-white/45 text-[12px] italic mt-3">Este resumen no sustituye al texto completo.</p>
+    </div>
 
     <div class="space-y-9 text-[15px] leading-relaxed text-white/75">
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">1. Aceptación de los términos</h2>
+        <h2 id="aceptacion" class="font-display font-bold text-xl text-white mb-3">1. Aceptación de los términos</h2>
         <p class="mb-3">Al crear una cuenta o usar la aplicación Spotz ("la App", "el Servicio"), aceptas estos Términos y Condiciones en su totalidad. Si no estás de acuerdo, por favor no utilices la App.</p>
         <p>Estos términos constituyen un acuerdo entre tú ("el usuario") y Spotz. Pueden actualizarse; el uso continuado de la App implica la aceptación de la versión vigente.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">2. Descripción del servicio</h2>
+        <h2 id="servicio" class="font-display font-bold text-xl text-white mb-3">2. Descripción del servicio</h2>
         <p class="mb-3">Spotz es una plataforma para descubrir eventos, conciertos y experiencias en Caracas y otras ciudades. La App muestra información de eventos, permite guardarlos como favoritos y ofrece recomendaciones mediante inteligencia artificial.</p>
         <p>La información de los eventos (fechas, precios, ubicación, organizadores) proviene de los propios locales/organizadores o de fuentes públicas. Spotz no organiza los eventos ni garantiza su realización, disponibilidad o exactitud.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">3. Registro y cuenta</h2>
+        <h2 id="cuenta" class="font-display font-bold text-xl text-white mb-3">3. Registro y cuenta</h2>
         <p class="mb-3">Para usar ciertas funciones debes crear una cuenta con un correo electrónico válido y una contraseña. Eres responsable de mantener la confidencialidad de tus credenciales y de toda la actividad realizada desde tu cuenta.</p>
-        <p>Debes ser mayor de edad o contar con el consentimiento de un representante legal para usar la App. La información que proporciones debe ser veraz y mantenerse actualizada.</p>
+        <p>Debes tener al menos 18 años para usar la App. La información que proporciones debe ser veraz y mantenerse actualizada.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">4. Uso permitido</h2>
+        <h2 id="uso" class="font-display font-bold text-xl text-white mb-3">4. Uso permitido</h2>
         <p class="mb-3">Te comprometes a usar la App únicamente con fines lícitos. No está permitido: (a) usar la App para actividades fraudulentas o ilegales; (b) intentar acceder sin autorización a sistemas o datos; (c) interferir con el funcionamiento del Servicio; (d) copiar, revender o explotar el contenido sin autorización.</p>
         <p>Nos reservamos el derecho de suspender o cancelar cuentas que incumplan estos términos.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">5. Eventos y contenido de terceros</h2>
+        <h2 id="terceros" class="font-display font-bold text-xl text-white mb-3">5. Eventos y contenido de terceros</h2>
         <p class="mb-3">Spotz puede mostrar enlaces, información de contacto (como WhatsApp o Instagram) y contenido de locales y organizadores externos. Dicho contenido pertenece a sus respectivos titulares y Spotz no se hace responsable de su exactitud, disponibilidad ni de las prácticas de esos terceros.</p>
         <p>Cualquier transacción, reserva o comunicación que realices directamente con un local u organizador es responsabilidad exclusiva tuya y de ese tercero.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">6. Compras y pagos</h2>
+        <h2 id="pagos" class="font-display font-bold text-xl text-white mb-3">6. Compras y pagos</h2>
         <p class="mb-3">Algunas funciones de compra de entradas pueden no estar disponibles en todas las versiones de la App. Cuando estén habilitadas, las condiciones de compra, reembolso y uso de las entradas se informarán en el momento de la transacción.</p>
         <p>Los precios mostrados pueden cambiar y están sujetos a la confirmación del organizador.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">7. Propiedad intelectual</h2>
+        <h2 id="propiedad" class="font-display font-bold text-xl text-white mb-3">7. Propiedad intelectual</h2>
         <p>La marca Spotz, el logotipo, el diseño, los textos y el software de la App están protegidos por derechos de propiedad intelectual y pertenecen a Spotz o a sus licenciantes. No se concede ningún derecho sobre ellos salvo el uso normal de la App.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">8. Privacidad</h2>
+        <h2 id="privacidad" class="font-display font-bold text-xl text-white mb-3">8. Privacidad</h2>
         <p class="mb-3">El tratamiento de tus datos personales (como tu correo y preferencias) se realiza para prestarte el Servicio. Recopilamos la información mínima necesaria para el funcionamiento de la App y no la vendemos a terceros. Puedes consultar los detalles en nuestra <a href="/privacidad" class="text-orange underline">Política de Privacidad</a>.</p>
-        <p>Para consultas sobre tus datos puedes escribirnos a <a href="mailto:somos.spotz@gmail.com" class="text-orange underline">somos.spotz@gmail.com</a>.</p>
+        <p>Para consultas sobre tus datos puedes escribirnos a <a href="mailto:hola@spotz.online" class="text-orange underline">hola@spotz.online</a>.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">9. Exención de garantías</h2>
+        <h2 id="garantias" class="font-display font-bold text-xl text-white mb-3">9. Exención de garantías</h2>
         <p>La App se ofrece "tal cual" y "según disponibilidad". No garantizamos que el Servicio sea ininterrumpido, libre de errores o que la información de los eventos sea siempre exacta o esté actualizada.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">10. Limitación de responsabilidad</h2>
+        <h2 id="responsabilidad" class="font-display font-bold text-xl text-white mb-3">10. Limitación de responsabilidad</h2>
         <p>En la medida permitida por la ley, Spotz no será responsable por daños indirectos, incidentales o derivados del uso o la imposibilidad de uso de la App, ni por la asistencia, cancelación o experiencia en cualquier evento de terceros.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">11. Modificaciones</h2>
+        <h2 id="modificaciones" class="font-display font-bold text-xl text-white mb-3">11. Modificaciones</h2>
         <p>Podemos modificar estos Términos y Condiciones en cualquier momento. Publicaremos la versión actualizada en la App e indicaremos la fecha de última actualización. El uso continuado tras los cambios implica su aceptación.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">12. Ley aplicable</h2>
+        <h2 id="ley" class="font-display font-bold text-xl text-white mb-3">12. Ley aplicable</h2>
         <p>Estos términos se rigen por las leyes de la República Bolivariana de Venezuela. Cualquier controversia se someterá a los tribunales competentes de Caracas.</p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-white mb-3">13. Contacto</h2>
+        <h2 id="contacto" class="font-display font-bold text-xl text-white mb-3">13. Contacto</h2>
         <p>Si tienes preguntas sobre estos Términos y Condiciones, escríbenos a <a href="mailto:hola@spotz.online" class="text-orange underline">hola@spotz.online</a>.</p>
       </section>
 
     </div>
-  </main>
+    </main>
+  </div>
 
   <footer class="px-6 py-10 border-t border-white/[0.06] text-center">
     <p class="font-mono text-[10px] tracking-[0.12em] text-white/20 uppercase">Spotz · Caracas · spotz.online</p>

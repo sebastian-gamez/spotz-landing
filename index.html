@@ -5,12 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spotz — Descubrí Caracas</title>
   <meta name="description" content="La primera app para descubrir todos los eventos y experiencias de Caracas, con un chat de IA que te arma el plan. Únete a la lista de espera y consigue acceso anticipado + promociones de lanzamiento.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://spotz.online">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z' fill='%23FF6B35'/%3E%3C/svg%3E">
+
+  <!-- Open Graph — TODO: sube assets/og.jpg (1200x630) antes de publicar -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Spotz">
+  <meta property="og:locale" content="es_VE">
   <meta property="og:title" content="Spotz — Todo Caracas, en tu bolsillo">
   <meta property="og:description" content="Descubre eventos y experiencias en Caracas con ayuda de IA. Acceso anticipado + promos de lanzamiento.">
   <meta property="og:url" content="https://spotz.online">
-  <meta name="theme-color" content="#0D1B2A">
+  <meta property="og:image" content="https://spotz.online/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Spotz — Todo Caracas, en tu bolsillo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spotz — Todo Caracas, en tu bolsillo">
+  <meta name="twitter:description" content="Descubre eventos y experiencias en Caracas con ayuda de IA.">
+  <meta name="twitter:image" content="https://spotz.online/assets/og.jpg">
 
-  <!-- Tailwind CDN -->
+  <!-- Tailwind CDN — ver ficha 01, punto "Rendimiento": compilar antes de escalar tráfico -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     const SYSTEM_SANS = ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif']
@@ -18,7 +33,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: { orange:'#FF6B35', navy:'#004E89', cream:'#EFEFD0', ink:'#0D1B2A', ink2:'#111D2C', peach:'#F7C59F' },
+          colors: { orange:'#FF6B35', orangeDeep:'#B8420F', navy:'#004E89', cream:'#EFEFD0', ink:'#0D1B2A', ink2:'#111D2C', peach:'#F7C59F' },
           fontFamily: { display: SYSTEM_SANS, body: SYSTEM_SANS, mono: SYSTEM_MONO, sans: SYSTEM_SANS }
         }
       }
@@ -27,7 +42,7 @@
 
   <style>
     * { -webkit-tap-highlight-color: transparent; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
@@ -41,46 +56,52 @@
 
     /* ── Form ── */
     .input-email {
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-      color: #fff; font-family: inherit; font-size: 16px; outline: none; transition: border-color .2s;
+      background: rgba(255,255,255,0.08); border: 1px solid transparent;
+      color: #fff; font-family: inherit; font-size: 16px; outline: none; transition: border-color .2s, background .2s;
     }
-    .input-email::placeholder { color: rgba(255,255,255,0.3); }
-    .input-email:focus { border-color: rgba(255,107,53,0.6); }
+    .input-email::placeholder { color: rgba(255,255,255,0.42); }
+    .input-email:focus { border-color: rgba(255,107,53,0.6); background: rgba(255,255,255,0.11); }
     .btn-primary {
       background: #FF6B35; font-family: inherit; font-weight: 800; letter-spacing: -0.01em;
+      box-shadow: 0 6px 20px rgba(255,107,53,0.32);
       transition: background .2s, transform .1s;
     }
     .btn-primary:hover { background: #ff5a20; }
     .btn-primary:active { transform: scale(0.98); }
-    .btn-primary:disabled { background: #5a3020; color: rgba(255,255,255,0.4); cursor: not-allowed; }
+    .btn-primary:disabled { background: #5a3020; color: rgba(255,255,255,0.4); cursor: not-allowed; box-shadow: none; }
 
     /* ── Animaciones de entrada ── */
     .fade-in { animation: fadeUp .7s ease both; }
     .fade-in-2 { animation-delay: .12s; } .fade-in-3 { animation-delay: .24s; }
     .fade-in-4 { animation-delay: .36s; } .fade-in-5 { animation-delay: .48s; }
     @keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .fade-in { animation: none; }
+      .live-dot::before { animation: none; }
+    }
 
-    /* ── Contador en vivo ── */
-    .live-dot { position: relative; width: 8px; height: 8px; }
+    /* ── Prueba social ── */
+    .live-dot { position: relative; width: 8px; height: 8px; flex-shrink: 0; }
     .live-dot::before, .live-dot::after { content:''; position:absolute; inset:0; border-radius:50%; background:#FF6B35; }
     .live-dot::before { animation: livePing 2s cubic-bezier(0,0,0.2,1) infinite; opacity:.65; }
     @keyframes livePing { 0%{transform:scale(1);opacity:.65;} 75%,100%{transform:scale(2.4);opacity:0;} }
-    #waitlist-count { font-variant-numeric: tabular-nums; transition: transform .4s cubic-bezier(0.34,1.56,0.64,1); }
-    #waitlist-count.pulse { transform: scale(1.12); }
-    .progress-track { background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; }
-    .progress-fill { background: linear-gradient(90deg,#FF6B35,#ff9b6b); height: 100%; border-radius: 999px; transition: width 1s cubic-bezier(0.22,1,0.36,1); }
+    .seats { font-variant-numeric: tabular-nums; transition: transform .4s cubic-bezier(0.34,1.56,0.64,1); }
+    .seats.pulse { transform: scale(1.1); }
+    .avatar-stack span { width:26px; height:26px; border-radius:999px; border:2px solid #0D1B2A; display:block; }
+    .avatar-stack span + span { margin-left:-9px; }
 
     /* ── Mockup de teléfono ── */
     .phone {
-      position: relative; aspect-ratio: 1220 / 2712; background: #0a111d;
+      position: relative; background: #0a111d;
       border-radius: 36px; padding: 7px; border: 1px solid rgba(255,255,255,0.09);
       box-shadow: 0 26px 70px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.03);
     }
     .phone::before { /* dynamic island */
       content:''; position:absolute; top:15px; left:50%; transform:translateX(-50%);
-      width:30%; height:1.0%; min-height:9px; background:#000; border-radius:999px; z-index:3;
+      width:30%; height:9px; background:#000; border-radius:999px; z-index:3;
     }
-    .phone > img { width:100%; height:100%; object-fit:cover; border-radius:30px; display:block; }
+    .phone > img { width:100%; aspect-ratio: 1220 / 2712; object-fit:cover; border-radius:30px; display:block; }
     .phone-glow::after {
       content:''; position:absolute; inset:-18% -22%; z-index:-1;
       background: radial-gradient(closest-side, rgba(255,107,53,0.28), transparent 72%);
@@ -89,20 +110,22 @@
   </style>
 </head>
 
-<body class="bg-ink text-white antialiased overflow-x-hidden">
+<body id="top" class="bg-ink text-white antialiased overflow-x-hidden">
 
 <!-- ── NAV ── -->
-<nav class="fixed top-0 left-0 right-0 z-50 px-5 py-4 flex items-center justify-between">
-  <div class="bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 flex items-center gap-2.5 border border-white/5">
-    <svg width="20" height="20" viewBox="0 0 80 80" fill="none"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/></svg>
+<nav class="fixed top-0 left-0 right-0 z-50 px-5 py-4 flex items-center justify-between gap-3">
+  <a href="#top" class="bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 flex items-center gap-2.5 border border-white/5">
+    <svg width="20" height="20" viewBox="0 0 80 80" fill="none" aria-hidden="true"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/></svg>
     <span class="font-display font-extrabold text-[17px] tracking-tight">Spot<span class="text-orange">z</span></span>
+  </a>
+  <div class="flex items-center gap-2">
+    <a href="/comercios" class="hidden sm:block bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 text-sm font-medium text-white/60 hover:text-white border border-white/5 transition-colors">Soy un negocio</a>
+    <a href="#unirme" class="btn-primary rounded-2xl px-4 py-2.5 text-white text-[13px]">Unirme a la lista</a>
   </div>
-  <a href="comercios.html" class="bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 text-sm font-medium text-white/60 hover:text-white border border-white/5 transition-colors">Soy un negocio →</a>
 </nav>
 
 <!-- ── HERO ── -->
-<section class="relative px-5 pt-28 pb-16 grid-bg overflow-hidden">
-  <!-- glow -->
+<section class="relative px-5 pt-28 pb-14 grid-bg overflow-hidden">
   <div class="absolute top-40 left-1/2 -translate-x-1/2 w-[520px] h-[520px] max-w-[90vw] rounded-full pointer-events-none"
        style="background: radial-gradient(circle, rgba(255,107,53,0.13) 0%, transparent 70%);"></div>
 
@@ -110,42 +133,29 @@
 
     <!-- Columna texto -->
     <div class="text-center lg:text-left max-w-lg mx-auto lg:mx-0">
-      <div class="fade-in inline-flex items-center gap-2 mb-5">
-        <span class="font-mono text-[10px] tracking-[0.2em] text-orange uppercase">Próximamente · Caracas, VE</span>
+      <div class="fade-in inline-flex items-center gap-2 mb-5 rounded-full px-3 py-1.5" style="background:rgba(255,107,53,0.14)">
+        <span class="font-mono text-[10px] tracking-[0.16em] uppercase" style="color:#FFB694">Caracas · abre en septiembre</span>
       </div>
 
       <h1 class="fade-in fade-in-2 font-display font-black text-[44px] sm:text-[58px] leading-[0.95] tracking-tight mb-5">
         Todo Caracas,<br><span class="text-orange">en tu bolsillo.</span>
       </h1>
 
-      <p class="fade-in fade-in-3 text-white/55 text-[16px] sm:text-[17px] leading-relaxed mb-8 max-w-md mx-auto lg:mx-0">
-        Descubre los mejores eventos y experiencias de la ciudad, y deja que un <span class="text-white/80 font-semibold">chat con IA</span> te arme el plan perfecto para esta noche.
+      <p class="fade-in fade-in-3 text-white/62 text-[16px] sm:text-[17px] leading-relaxed mb-7 max-w-md mx-auto lg:mx-0">
+        Descubre los mejores eventos y experiencias de la ciudad, y deja que un <span class="text-white font-semibold">chat con IA</span> te arme el plan perfecto para esta noche.
       </p>
 
-      <!-- CONTADOR CENTRAL + meta -->
-      <div class="fade-in fade-in-3 bg-white/[0.04] border border-white/[0.08] rounded-3xl p-5 mb-6 max-w-md mx-auto lg:mx-0">
-        <div class="flex items-center gap-2 mb-2 text-white/50 text-[12px] font-medium">
-          <span class="live-dot"></span> Lista de espera · acceso anticipado
-        </div>
-        <div class="flex items-end gap-2 mb-3">
-          <span id="waitlist-count" class="font-display font-black text-5xl sm:text-6xl text-white leading-none">—</span>
-          <span class="text-white/40 text-sm mb-1.5">de <span id="goal">500</span> cupos</span>
-        </div>
-        <div class="progress-track h-2 mb-2"><div id="progress-fill" class="progress-fill" style="width:0%"></div></div>
-        <p id="scarcity" class="text-orange/90 text-[12px] font-medium">Cupos limitados para la semana de lanzamiento.</p>
-      </div>
-
       <!-- Form -->
-      <form id="waitlist-form" class="fade-in fade-in-4 max-w-md mx-auto lg:mx-0">
+      <form id="waitlist-form" class="fade-in fade-in-4 max-w-md mx-auto lg:mx-0 scroll-mt-28" novalidate>
         <div class="flex flex-col sm:flex-row gap-3">
+          <label for="email-input" class="sr-only">Correo electrónico</label>
           <input id="email-input" type="email" placeholder="tucorreo@email.com" required autocomplete="email"
                  class="input-email flex-1 rounded-2xl px-5 py-4 text-base">
           <button id="submit-btn" type="submit" class="btn-primary rounded-2xl px-6 py-4 text-white text-[15px] whitespace-nowrap">
             Quiero acceso →
           </button>
         </div>
-        <p id="form-error" class="hidden mt-3 text-red-400 text-sm text-center lg:text-left"></p>
-        <p class="mt-3 text-white/25 text-xs text-center lg:text-left">Sin spam. Solo te avisamos cuando lancemos.</p>
+        <p id="form-error" class="hidden mt-3 text-red-300 text-sm text-center lg:text-left" role="alert"></p>
       </form>
 
       <!-- Success state -->
@@ -153,136 +163,217 @@
         <div class="bg-orange/10 border border-orange/30 rounded-2xl p-6 text-center">
           <div class="text-3xl mb-2">🎉</div>
           <p class="font-display font-black text-xl mb-1">¡Ya estás en la lista!</p>
-          <p class="text-white/55 text-sm">Te avisamos cuando abramos. Prepárate para lo mejor de Caracas.</p>
+          <p class="text-white/60 text-sm">Te avisamos cuando abramos. Prepárate para lo mejor de Caracas.</p>
         </div>
       </div>
+
+      <!-- Prueba social -->
+      <div id="social-proof" class="fade-in fade-in-4 flex items-center gap-3.5 justify-center lg:justify-start mt-5 max-w-md mx-auto lg:mx-0">
+        <div class="avatar-stack flex" aria-hidden="true">
+          <span style="background:#3E6B8C"></span><span style="background:#8C5A3E"></span><span style="background:#6B2D5C"></span>
+        </div>
+        <p class="text-white/62 text-[13px] leading-snug">
+          <span class="live-dot inline-block align-middle mr-1"></span>
+          Quedan <span id="seats-left" class="seats text-white font-bold">—</span> cupos de acceso anticipado
+        </p>
+      </div>
+
+      <!-- Micro-garantías -->
+      <ul class="fade-in fade-in-5 flex flex-wrap gap-x-5 gap-y-2 justify-center lg:justify-start mt-5 text-white/50 text-[12.5px]">
+        <li>Sin spam · un solo correo</li>
+        <li>iOS y Android</li>
+        <li>Gratis</li>
+      </ul>
     </div>
 
-    <!-- Columna mockup (AI) -->
-    <div class="fade-in fade-in-5 mt-14 lg:mt-0 flex justify-center">
-      <div class="phone phone-glow w-[250px] sm:w-[270px]" style="transform: rotate(-3deg);">
-        <img src="assets/app-ai.webp" alt="Chat con IA de Spotz recomendando planes en Caracas" loading="eager">
+    <!-- Columna mockups: feed detrás, chat delante -->
+    <div class="fade-in fade-in-5 mt-14 lg:mt-0 flex justify-center items-center">
+      <div class="phone w-[150px] sm:w-[172px]" style="transform: rotate(-8deg) translateX(30px) translateY(14px); z-index:1;">
+        <img src="assets/app-home.webp" alt="Feed de eventos de Caracas en Spotz" loading="eager" width="1220" height="2712">
+      </div>
+      <div class="phone phone-glow w-[176px] sm:w-[200px]" style="transform: rotate(3deg); z-index:2;">
+        <img src="assets/app-ai.webp" alt="Chat con IA de Spotz recomendando planes en Caracas" loading="eager" width="1220" height="2712">
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── ¿QUÉ ES SPOTZ? (3 mockups) ── -->
-<section class="px-5 py-16 sm:py-24 max-w-6xl mx-auto">
-  <div class="text-center mb-12">
-    <div class="font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-3">Cómo funciona</div>
-    <h2 class="font-display font-black text-3xl sm:text-4xl tracking-tight">Tu próximo plan, en pocos toques.</h2>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-6">
-    <!-- 1 -->
-    <div class="flex flex-col items-center text-center">
-      <div class="phone w-[200px] mb-6"><img src="assets/app-home.webp" alt="Pantalla de descubrir eventos en Caracas" loading="lazy"></div>
-      <h3 class="font-display font-bold text-lg mb-1.5">1 · Descubre</h3>
-      <p class="text-white/45 text-sm leading-relaxed max-w-xs">Todos los eventos y experiencias de Caracas en un solo lugar: conciertos, gastronomía, arte, fiestas y más.</p>
-    </div>
-    <!-- 2 -->
-    <div class="flex flex-col items-center text-center">
-      <div class="phone phone-glow w-[200px] mb-6"><img src="assets/app-ai.webp" alt="Chat con IA de Spotz" loading="lazy"></div>
-      <h3 class="font-display font-bold text-lg mb-1.5">2 · Pregúntale a la IA</h3>
-      <p class="text-white/45 text-sm leading-relaxed max-w-xs">Un chat que conoce la ciudad y te sugiere qué hacer esta noche según tus gustos. Tu plan, listo en segundos.</p>
-    </div>
-    <!-- 3 -->
-    <div class="flex flex-col items-center text-center">
-      <div class="phone w-[200px] mb-6"><img src="assets/app-mapa.webp" alt="Mapa de eventos de Caracas en Spotz" loading="lazy"></div>
-      <h3 class="font-display font-bold text-lg mb-1.5">3 · Explora el mapa</h3>
-      <p class="text-white/45 text-sm leading-relaxed max-w-xs">Mira qué se mueve cerca de ti en el mapa de la ciudad y filtra por fecha, categoría y precio.</p>
-    </div>
-    <!-- 4 -->
-    <div class="flex flex-col items-center text-center">
-      <div class="phone w-[200px] mb-6"><img src="assets/app-favoritos.webp" alt="Pantalla de favoritos guardados" loading="lazy"></div>
-      <h3 class="font-display font-bold text-lg mb-1.5">4 · Guarda y vive</h3>
-      <p class="text-white/45 text-sm leading-relaxed max-w-xs">Guarda tus planes, no te pierdas nada y vive lo mejor de la ciudad. (Pronto: compra tu ticket y asiste.)</p>
-    </div>
+<!-- ── FRANJA DE CATEGORÍAS ── -->
+<section class="px-5 py-4 border-y border-white/[0.06]">
+  <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+    <span class="font-mono text-[10px] tracking-[0.16em] text-white/35 uppercase">Qué vas a encontrar</span>
+    <span class="text-white/20" aria-hidden="true">·</span>
+    <span class="text-white/70 text-sm font-semibold">Conciertos</span>
+    <span class="text-white/70 text-sm font-semibold">Gastronomía</span>
+    <span class="text-white/70 text-sm font-semibold">Arte</span>
+    <span class="text-white/70 text-sm font-semibold">Fiestas</span>
+    <span class="text-white/70 text-sm font-semibold">Deporte</span>
+    <span class="text-white/70 text-sm font-semibold">Teatro</span>
   </div>
 </section>
 
 <!-- ── SPOTLIGHT IA ── -->
-<section class="px-5 py-16 sm:py-24">
-  <div class="max-w-5xl mx-auto bg-white/[0.03] border border-white/[0.08] rounded-3xl p-7 sm:p-12 lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center overflow-hidden">
+<section class="px-5 py-16 sm:py-20">
+  <div class="max-w-5xl mx-auto rounded-3xl p-7 sm:p-10 lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center overflow-hidden"
+       style="background:linear-gradient(135deg, rgba(255,107,53,0.10), rgba(255,107,53,0.02)); border:1px solid rgba(255,107,53,0.18);">
     <div class="text-center lg:text-left max-w-lg mx-auto lg:mx-0">
-      <div class="font-mono text-[10px] tracking-[0.2em] text-orange uppercase mb-3">✦ Recomendaciones con IA</div>
-      <h2 class="font-display font-black text-3xl sm:text-4xl leading-tight tracking-tight mb-4">Dile qué quieres.<br>Spotz te arma el plan.</h2>
-      <p class="text-white/55 text-[16px] leading-relaxed mb-6">
-        "Planes al aire libre", "algo gastronómico esta noche", "qué hacer con amigos". El chat de Spotz entiende lo que buscas y te recomienda experiencias reales de Caracas, al instante.
+      <div class="font-mono text-[10px] tracking-[0.18em] uppercase mb-3" style="color:#FFB694">✦ Lo que nadie más tiene</div>
+      <h2 class="font-display font-black text-3xl sm:text-4xl leading-[1.05] tracking-tight mb-4">Dile qué quieres.<br>Spotz te arma el plan.</h2>
+      <p class="text-white/62 text-[16px] leading-relaxed mb-7">
+        Un chat que conoce la ciudad, entiende cómo hablas y te devuelve experiencias reales de Caracas — con precio, sitio y hora. Sin buscar en cinco cuentas de Instagram.
       </p>
-      <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
-        <span class="bg-orange/10 border border-orange/25 text-orange text-sm rounded-full px-4 py-1.5">Planes al aire libre</span>
-        <span class="bg-white/[0.05] border border-white/10 text-white/70 text-sm rounded-full px-4 py-1.5">Cena con amigos</span>
-        <span class="bg-white/[0.05] border border-white/10 text-white/70 text-sm rounded-full px-4 py-1.5">Algo cultural</span>
+
+      <div class="flex flex-col gap-2.5 max-w-sm mx-auto lg:mx-0">
+        <div class="self-end text-white text-[13.5px] leading-snug rounded-2xl rounded-br-md px-3.5 py-2.5" style="background:#B8420F">
+          algo tranquilo el viernes, cerca de Chacao
+        </div>
+        <div class="flex items-end gap-2">
+          <span class="w-6 h-6 rounded-full bg-orange shrink-0" aria-hidden="true"></span>
+          <div class="text-white/90 text-[13.5px] leading-snug rounded-2xl rounded-bl-md px-3.5 py-2.5 bg-white/[0.08]">
+            Dos que encajan, a 10 min de ti →
+          </div>
+        </div>
       </div>
     </div>
     <div class="mt-12 lg:mt-0 flex justify-center">
-      <div class="phone phone-glow w-[240px] sm:w-[260px]" style="transform: rotate(3deg);">
-        <img src="assets/app-ai.webp" alt="Chat de IA de Spotz recomendando planes" loading="lazy">
+      <div class="phone phone-glow w-[230px] sm:w-[250px]">
+        <img src="assets/app-ai.webp" alt="Chat de IA de Spotz recomendando planes" loading="lazy" width="1220" height="2712">
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CÓMO FUNCIONA ── -->
+<section class="px-5 pb-16 sm:pb-20 max-w-6xl mx-auto">
+  <div class="text-center mb-12">
+    <div class="font-mono text-[10px] tracking-[0.18em] text-white/35 uppercase mb-3">Cómo funciona</div>
+    <h2 class="font-display font-black text-3xl sm:text-4xl tracking-tight">Tu próximo plan, en tres toques.</h2>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6">
+    <div class="flex flex-col items-center text-center">
+      <div class="phone w-[186px] mb-6"><img src="assets/app-home.webp" alt="Pantalla de descubrir eventos en Caracas" loading="lazy" width="1220" height="2712"></div>
+      <div class="font-mono text-[11px] tracking-[0.1em] text-orange font-bold mb-1.5">01</div>
+      <h3 class="font-display font-bold text-lg mb-1.5">Descubre</h3>
+      <p class="text-white/60 text-sm leading-relaxed max-w-xs">Todo lo que pasa en Caracas en un solo sitio, ordenado por lo que de verdad está pasando esta semana.</p>
+    </div>
+    <div class="flex flex-col items-center text-center">
+      <div class="phone w-[186px] mb-6"><img src="assets/app-mapa.webp" alt="Mapa de eventos de Caracas en Spotz" loading="lazy" width="1220" height="2712"></div>
+      <div class="font-mono text-[11px] tracking-[0.1em] text-orange font-bold mb-1.5">02</div>
+      <h3 class="font-display font-bold text-lg mb-1.5">Explora el mapa</h3>
+      <p class="text-white/60 text-sm leading-relaxed max-w-xs">Mira qué se mueve cerca de ti y filtra por fecha, categoría y precio sin salir del mapa.</p>
+    </div>
+    <div class="flex flex-col items-center text-center">
+      <div class="phone w-[186px] mb-6"><img src="assets/app-favoritos.webp" alt="Pantalla de favoritos guardados" loading="lazy" width="1220" height="2712"></div>
+      <div class="font-mono text-[11px] tracking-[0.1em] text-orange font-bold mb-1.5">03</div>
+      <h3 class="font-display font-bold text-lg mb-1.5">Guarda y ve</h3>
+      <p class="text-white/60 text-sm leading-relaxed max-w-xs">Guarda lo que te interesa, decide después y no te enteres del plan cuando ya pasó.</p>
     </div>
   </div>
 </section>
 
 <!-- ── BENEFICIOS ── -->
-<section class="px-5 py-16 max-w-lg mx-auto">
-  <div class="font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-3 text-center">Acceso anticipado</div>
-  <h2 class="font-display font-black text-3xl sm:text-4xl tracking-tight text-center mb-8">¿Qué incluye registrarse hoy?</h2>
-
-  <div class="relative rounded-3xl overflow-hidden mb-6 border border-white/[0.08]">
-    <img src="assets/benefit.webp" alt="Amigos disfrutando un evento nocturno en Caracas" loading="lazy" class="w-full h-52 sm:h-64 object-cover">
-    <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(13,27,42,0.7), transparent 55%);"></div>
-  </div>
-
-  <div class="flex flex-col gap-4">
-    <div class="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-6 flex items-start gap-4">
-      <div class="text-2xl shrink-0">🎫</div>
-      <div><p class="font-display font-bold text-lg mb-1">Acceso antes que nadie</p>
-        <p class="text-white/45 text-sm leading-relaxed">Eres de los primeros en usar Spotz cuando abramos. Los eventos más buscados, en tus manos primero.</p></div>
+<section class="px-5 pb-16 sm:pb-20 max-w-5xl mx-auto">
+  <div class="lg:grid lg:grid-cols-[0.85fr_1.15fr] lg:gap-8 lg:items-center">
+    <div class="relative rounded-3xl overflow-hidden mb-8 lg:mb-0 border border-white/[0.08]">
+      <img src="assets/benefit.webp" alt="Amigos disfrutando un evento nocturno en Caracas" loading="lazy" class="w-full h-56 lg:h-[330px] object-cover">
+      <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(13,27,42,0.78), transparent 55%);"></div>
+      <p class="absolute left-5 right-5 bottom-4 font-display font-black text-[19px] leading-tight tracking-tight">Entra antes que<br>el resto de la ciudad.</p>
     </div>
-    <div class="bg-orange/[0.08] border border-orange/20 rounded-2xl p-6 flex items-start gap-4">
-      <div class="text-2xl shrink-0">🏷️</div>
-      <div><p class="font-display font-bold text-lg mb-1">Promociones exclusivas de lanzamiento</p>
-        <p class="text-white/45 text-sm leading-relaxed">Comercios y experiencias de Caracas activarán descuentos especiales solo para la lista de espera durante la semana de apertura.</p></div>
-    </div>
-    <div class="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-6 flex items-start gap-4">
-      <div class="text-2xl shrink-0">🤖</div>
-      <div><p class="font-display font-bold text-lg mb-1">Tu asistente con IA</p>
-        <p class="text-white/45 text-sm leading-relaxed">Un chat que conoce Caracas y te sugiere qué hacer según tus gustos — conciertos, gastronomía, arte, fiestas y más.</p></div>
+
+    <div>
+      <div class="font-mono text-[10px] tracking-[0.18em] text-white/35 uppercase mb-3">Acceso anticipado</div>
+      <h2 class="font-display font-black text-3xl tracking-tight mb-6">Qué llevas por registrarte hoy</h2>
+
+      <div class="flex flex-col gap-3">
+        <div class="bg-white/[0.05] rounded-2xl p-5 flex items-start gap-3.5">
+          <div class="text-xl shrink-0 leading-snug">🎫</div>
+          <div><p class="font-display font-bold text-[15px] mb-1">Acceso antes que nadie</p>
+            <p class="text-white/60 text-[13px] leading-relaxed">Los eventos más buscados, en tus manos primero.</p></div>
+        </div>
+        <div class="bg-orange/[0.10] border border-orange/25 rounded-2xl p-5 flex items-start gap-3.5">
+          <div class="text-xl shrink-0 leading-snug">🏷️</div>
+          <div><p class="font-display font-bold text-[15px] mb-1">Promociones de lanzamiento</p>
+            <p class="text-white/68 text-[13px] leading-relaxed">Descuentos en locales de Chacao, Las Mercedes y Altamira, solo para la lista de espera.</p></div>
+        </div>
+        <div class="bg-white/[0.05] rounded-2xl p-5 flex items-start gap-3.5">
+          <div class="text-xl shrink-0 leading-snug">🤖</div>
+          <div><p class="font-display font-bold text-[15px] mb-1">Tu asistente con IA</p>
+            <p class="text-white/60 text-[13px] leading-relaxed">Sin límite de consultas durante el lanzamiento.</p></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── NEGOCIOS ── -->
-<section class="mx-4 mb-16 rounded-3xl overflow-hidden" style="background:#FF6B35;">
-  <div class="px-8 py-14 max-w-lg mx-auto text-center">
-    <div class="font-mono text-[10px] tracking-[0.2em] text-white/50 uppercase mb-4">Para negocios</div>
-    <h2 class="font-display font-black text-3xl sm:text-4xl leading-tight tracking-tight text-white mb-4">¿Tienes un comercio<br>o experiencia en Caracas?</h2>
-    <p class="text-white/70 text-[16px] leading-relaxed mb-8">Llega a miles de personas que buscan qué hacer en la ciudad. Registra tu negocio y aparece en Spotz desde el primer día.</p>
-    <a href="comercios.html" class="inline-block bg-ink text-white font-display font-black text-[15px] px-8 py-4 rounded-2xl hover:bg-ink/80 transition-colors tracking-tight">Quiero estar en Spotz →</a>
-    <p class="mt-5 text-white/40 text-xs">Sin costo durante el lanzamiento.</p>
+<!-- ── FAQ ── -->
+<section class="px-5 pb-16 sm:pb-20 max-w-3xl mx-auto">
+  <h2 class="font-display font-black text-3xl tracking-tight text-center mb-8">Preguntas rápidas</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div class="bg-white/[0.05] rounded-2xl p-5">
+      <p class="font-bold text-[15px] mb-1.5">¿Cuándo sale la app?</p>
+      <p class="text-white/60 text-[13px] leading-relaxed">En septiembre, en iOS y Android. La lista de espera entra una semana antes.</p>
+    </div>
+    <div class="bg-white/[0.05] rounded-2xl p-5">
+      <p class="font-bold text-[15px] mb-1.5">¿Cuesta algo?</p>
+      <p class="text-white/60 text-[13px] leading-relaxed">No. Descubrir eventos y usar la IA es gratis. Algunas experiencias tienen su propio precio.</p>
+    </div>
+    <div class="bg-white/[0.05] rounded-2xl p-5">
+      <p class="font-bold text-[15px] mb-1.5">¿Qué hacen con mi correo?</p>
+      <p class="text-white/60 text-[13px] leading-relaxed">Avisarte del lanzamiento. Nada más, y puedes pedir que lo borremos cuando quieras. Ver <a href="/privacidad" class="text-orange underline">Privacidad</a>.</p>
+    </div>
+    <div class="bg-white/[0.05] rounded-2xl p-5">
+      <p class="font-bold text-[15px] mb-1.5">Tengo un local, ¿cómo publico?</p>
+      <p class="text-white/60 text-[13px] leading-relaxed">Registra tu negocio y publica desde la app de comercios. <a href="/comercios" class="text-orange underline">Gratis durante el lanzamiento</a>.</p>
+    </div>
   </div>
 </section>
 
 <!-- ── CTA FINAL ── -->
-<section class="px-5 pb-20 max-w-md mx-auto text-center">
-  <h2 class="font-display font-black text-3xl tracking-tight mb-3">No te quedes fuera.</h2>
-  <p class="text-white/50 text-sm mb-6"><span id="waitlist-count-2" class="text-white font-bold">—</span> personas ya quieren entrar.</p>
-  <a href="#top" onclick="document.getElementById('email-input').focus()" class="btn-primary inline-block rounded-2xl px-8 py-4 text-white text-[15px]">Unirme a la lista de espera →</a>
+<section id="unirme" class="px-5 pb-20 max-w-md mx-auto text-center scroll-mt-28">
+  <h2 class="font-display font-black text-3xl sm:text-[34px] tracking-tight mb-3">No te quedes fuera.</h2>
+  <p class="text-white/60 text-[14.5px] mb-6">Quedan <span id="seats-left-2" class="seats text-white font-bold">—</span> cupos de acceso anticipado.</p>
+
+  <form id="waitlist-form-2" novalidate>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <label for="email-input-2" class="sr-only">Correo electrónico</label>
+      <input id="email-input-2" type="email" placeholder="tucorreo@email.com" required autocomplete="email"
+             class="input-email flex-1 rounded-2xl px-5 py-4 text-base">
+      <button id="submit-btn-2" type="submit" class="btn-primary rounded-2xl px-6 py-4 text-white text-[15px] whitespace-nowrap">
+        Quiero acceso →
+      </button>
+    </div>
+    <p id="form-error-2" class="hidden mt-3 text-red-300 text-sm" role="alert"></p>
+  </form>
+
+  <div id="success-state-2" class="hidden fade-in">
+    <div class="bg-orange/10 border border-orange/30 rounded-2xl p-6">
+      <div class="text-3xl mb-2">🎉</div>
+      <p class="font-display font-black text-xl mb-1">¡Ya estás en la lista!</p>
+      <p class="text-white/60 text-sm">Te avisamos cuando abramos.</p>
+    </div>
+  </div>
+
+  <p class="mt-4 text-white/50 text-xs">Sin spam. Un solo correo el día del lanzamiento.</p>
 </section>
 
 <!-- ── FOOTER ── -->
-<footer class="px-6 py-10 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 max-w-lg mx-auto w-full">
-  <div class="flex items-center gap-2">
-    <svg width="16" height="16" viewBox="0 0 80 80" fill="none"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/></svg>
-    <span class="font-display font-black text-base tracking-tight">Spot<span class="text-orange">z</span></span>
+<footer class="px-6 py-8 border-t border-white/[0.06]">
+  <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
+    <div class="flex items-center gap-3">
+      <svg width="16" height="16" viewBox="0 0 80 80" fill="none" aria-hidden="true"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/></svg>
+      <span class="font-display font-black text-[15px] tracking-tight">Spot<span class="text-orange">z</span></span>
+      <span class="text-white/20" aria-hidden="true">·</span>
+      <span class="text-white/50 text-[12.5px]">Caracas · 2026</span>
+    </div>
+    <nav class="flex flex-wrap items-center justify-center gap-4 text-[12.5px] text-white/50">
+      <a href="/privacidad" class="hover:text-white/80 transition">Privacidad</a>
+      <a href="/terminos" class="hover:text-white/80 transition">Términos</a>
+      <a href="/eliminar-cuenta" class="hover:text-white/80 transition">Eliminar cuenta</a>
+      <a href="/comercios" class="rounded-xl px-3.5 py-2 font-bold transition"
+         style="border:1px solid rgba(255,107,53,0.35); background:rgba(255,107,53,0.08); color:#FFB694;">¿Tienes un local? Publica en Spotz →</a>
+    </nav>
   </div>
-  <nav class="flex items-center gap-4 text-[12px] text-white/45">
-    <a href="/privacidad" class="hover:text-white/80 transition">Privacidad</a>
-    <a href="/terminos" class="hover:text-white/80 transition">Términos</a>
-  </nav>
-  <p class="font-mono text-[10px] tracking-[0.12em] text-white/20 uppercase text-center">Caracas · 2026 · spotz.online</p>
 </footer>
 
 <!-- ── SCRIPTS ── -->
@@ -294,20 +385,20 @@
   const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
   const GOAL = 500
-  const countEls = [document.getElementById('waitlist-count'), document.getElementById('waitlist-count-2')]
-  const fillEl = document.getElementById('progress-fill')
+  const seatEls = [document.getElementById('seats-left'), document.getElementById('seats-left-2')]
   let currentCount = 0
 
+  // Marco de escasez: mostramos los cupos QUE QUEDAN, no los ocupados.
+  // Una barra al 3% dice "nadie se apuntó"; "quedan 486" dice "corre".
   function render(n, animate = false) {
     currentCount = n
-    const txt = n.toLocaleString('es-VE')
-    countEls.forEach(el => { if (el) el.textContent = txt })
-    const pct = Math.max(2, Math.min(100, (n / GOAL) * 100))
-    if (fillEl) fillEl.style.width = pct + '%'
-    if (animate) {
-      const c = document.getElementById('waitlist-count')
-      c.classList.add('pulse'); setTimeout(() => c.classList.remove('pulse'), 400)
-    }
+    const left = Math.max(0, GOAL - n)
+    const txt = left.toLocaleString('es-VE')
+    seatEls.forEach(el => {
+      if (!el) return
+      el.textContent = txt
+      if (animate) { el.classList.add('pulse'); setTimeout(() => el.classList.remove('pulse'), 400) }
+    })
   }
 
   async function loadCount() {
@@ -318,28 +409,43 @@
   }
   loadCount()
 
-  // Form
-  const form = document.getElementById('waitlist-form')
-  const emailInput = document.getElementById('email-input')
-  const submitBtn = document.getElementById('submit-btn')
-  const errorEl = document.getElementById('form-error')
-  const successEl = document.getElementById('success-state')
+  // ── Formularios (hero + CTA final) ──
+  function wireForm({ formId, inputId, btnId, errorId, successId }) {
+    const form = document.getElementById(formId)
+    const input = document.getElementById(inputId)
+    const btn = document.getElementById(btnId)
+    const errorEl = document.getElementById(errorId)
+    const successEl = document.getElementById(successId)
+    if (!form) return
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const email = emailInput.value.trim().toLowerCase()
-    if (!email) return
-    submitBtn.disabled = true; submitBtn.textContent = 'Guardando...'; errorEl.classList.add('hidden')
-    const { error } = await db.from('waitlist').insert({ email })
-    if (error) {
-      submitBtn.disabled = false; submitBtn.textContent = 'Quiero acceso →'
-      errorEl.textContent = error.code === '23505' ? '¡Este correo ya está en la lista! 🎉' : 'Algo salió mal. Inténtalo de nuevo.'
-      errorEl.classList.remove('hidden')
-    } else {
-      form.classList.add('hidden'); successEl.classList.remove('hidden')
-      render(currentCount + 1, true)   // refleja al instante que el usuario se unió
-    }
-  })
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const email = input.value.trim().toLowerCase()
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorEl.textContent = 'Revisa el correo, parece incompleto.'
+        errorEl.classList.remove('hidden'); return
+      }
+      btn.disabled = true; btn.textContent = 'Guardando...'; errorEl.classList.add('hidden')
+
+      const { error } = await db.from('waitlist').insert({ email })
+
+      // El duplicado (23505) es una BUENA noticia: ya está dentro. No es un error rojo.
+      if (error && error.code !== '23505') {
+        btn.disabled = false; btn.textContent = 'Quiero acceso →'
+        errorEl.textContent = 'Algo salió mal. Inténtalo de nuevo.'
+        errorEl.classList.remove('hidden'); return
+      }
+
+      form.classList.add('hidden')
+      successEl.classList.remove('hidden')
+      const proof = document.getElementById('social-proof')
+      if (proof && formId === 'waitlist-form') proof.classList.add('hidden')
+      if (!error) render(currentCount + 1, true)
+    })
+  }
+
+  wireForm({ formId:'waitlist-form',   inputId:'email-input',   btnId:'submit-btn',   errorId:'form-error',   successId:'success-state' })
+  wireForm({ formId:'waitlist-form-2', inputId:'email-input-2', btnId:'submit-btn-2', errorId:'form-error-2', successId:'success-state-2' })
 </script>
 
 </body>
