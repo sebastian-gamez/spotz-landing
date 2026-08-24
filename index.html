@@ -134,7 +134,8 @@
     <!-- Columna texto -->
     <div class="text-center lg:text-left max-w-lg mx-auto lg:mx-0">
       <div class="fade-in inline-flex items-center gap-2 mb-5 rounded-full px-3 py-1.5" style="background:rgba(255,107,53,0.14)">
-        <span class="font-mono text-[10px] tracking-[0.16em] uppercase" style="color:#FFB694">Caracas · abre en septiembre</span>
+        <span class="live-dot inline-block align-middle"></span>
+        <span class="font-mono text-[10px] tracking-[0.16em] uppercase" style="color:#FFB694">Día <span id="serie-day">—</span> de <span id="serie-total">45</span> · lanzamos el 9 de octubre</span>
       </div>
 
       <h1 class="fade-in fade-in-2 font-display font-black text-[44px] sm:text-[58px] leading-[0.95] tracking-tight mb-5">
@@ -144,6 +145,28 @@
       <p class="fade-in fade-in-3 text-white/62 text-[16px] sm:text-[17px] leading-relaxed mb-7 max-w-md mx-auto lg:mx-0">
         Descubre los mejores eventos y experiencias de la ciudad, y deja que un <span class="text-white font-semibold">chat con IA</span> te arme el plan perfecto para esta noche.
       </p>
+
+      <!-- Los dos números reales: cuánto falta y cuántos comercios llevamos -->
+      <div class="fade-in fade-in-4 grid grid-cols-2 gap-3 max-w-md mx-auto lg:mx-0 mb-5">
+        <div class="rounded-2xl px-[18px] py-4" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.07)">
+          <div class="flex items-baseline gap-1.5">
+            <span id="cd-days" class="seats font-display font-black text-[38px] leading-none tracking-tight">—</span>
+            <span class="font-mono text-[12px] text-white/55">d</span>
+            <span id="cd-hours" class="seats font-bold text-[20px] text-white/80">—</span>
+            <span class="font-mono text-[12px] text-white/55">h</span>
+            <span id="cd-mins" class="seats font-bold text-[20px] text-white/80">—</span>
+            <span class="font-mono text-[12px] text-white/55">m</span>
+          </div>
+          <div class="font-mono text-[10px] tracking-[0.14em] uppercase text-white/40 mt-2">para el lanzamiento</div>
+        </div>
+        <div class="rounded-2xl px-[18px] py-4" style="background:rgba(255,107,53,0.10); border:1px solid rgba(255,107,53,0.25)">
+          <div class="flex items-baseline gap-1">
+            <span id="partners-count" class="seats font-display font-black text-[38px] leading-none tracking-tight text-orange">0</span>
+            <span class="font-display font-black text-[22px] text-white/35">/ <span class="partners-goal">20</span></span>
+          </div>
+          <div class="font-mono text-[10px] tracking-[0.14em] uppercase text-white/40 mt-2">comercios en el mapa</div>
+        </div>
+      </div>
 
       <!-- Form -->
       <form id="waitlist-form" class="fade-in fade-in-4 max-w-md mx-auto lg:mx-0 scroll-mt-28" novalidate>
@@ -167,20 +190,10 @@
         </div>
       </div>
 
-      <!-- Prueba social -->
-      <div id="social-proof" class="fade-in fade-in-4 flex items-center gap-3.5 justify-center lg:justify-start mt-5 max-w-md mx-auto lg:mx-0">
-        <div class="avatar-stack flex" aria-hidden="true">
-          <span style="background:#3E6B8C"></span><span style="background:#8C5A3E"></span><span style="background:#6B2D5C"></span>
-        </div>
-        <p class="text-white/62 text-[13px] leading-snug">
-          <span class="live-dot inline-block align-middle mr-1"></span>
-          Quedan <span id="seats-left" class="seats text-white font-bold">—</span> cupos de acceso anticipado
-        </p>
-      </div>
-
-      <!-- Micro-garantías -->
-      <ul class="fade-in fade-in-5 flex flex-wrap gap-x-5 gap-y-2 justify-center lg:justify-start mt-5 text-white/50 text-[12.5px]">
-        <li>Sin spam · un solo correo</li>
+      <!-- Micro-línea bajo el form: los cupos viven aquí, no compitiendo arriba -->
+      <ul id="social-proof" class="fade-in fade-in-5 flex flex-wrap gap-x-5 gap-y-2 justify-center lg:justify-start mt-3.5 max-w-md mx-auto lg:mx-0 text-white/50 text-[12.5px]">
+        <li>Quedan <span id="seats-left" class="seats text-white/75 font-bold">—</span> cupos</li>
+        <li>Sin spam</li>
         <li>iOS y Android</li>
         <li>Gratis</li>
       </ul>
@@ -209,6 +222,76 @@
     <span class="text-white/70 text-sm font-semibold">Fiestas</span>
     <span class="text-white/70 text-sm font-semibold">Deporte</span>
     <span class="text-white/70 text-sm font-semibold">Teatro</span>
+  </div>
+</section>
+
+<!-- ── EL TABLERO / MAPA DE SOCIOS ── -->
+<section id="mapa" class="px-5 py-16">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Cabecera: solo visible cuando ya hay socios -->
+    <div id="map-header" class="hidden items-end justify-between gap-6 mb-5 sm:flex">
+      <div>
+        <div class="font-mono text-[10px] tracking-[0.18em] text-white/35 uppercase mb-2.5">El mapa</div>
+        <h2 class="font-display font-black text-3xl sm:text-4xl tracking-tight">
+          <span class="text-orange" id="map-count">0</span> <span class="text-white/30">/ <span class="partners-goal">20</span></span> comercios firmados
+        </h2>
+      </div>
+      <p class="text-white/55 text-sm leading-relaxed max-w-[340px] text-right">
+        Toca un local para ver su oferta. Cada una existe solo aquí.
+      </p>
+    </div>
+
+    <!-- Contenedor del mapa. Con 0 socios NO se carga mapbox: se ve el tablero. -->
+    <div class="relative rounded-3xl overflow-hidden border border-white/[0.08]" style="background:#0a1421">
+
+      <!-- Tablero vacío (estado por defecto) -->
+      <div id="map-empty" class="relative" style="height:420px">
+        <svg viewBox="0 0 1000 420" class="absolute inset-0 w-full h-full block" aria-hidden="true">
+          <rect width="1000" height="420" fill="#0d1826"/>
+          <path d="M0 96 C 150 58, 320 44, 500 62 C 690 80, 850 66, 1000 40 L1000 0 L0 0 Z" fill="#101f31"/>
+          <path d="M0 96 C 150 58, 320 44, 500 62 C 690 80, 850 66, 1000 40" stroke="rgba(255,255,255,0.10)" stroke-width="1.5" fill="none"/>
+          <g stroke="rgba(255,255,255,0.055)" stroke-width="1">
+            <path d="M40 150 H 960"/><path d="M40 196 H 960"/><path d="M40 242 H 960"/>
+            <path d="M40 288 H 960"/><path d="M40 334 H 960"/>
+            <path d="M140 120 V 400"/><path d="M270 120 V 400"/><path d="M400 120 V 400"/>
+            <path d="M530 120 V 400"/><path d="M660 120 V 400"/><path d="M790 120 V 400"/>
+          </g>
+          <path d="M60 268 C 240 250, 420 286, 620 262 C 780 244, 900 258, 980 246" stroke="rgba(0,78,137,0.5)" stroke-width="3" fill="none"/>
+        </svg>
+        <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at center, transparent 30%, #0D1B2A 88%)"></div>
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-10">
+          <div class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-4" style="background:rgba(255,107,53,0.14)">
+            <span class="live-dot inline-block align-middle"></span>
+            <span class="font-mono text-[10px] tracking-[0.16em] uppercase" style="color:#FFB694">Día <span class="serie-day">—</span> de <span class="partners-total">45</span></span>
+          </div>
+          <div class="font-display font-black text-[60px] leading-none tracking-tight text-orange">
+            <span class="board-count">0</span> <span class="text-white/30">/ <span class="partners-goal">20</span></span>
+          </div>
+          <div class="font-mono text-[11px] tracking-[0.16em] uppercase text-white/45 mt-2.5">comercios en el mapa</div>
+        </div>
+      </div>
+
+      <!-- Mapa real (se rellena solo si hay socios) -->
+      <div id="map-live" class="hidden" style="height:460px"></div>
+
+      <!-- Copy del tablero -->
+      <div class="px-6 sm:px-10 pt-8 pb-9 text-center border-t border-white/[0.06]">
+        <p id="board-title" class="font-display font-black text-[22px] tracking-tight mb-3">Ningún pin todavía. Y así es como tiene que verse.</p>
+        <p id="board-body" class="text-white/62 text-[15px] leading-relaxed max-w-lg mx-auto mb-6">
+          Cada pin de este mapa es un local de Caracas que firmó de verdad, con una oferta que solo existe aquí. No hay relleno. Cuando veas uno, es real.
+        </p>
+
+        <!-- El marcador: una casilla por socio de la meta -->
+        <div id="board-slots" class="flex flex-wrap gap-2.5 justify-center mb-6" aria-hidden="true"></div>
+
+        <p class="text-white/50 text-[13px]">
+          Estoy recorriendo la ciudad para conseguirlos. Míralo día a día en
+          <a href="https://instagram.com/spotz.online" target="_blank" rel="noopener" class="text-orange underline">@spotz.online</a>
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -293,8 +376,8 @@
         </div>
         <div class="bg-orange/[0.10] border border-orange/25 rounded-2xl p-5 flex items-start gap-3.5">
           <div class="text-xl shrink-0 leading-snug">🏷️</div>
-          <div><p class="font-display font-bold text-[15px] mb-1">Promociones de lanzamiento</p>
-            <p class="text-white/68 text-[13px] leading-relaxed">Descuentos en locales de Chacao, Las Mercedes y Altamira, solo para la lista de espera.</p></div>
+          <div><p class="font-display font-bold text-[15px] mb-1">Una oferta por cada socio que firmemos</p>
+            <p class="text-white/68 text-[13px] leading-relaxed">Cada local que se suma al mapa trae un descuento que solo existe aquí. Ya puedes tomarlos, sin esperar a la app.</p></div>
         </div>
         <div class="bg-white/[0.05] rounded-2xl p-5 flex items-start gap-3.5">
           <div class="text-xl shrink-0 leading-snug">🤖</div>
@@ -312,7 +395,11 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     <div class="bg-white/[0.05] rounded-2xl p-5">
       <p class="font-bold text-[15px] mb-1.5">¿Cuándo sale la app?</p>
-      <p class="text-white/60 text-[13px] leading-relaxed">En septiembre, en iOS y Android. La lista de espera entra una semana antes.</p>
+      <p class="text-white/60 text-[13px] leading-relaxed">El 9 de octubre, en iOS y Android. La lista de espera entra una semana antes.</p>
+    </div>
+    <div class="bg-white/[0.05] rounded-2xl p-5">
+      <p class="font-bold text-[15px] mb-1.5">¿Cómo tomo un descuento?</p>
+      <p class="text-white/60 text-[13px] leading-relaxed">Entras al local desde el mapa y activas su oferta. Te damos un código para mostrar en el sitio. No hace falta descargar nada.</p>
     </div>
     <div class="bg-white/[0.05] rounded-2xl p-5">
       <p class="font-bold text-[15px] mb-1.5">¿Cuesta algo?</p>
@@ -323,8 +410,8 @@
       <p class="text-white/60 text-[13px] leading-relaxed">Avisarte del lanzamiento. Nada más, y puedes pedir que lo borremos cuando quieras. Ver <a href="/privacidad" class="text-orange underline">Privacidad</a>.</p>
     </div>
     <div class="bg-white/[0.05] rounded-2xl p-5">
-      <p class="font-bold text-[15px] mb-1.5">Tengo un local, ¿cómo publico?</p>
-      <p class="text-white/60 text-[13px] leading-relaxed">Registra tu negocio y publica desde la app de comercios. <a href="/comercios" class="text-orange underline">Gratis durante el lanzamiento</a>.</p>
+      <p class="font-bold text-[15px] mb-1.5">Tengo un local, ¿cómo entro al mapa?</p>
+      <p class="text-white/60 text-[13px] leading-relaxed">Quedan <span class="slots-left">20</span> plazas de las <span class="partners-goal">20</span>. <a href="/comercios" class="text-orange underline">Registra tu negocio</a> — gratis durante el lanzamiento.</p>
     </div>
   </div>
 </section>
@@ -332,7 +419,7 @@
 <!-- ── CTA FINAL ── -->
 <section id="unirme" class="px-5 pb-20 max-w-md mx-auto text-center scroll-mt-28">
   <h2 class="font-display font-black text-3xl sm:text-[34px] tracking-tight mb-3">No te quedes fuera.</h2>
-  <p class="text-white/60 text-[14.5px] mb-6">Quedan <span id="seats-left-2" class="seats text-white font-bold">—</span> cupos de acceso anticipado.</p>
+  <p class="text-white/60 text-[14.5px] mb-6">Faltan <span class="cd-days-2 seats text-white font-bold">—</span> días y quedan <span id="seats-left-2" class="seats text-white font-bold">—</span> cupos.</p>
 
   <form id="waitlist-form-2" novalidate>
     <div class="flex flex-col sm:flex-row gap-3">
@@ -354,7 +441,7 @@
     </div>
   </div>
 
-  <p class="mt-4 text-white/50 text-xs">Sin spam. Un solo correo el día del lanzamiento.</p>
+  <p class="mt-4 text-white/50 text-xs">Dos correos: uno ahora y otro el día del lanzamiento. Nada más.</p>
 </section>
 
 <!-- ── FOOTER ── -->
@@ -371,20 +458,108 @@
       <a href="/terminos" class="hover:text-white/80 transition">Términos</a>
       <a href="/eliminar-cuenta" class="hover:text-white/80 transition">Eliminar cuenta</a>
       <a href="/comercios" class="rounded-xl px-3.5 py-2 font-bold transition"
-         style="border:1px solid rgba(255,107,53,0.35); background:rgba(255,107,53,0.08); color:#FFB694;">¿Tienes un local? Publica en Spotz →</a>
+         style="border:1px solid rgba(255,107,53,0.35); background:rgba(255,107,53,0.08); color:#FFB694;">¿Tienes un local? Entra al mapa →</a>
     </nav>
   </div>
 </footer>
 
 <!-- ── SCRIPTS ── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/spotz-config.js"></script>
+<script src="/assets/spotz-lib.js"></script>
+<script src="/assets/map.js"></script>
 <script>
-  const SUPABASE_URL = 'https://yifijgmmrdpafmeknind.supabase.co'
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpZmlqZ21tcmRwYWZtZWtuaW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NTAyNjksImV4cCI6MjA5MTUyNjI2OX0.YMvZAX8BD8h8EHZHuG4H9HR17REkaW9awnZPY4WYtG4'
   const { createClient } = supabase
-  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  const db = createClient(window.SPOTZ.SUPABASE_URL, window.SPOTZ.SUPABASE_ANON_KEY)
 
-  const GOAL = 500
+  /* ── Cronómetro y día de la serie ───────────────────────────────────────
+     Todo sale de SPOTZ.START y SPOTZ.LAUNCH. Ningún número se escribe a mano:
+     es lo que garantiza que la web diga lo mismo que el video de ese día. */
+  const pad = (n) => String(n).padStart(2, '0')
+
+  function tick() {
+    const c = window.SPOTZ.countdown()
+    const set = (sel, val) => document.querySelectorAll(sel).forEach(el => { el.textContent = val })
+
+    set('#cd-days', c.days)
+    set('#cd-hours', pad(c.hours))
+    set('#cd-mins', pad(c.minutes))
+    set('.cd-days-2', c.days)
+    set('#serie-day', c.day)
+    set('.serie-day', c.day)
+    set('#serie-total', c.total)
+    set('.partners-total', c.total)
+  }
+  tick()
+  setInterval(tick, 30000)
+
+  document.querySelectorAll('.partners-goal').forEach(el => {
+    el.textContent = window.SPOTZ.PARTNER_GOAL
+  })
+
+  /* ── Socios: contador, casillas y mapa ──────────────────────────────────
+     Una sola llamada alimenta las tres cosas. Si falla, la página se queda en
+     el tablero vacío, que es un estado legítimo, no un error. */
+  const PARTNER_GOAL = window.SPOTZ.PARTNER_GOAL
+
+  function renderSlots(partners) {
+    const wrap = document.getElementById('board-slots')
+    if (!wrap) return
+    wrap.innerHTML = ''
+    for (let i = 0; i < PARTNER_GOAL; i++) {
+      const p = partners[i]
+      const el = document.createElement('span')
+      el.className = 'block w-[22px] h-[22px] rounded-full'
+      if (p) {
+        const d = window.SpotzLib.resolveCardDesign(p.name, ((p.offers || [])[0] || {}).design)
+        el.style.background = window.SpotzLib.cardBackground(d)
+        el.title = p.name
+      } else {
+        el.style.border = '1.5px dashed rgba(255,255,255,0.22)'
+      }
+      wrap.appendChild(el)
+    }
+  }
+
+  async function loadPartners() {
+    let partners = []
+    try {
+      const { data, error } = await db.rpc('public_partners')
+      if (!error && Array.isArray(data)) partners = data
+    } catch (e) {
+      console.warn('[socios]', e)
+    }
+
+    const n = partners.length
+    const left = Math.max(0, PARTNER_GOAL - n)
+    document.querySelectorAll('#partners-count, .board-count, #map-count')
+      .forEach(el => { el.textContent = n })
+    document.querySelectorAll('.slots-left').forEach(el => { el.textContent = left })
+
+    renderSlots(partners)
+
+    if (n === 0) return   // tablero vacío: mapbox NI se descarga
+
+    // Hay socios: el tablero da paso al mapa real.
+    document.getElementById('map-empty')?.classList.add('hidden')
+    document.getElementById('map-live')?.classList.remove('hidden')
+    document.getElementById('map-header')?.classList.remove('hidden')
+    document.getElementById('map-header')?.classList.add('flex')
+
+    const title = document.getElementById('board-title')
+    const body  = document.getElementById('board-body')
+    if (title) title.textContent = n >= PARTNER_GOAL
+      ? '20 de 20. Lo prometido.'
+      : `${n} ${n === 1 ? 'local firmado' : 'locales firmados'}. Faltan ${left}.`
+    if (body) body.textContent = 'Cada pin es un local de Caracas que firmó de verdad, con una oferta que solo existe aquí. Toca uno para verla.'
+
+    const section = document.getElementById('mapa')
+    const container = document.getElementById('map-live')
+    if (section && container) window.SpotzMap.mountWhenVisible(section, container, partners)
+  }
+  loadPartners()
+
+  const GOAL = window.SPOTZ.WAITLIST_GOAL
   const seatEls = [document.getElementById('seats-left'), document.getElementById('seats-left-2')]
   let currentCount = 0
 

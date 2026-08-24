@@ -19,28 +19,18 @@
   <meta property="og:image" content="https://spotz.online/assets/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://api.fontshare.com">
-  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@900,800,700,500&f[]=dm-sans@400,500&f[]=dm-mono@400,500&display=swap" rel="stylesheet">
-
-  <!-- Tailwind CDN -->
+  <!-- Tailwind CDN — misma config que index.html. Esta pagina se quedo fuera
+       del rediseno y usaba webfonts de Fontshare y una paleta recortada, asi
+       que no coincidia visualmente con el resto del sitio. -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
+    const SYSTEM_SANS = ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif']
+    const SYSTEM_MONO = ['ui-monospace', '"SF Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace']
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            orange: '#FF6B35',
-            navy:   '#004E89',
-            cream:  '#EFEFD0',
-            ink:    '#0D1B2A',
-            peach:  '#F7C59F',
-          },
-          fontFamily: {
-            display: ['Cabinet Grotesk', 'sans-serif'],
-            body:    ['DM Sans', 'sans-serif'],
-            mono:    ['DM Mono', 'monospace'],
-          }
+          colors: { orange:'#FF6B35', orangeDeep:'#B8420F', navy:'#004E89', cream:'#EFEFD0', ink:'#0D1B2A', ink2:'#111D2C', peach:'#F7C59F' },
+          fontFamily: { display: SYSTEM_SANS, body: SYSTEM_SANS, mono: SYSTEM_MONO, sans: SYSTEM_SANS }
         }
       }
     }
@@ -130,7 +120,7 @@
   </h1>
 
   <p class="fade-in fade-in-2 text-white/50 text-[16px] leading-relaxed mb-2">
-    Regístra tu negocio o experiencia en Spotz y aparece desde el primer día. Miles de personas buscando qué hacer en la ciudad verán lo que tienes para ofrecer.
+    Registra tu negocio o experiencia en Spotz y aparece desde el primer día. Miles de personas buscando qué hacer en la ciudad verán lo que tienes para ofrecer.
   </p>
 
 </div>
@@ -259,17 +249,18 @@
 <!-- FOOTER -->
 <footer class="px-6 py-8 border-t border-white/[0.06] text-center">
   <p class="font-mono text-[10px] tracking-[0.12em] text-white/15 uppercase">
-    Spotz · Caracas · 2025 · spotz.online
+    Spotz · Caracas · 2026 · spotz.online
   </p>
 </footer>
 
 
 <!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/spotz-config.js"></script>
 <script>
   // ── Configuración Supabase (mismos valores que index.html) ──
-  const SUPABASE_URL      = 'https://yifijgmmrdpafmeknind.supabase.co'
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpZmlqZ21tcmRwYWZtZWtuaW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NTAyNjksImV4cCI6MjA5MTUyNjI2OX0.YMvZAX8BD8h8EHZHuG4H9HR17REkaW9awnZPY4WYtG4'
+  const SUPABASE_URL      = window.SPOTZ.SUPABASE_URL
+  const SUPABASE_ANON_KEY = window.SPOTZ.SUPABASE_ANON_KEY
 
   const { createClient } = supabase
   const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
