@@ -107,15 +107,28 @@
    * @param {HTMLElement} container
    * @param {Array} partners  salida de public_partners()
    */
-  function mount(container, partners) {
-    var token = (window.SPOTZ && window.SPOTZ.MAPBOX_TOKEN) || ''
-    if (!token) {
-      console.warn('[map] sin MAPBOX_TOKEN: se queda el tablero estático')
-      return Promise.resolve(null)
-    }
+  /* El token vive en las variables de entorno de Vercel, no en el repo: el
+   * escaneo de secretos de GitHub bloquea los tokens de Mapbox al hacer push.
+   * Se pide UNA sola vez, y solo cuando ya hay socios que pintar — con el mapa
+   * vacío no se hace ni esta petición. */
+  var tokenPromise = null
+  function getToken() {
+    if (tokenPromise) return tokenPromise
+    tokenPromise = fetch('/api/mapbox-token')
+      .then(function (r) { return r.json() })
+      .then(function (j) { return (j && j.token) || '' })
+      .catch(function () { return '' })
+    return tokenPromise
+  }
 
-    return loadMapbox().then(function (mapboxgl) {
-      mapboxgl.accessToken = token
+  function mount(container, partners) {
+    return getToken().then(function (token) {
+      if (!token) {
+        console.warn('[map] sin MAPBOX_TOKEN en el entorno: se queda el tablero estático')
+        return null
+      }
+      return loadMapbox().then(function (mapboxgl) {
+        mapboxgl.accessToken = token
 
       var map = new mapboxgl.Map({
         container: container,
@@ -214,7 +227,8 @@
         })
       })
 
-      return map
+        return map
+      })
     })
   }
 

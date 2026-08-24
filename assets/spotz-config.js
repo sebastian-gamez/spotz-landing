@@ -14,18 +14,15 @@ window.SPOTZ = {
   SUPABASE_URL: 'https://yifijgmmrdpafmeknind.supabase.co',
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpZmlqZ21tcmRwYWZtZWtuaW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NTAyNjksImV4cCI6MjA5MTUyNjI2OX0.YMvZAX8BD8h8EHZHuG4H9HR17REkaW9awnZPY4WYtG4',
 
-  /* Token de la WEB, distinto al de la app.
+  /* El token de Mapbox NO vive aquí: lo sirve /api/mapbox-token desde las
+   * variables de entorno de Vercel (MAPBOX_TOKEN).
    *
-   * Las restricciones por URL de Mapbox se evalúan por cabecera `Referer`, y el
-   * SDK nativo NO manda `Referer`: ponerle restricciones al token que usa la app
-   * (EXPO_PUBLIC_MAPBOX_TOKEN) rompería el mapa del móvil.
+   * Motivo: el escaneo de secretos de GitHub bloquea el push si aparece un
+   * token de Mapbox en el repo. De paso se gana poder rotarlo sin commit.
    *
-   * Este debe crearse aparte con scopes styles:read + styles:tiles + fonts:read,
-   * y restringido a  https://spotz.online/*  ·  https://www.spotz.online/*  ·
-   * https://*.vercel.app/*  (lo último para que las previews no salgan en gris).
-   *
-   * Mientras esté vacío, el mapa no se monta y se ve el tablero estático. */
-  MAPBOX_TOKEN: '',
+   * Debe ser un token DISTINTO al de la app: las restricciones por URL de
+   * Mapbox se evalúan por cabecera `Referer`, y el SDK nativo no la manda, así
+   * que restringir EXPO_PUBLIC_MAPBOX_TOKEN rompería el mapa del móvil. */
 
   /* Las DOS constantes de las que sale todo lo demás: el cronómetro del hero,
    * el chip "Día N de 45" y el del tablero. Nunca escribir un número a mano —
