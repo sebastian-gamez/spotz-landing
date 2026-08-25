@@ -14,6 +14,19 @@
  * mapa web del mundo. Lo que de verdad lo protege son las restricciones por
  * URL en account.mapbox.com y la alerta de facturacion.
  *
+ * RESTRICCIONES DE URL EN MAPBOX — LO QUE HAY QUE SABER:
+ * Mapbox NO admite comodines. Un `https://*.vercel.app/*` lo rechaza con
+ * "Wildcard characters (*) are not supported in URL restrictions". Hay que
+ * listar dominios exactos, uno a uno:
+ *
+ *   https://enspotz.com/
+ *   https://www.enspotz.com/
+ *   https://spotz.online/
+ *
+ * Consecuencia asumida: las previews de Vercel (URLs aleatorias por despliegue)
+ * NO se pueden autorizar, asi que ahi el mapa sale en gris. Es esperado, no un
+ * bug: se prueba en produccion.
+ *
  * Configurar en Vercel: Settings -> Environment Variables -> MAPBOX_TOKEN
  * ========================================================================== */
 
