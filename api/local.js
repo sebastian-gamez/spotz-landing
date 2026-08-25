@@ -363,6 +363,13 @@ module.exports = async function handler(req, res) {
   const events = rawEvents.filter((ev) =>
     Lib.isEventAvailable(Object.assign({}, ev, { opening_hours: venue.opening_hours }), ahora))
 
+  // El puesto del socio ya es de fiar: desde 20260825002000, public_partners()
+  // ordena por `published_at` — la fecha real en que salio al mapa — y no por
+  // nombre. Antes esto era mentira: "SOCIO 3 DE 20" se movia solo porque
+  // entrara un local que empezaba por A, y el numero de un socio cambiaba sin
+  // que el hiciera nada.
+  const rank = partners.findIndex((p) => p.id === id) + 1
+
   const headline = offers.length ? offers[0].title : venue.name
 
   const contact = []
@@ -373,7 +380,7 @@ module.exports = async function handler(req, res) {
     ${venue.cover_image_url ? `<img class="hero" src="${esc(venue.cover_image_url)}" alt="${esc(venue.name)}">` : ''}
     <div class="content">
       <div class="tags">
-        <span class="pill">SOCIO ALIADO · ${partners.length} DE ${PARTNER_GOAL}</span>
+        <span class="pill">SOCIO ${rank} DE ${PARTNER_GOAL}</span>
         ${venue.category ? `<span class="cat">${esc(venue.category)}</span>` : ''}
       </div>
       <h1>${esc(venue.name)}</h1>
