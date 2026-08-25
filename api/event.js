@@ -1,4 +1,4 @@
-// Página pública de un evento — se sirve en https://spotz.online/event/:id
+// Página pública de un evento — se sirve en https://enspotz.com/event/:id
 // (la app comparte ese link). Renderiza la info del evento con meta tags Open
 // Graph para que la vista previa al compartir (WhatsApp, IG, X…) muestre título
 // e imagen, e incluye un banner para descargar la app.
@@ -12,9 +12,9 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // Links de descarga. Mientras la app no esté en las tiendas apuntan al home
 // (lista de espera). Actualizar cuando estén publicadas.
-const APP_STORE_URL = 'https://spotz.online'
-const PLAY_STORE_URL = 'https://spotz.online'
-const HOME_URL = 'https://spotz.online'
+const APP_STORE_URL = 'https://enspotz.com'
+const PLAY_STORE_URL = 'https://enspotz.com'
+const HOME_URL = 'https://enspotz.com'
 
 const ORANGE = '#FF6B35'
 const INK = '#0D1B2A'
@@ -146,7 +146,7 @@ function pageShell({ title, desc, image, url, body }) {
     <div class="topbar">${BOLT}<span class="wm">Spot<span style="color:${ORANGE}">z</span></span></div>
     ${body}
     ${downloadBanner()}
-    <div class="foot"><a href="${HOME_URL}">spotz.online · Eventos en Caracas</a></div>
+    <div class="foot"><a href="${HOME_URL}">enspotz.com · Eventos en Caracas</a></div>
   </div>
 </body>
 </html>`

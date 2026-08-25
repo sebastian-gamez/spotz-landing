@@ -94,7 +94,7 @@
         ? '<div style="background:rgba(255,107,53,0.10);border:1px solid rgba(255,107,53,0.25);border-radius:12px;padding:12px;margin-bottom:12px">' +
             '<p style="font-weight:800;font-size:14px;margin:0 0 2px;color:#fff">' + esc(offer.title) + '</p>' +
             '<p style="color:rgba(255,255,255,0.6);font-size:12px;margin:0">' +
-              (extra > 0 ? 'Y ' + extra + ' más · solo en spotz.online' : 'Solo en spotz.online') +
+              (extra > 0 ? 'Y ' + extra + ' más · solo en enspotz.com' : 'Solo en enspotz.com') +
             '</p>' +
           '</div>'
         : '') +
