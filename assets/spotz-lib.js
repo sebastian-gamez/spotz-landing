@@ -209,10 +209,21 @@ function isEventAvailable(ev, now) {
   return isOpenNow(ev.opening_hours, d)
 }
 
-/* ─── Export global (sin módulos: la landing carga con <script>) ──────────── */
-window.SpotzLib = {
+/* ─── Export: sirve a los DOS lados ────────────────────────────────────────
+ * En el navegador la landing lo carga con <script> y lo usa como window.SpotzLib.
+ * En Vercel, api/local.js hace require('../assets/spotz-lib.js') para pintar la
+ * tarjeta del cupón en el servidor.
+ *
+ * Es deliberado que sea el MISMO archivo: si el servidor tuviera su propia copia
+ * de resolveCardDesign, habría TRES versiones de la misma lógica (el TS original,
+ * esta y la del servidor) y la tarjeta acabaría viéndose distinta según por dónde
+ * la mires. Ya son dos; tres es donde se rompe. */
+var SpotzLibAPI = {
   PALETTE,
   resolveCardDesign, cardBackground, gradientForVenue, shade, initialsOf,
   formatDateTime, formatTime, formatShortDate, formatPrice,
   isEventAvailable, isOpenNow,
 }
+
+if (typeof window !== 'undefined') window.SpotzLib = SpotzLibAPI
+if (typeof module !== 'undefined' && module.exports) module.exports = SpotzLibAPI
