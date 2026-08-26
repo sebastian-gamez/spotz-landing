@@ -27,8 +27,8 @@ window.SPOTZ = {
   /* Las DOS constantes de las que sale todo lo demás: el cronómetro del hero,
    * el chip "Día N de 45" y el del tablero. Nunca escribir un número a mano —
    * es lo que garantiza que la web diga lo mismo que el video de ese día. */
-  START:  '2026-08-25T00:00:00-04:00',   // Día 1 — sale el primer video
-  LAUNCH: '2026-10-09T00:00:00-04:00',   // el lanzamiento
+  START:  '2026-08-26T00:00:00-04:00',   // Día 1 — sale el primer video
+  LAUNCH: '2026-10-10T00:00:00-04:00',   // el lanzamiento
 
   /** Meta de socios de la serie. */
   PARTNER_GOAL: 20,
