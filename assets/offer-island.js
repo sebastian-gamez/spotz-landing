@@ -99,9 +99,14 @@
   }
 
   /* ─── Las siete puertas de activate_offer ────────────────────────────── */
-  /* Copiadas de 20260805000000_fase8_profiles_rls_hardening.sql. El texto es
-   * el del `raise exception`; si cambia allí, deja de traducirse aquí y el
-   * usuario ve el mensaje genérico — nunca una pantalla en blanco. */
+  /* Copiadas de 20260916000000_merchant_members.sql, que redefinió la función
+   * (antes: 20260805000000_fase8_profiles_rls_hardening.sql). El texto es el del
+   * `raise exception`; si cambia allí, deja de traducirse aquí y el usuario ve
+   * el mensaje genérico — nunca una pantalla en blanco.
+   *
+   * [2026-09-16] 'venue is not claimed' pasó a 'venue has no merchant': se
+   * retiró el modelo de reclamo de local y ahora la función comprueba que el
+   * local tenga detrás un comercio, no que alguien lo hubiera reclamado. */
   var EXCUSAS = {
     'not authenticated':
       'No pudimos abrir tu sesión. Recarga la página e inténtalo otra vez.',
@@ -113,8 +118,8 @@
       'Esta oferta está en revisión por el equipo de Spotz. Vuelve en un rato.',
     'offer out of window':
       'Esta oferta está fuera de sus fechas. Ya terminó o todavía no ha empezado.',
-    'venue is not claimed':
-      'Este local todavía no ha terminado de darse de alta en Spotz.',
+    'venue has no merchant':
+      'Este local todavía no está dado de alta en Spotz.',
     'merchant not verified':
       'Este comercio está pendiente de verificación por el equipo de Spotz.',
     'ANON_OFF':
