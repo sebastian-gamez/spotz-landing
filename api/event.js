@@ -123,6 +123,10 @@ function pageShell({ title, desc, image, url, body }) {
              border:1px solid ${ORANGE}55; background:${ORANGE}14; padding:8px 14px;
              border-radius:12px; margin-bottom:22px; }
     .desc { color:#C7D0DA; font-size:15px; line-height:1.7; white-space:pre-line; margin-bottom:24px; }
+    .claim { margin-top:20px; padding:14px 16px; border:1px solid rgba(255,107,53,.35); border-radius:14px;
+             font-size:14px; color:#C7D0DA; }
+    .claim strong { color:#fff; }
+    .claim a { display:inline-block; margin-top:8px; color:${ORANGE}; font-weight:700; text-decoration:none; }
     .contact { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
     .contact a { display:inline-flex; align-items:center; gap:7px; font-size:14px; font-weight:600;
                  color:#fff; text-decoration:none; padding:9px 14px; border-radius:12px;
@@ -178,7 +182,7 @@ module.exports = async function handler(req, res) {
   let event = null
   try {
     const select = 'id,title,description,start_time,cover_image_url,is_free,price_from,' +
-      'venue:venues(name,address,instagram,whatsapp),category:categories(name)'
+      'venue:venues(id,name,address,instagram,whatsapp,merchant_id),category:categories(name)'
     const r = await fetch(
       `${SUPABASE_URL}/rest/v1/events?id=eq.${encodeURIComponent(id)}&select=${encodeURIComponent(select)}&limit=1`,
       { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } },
@@ -222,6 +226,7 @@ module.exports = async function handler(req, res) {
       <div class="price">${esc(priceLabel(event))}</div>
       ${rawDesc ? `<p class="desc">${esc(rawDesc)}</p>` : ''}
       ${contactLinks.length ? `<div class="contact">${contactLinks.join('')}</div>` : ''}
+      ${venue && venue.id && !venue.merchant_id ? `<div class="claim"><strong>¿Este es tu negocio?</strong><br>Este perfil se creó con información pública. Reclámalo gratis y toma el control de tus eventos.<br><a href="https://socios.enspotz.com/reclamar/${esc(venue.id)}">Reclamar mi negocio →</a></div>` : ''}
     </div>`
 
   res.statusCode = 200

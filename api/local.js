@@ -13,7 +13,7 @@
 // y reusa resolveCardDesign de assets/spotz-lib.js — el MISMO archivo que usa el
 // navegador, para que la tarjeta se vea idéntica en la web y en la app.
 
-const { rpc } = require('./_supabase')
+const { rpc, SUPABASE_URL, anonHeaders } = require('./_supabase')
 const Lib = require('../assets/spotz-lib.js')
 
 const HOME_URL = 'https://enspotz.com'
@@ -348,7 +348,55 @@ module.exports = async function handler(req, res) {
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
 
+  // Local que existe pero no es socio (scrapeado, merchant_id NULL): antes daba
+  // 404; ahora pinta una ficha reducida con el reclamo. Se lee directo con la
+  // anon key — la misma RLS publica que deja a la app mostrar estos locales.
   if (!venue) {
+    let raw = null
+    try {
+      const r = await fetch(
+        SUPABASE_URL + '/rest/v1/venues?id=eq.' + encodeURIComponent(id) +
+          '&select=id,name,address,zona,instagram,whatsapp,merchant_id&limit=1',
+        { headers: anonHeaders },
+      )
+      if (r.ok) {
+        const rows = await r.json()
+        raw = Array.isArray(rows) ? rows[0] : null
+      }
+    } catch {
+      raw = null
+    }
+
+    if (raw && !raw.merchant_id) {
+      const contact = []
+      if (raw.whatsapp) contact.push('<a href="' + esc(waUrl(raw.whatsapp)) + '">WhatsApp</a>')
+      if (raw.instagram) contact.push('<a href="' + esc(igUrl(raw.instagram)) + '">' + esc(igHandle(raw.instagram)) + '</a>')
+      const claimUrl = 'https://socios.enspotz.com/reclamar/' + encodeURIComponent(raw.id)
+      const zonaRow = raw.zona || raw.address
+        ? '<div class="meta-row"><span class="ic">📍</span><span>' + esc(raw.zona || '') +
+          (raw.address ? '<br><span class="sub">' + esc(raw.address) + '</span>' : '') + '</span></div>'
+        : ''
+      const body =
+        '\n    <div class="content">' +
+        '\n      <h1>' + esc(raw.name) + '</h1>' +
+        '\n      <div class="meta">' + zonaRow + '</div>' +
+        (contact.length ? '\n      <div class="contact">' + contact.join('') + '</div>' : '') +
+        '\n      <div class="claim"><strong>¿Este es tu negocio?</strong><br>' +
+        'Este perfil se creó con información pública. Reclámalo gratis para publicar tus eventos y ' +
+        'cupones en Spotz, y editar o borrar lo que ya aparece.<br>' +
+        '<a href="' + claimUrl + '">Reclamar mi negocio →</a></div>' +
+        '\n    </div>'
+      res.statusCode = 200
+      res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')
+      return res.end(pageShell({
+        title: raw.name + ' · Spotz',
+        desc: 'Perfil de ' + raw.name + ' en Spotz. ¿Es tu negocio? Reclámalo gratis.',
+        image: '',
+        url: canonical,
+        body,
+      }))
+    }
+
     res.statusCode = 404
     res.setHeader('Cache-Control', 'public, s-maxage=60')
     return res.end(notFoundPage(canonical))
