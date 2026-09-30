@@ -45,6 +45,13 @@ function caracasNow() {
     Number(parts.hour) % 24, Number(parts.minute), Number(parts.second))
 }
 
+// Variante pequeña de una imagen ya comprimida (-1200.webp → -400.webp).
+// Las portadas migradas existen en dos tamaños; en tarjetas y logos basta la
+// de 400 px (~25 KB en vez de ~100). Cualquier otra URL se deja igual.
+function small(url) {
+  return typeof url === "string" ? url.replace(/-1200\.webp(\?|$)/, "-400.webp$1") : url
+}
+
 function esc(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -87,7 +94,7 @@ function offerCard(venue, offer) {
   const badgeText = isLoyalty ? '0/' + (offer.stamps_required || 8) : 'Cupón'
 
   const mark = logo
-    ? '<img src="' + esc(logo) + '" alt="" class="oc-logo">'
+    ? '<img src="' + esc(small(logo)) + '" alt="" class="oc-logo" loading="lazy">'
     : '<div class="oc-logo oc-initials" style="background:' + esc(d.accent) + ';color:' + esc(d.onAccent) + '">' + esc(Lib.initialsOf(venue.name)) + '</div>'
 
   // Sellos de fidelidad — espejo de StampProgress, size 16.
@@ -141,7 +148,7 @@ function eventCard(venue, ev) {
         (price ? '<span class="ec-price">' + esc(price) + '</span>' : '') +
       '</div>' +
     '</div>' +
-    (ev.cover_image_url ? '<img class="ec-img" src="' + esc(ev.cover_image_url) + '" alt="">' : '<div class="ec-img"></div>') +
+    (ev.cover_image_url ? '<img class="ec-img" src="' + esc(small(ev.cover_image_url)) + '" alt="" loading="lazy">' : '<div class="ec-img"></div>') +
   '</div>'
 }
 

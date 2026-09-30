@@ -77,7 +77,7 @@
 
     var logo = d.logoUrl || p.logo_url
     var badge = logo
-      ? '<img src="' + esc(logo) + '" alt="" style="width:34px;height:34px;border-radius:10px;object-fit:cover;flex-shrink:0">'
+      ? '<img src="' + esc(String(logo).replace(/-1200\.webp(\?|$)/, "-400.webp$1")) + '" alt="" loading="lazy" style="width:34px;height:34px;border-radius:10px;object-fit:cover;flex-shrink:0">'
       : '<div style="width:34px;height:34px;border-radius:10px;flex-shrink:0;background:' +
         lib.cardBackground(d) + ';display:flex;align-items:center;justify-content:center;' +
         'font-weight:900;font-size:13px;color:' + d.textColor + '">' + esc(lib.initialsOf(p.name)) + '</div>'
