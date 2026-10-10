@@ -40,10 +40,36 @@ function formatDate(iso) {
   }
 }
 
+// Copia de `shared/lib/price.ts` del monorepo (variante 'detail'). Un precio puede ser real, estimado
+// por rubro (price_source = 'estimado', SIEMPRE con su marca) o una etiqueta sin cifra (price_label).
+const PRICE_LABELS = { segun_funcion: 'Según función', consultar_entrada: 'Consultar entrada', consultar: 'Consultar' }
+function priceNum(v) {
+  if (v === null || v === undefined || v === '') return null
+  const n = Number(String(v).replace(',', '.'))
+  return Number.isFinite(n) && n >= 0 ? n : null
+}
+function money(n) { return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/0+$/, '').replace(/\.$/, '') }
 function priceLabel(ev) {
-  if (ev.is_free) return 'Gratis'
-  if (ev.price_from) return `Desde $${ev.price_from} USD`
+  if (ev.price_label === 'sin_linea') return ''
+  if (ev.is_free) return ev.price_label === 'entrada_libre' ? 'Entrada libre' : 'Gratis'
+  const from = priceNum(ev.price_from)
+  if (from !== null) {
+    const t = priceNum(ev.price_to)
+    const to = t !== null && t > from ? t : null
+    const cifra = to === null ? `$${money(from)}` : `$${money(from)}–${money(to)}`
+    if (ev.price_source === 'estimado') return `≈ ${cifra} USD · estimado`
+    return to === null && t !== from ? `Desde ${cifra} USD` : `${cifra} USD`
+  }
+  if (PRICE_LABELS[ev.price_label]) return PRICE_LABELS[ev.price_label]
   return 'Por confirmar'
+}
+function priceNote(ev) {
+  const e = ev.price_evidence || {}
+  if (ev.price_source === 'estimado' && priceNum(ev.price_from) !== null) {
+    return `${e.etiqueta ? `Típico de ${e.etiqueta}` : 'Rango típico de locales parecidos'} en Caracas. Confírmalo con el local.`
+  }
+  if (ev.price_label === 'segun_funcion') return 'Cambia con cada función: mira su cartelera.'
+  return ''
 }
 
 function igHandle(raw) {
@@ -124,6 +150,7 @@ function pageShell({ title, desc, image, url, body, app }) {
     .price { display:inline-block; font-size:16px; font-weight:800; color:${ORANGE};
              border:1px solid ${ORANGE}55; background:${ORANGE}14; padding:8px 14px;
              border-radius:12px; margin-bottom:22px; }
+    .price-note { color:#A7B4C2; font-size:13px; margin:-12px 0 22px; }
     .desc { color:#C7D0DA; font-size:15px; line-height:1.7; white-space:pre-line; margin-bottom:24px; }
     .claim { margin-top:20px; padding:14px 16px; border:1px solid rgba(255,107,53,.35); border-radius:14px;
              font-size:14px; color:#C7D0DA; }
@@ -184,7 +211,8 @@ module.exports = async function handler(req, res) {
 
   let event = null
   try {
-    const select = 'id,title,description,start_time,cover_image_url,is_free,price_from,' +
+    const select = 'id,title,description,start_time,cover_image_url,is_free,price_from,price_to,' +
+      'price_source,price_label,price_evidence,' +
       'venue:venues(id,name,address,instagram,whatsapp,merchant_id),category:categories(name)'
     const r = await fetch(
       `${SUPABASE_URL}/rest/v1/events?id=eq.${encodeURIComponent(id)}&select=${encodeURIComponent(select)}&limit=1`,
@@ -226,7 +254,8 @@ module.exports = async function handler(req, res) {
         <div class="meta-row"><span class="ic">📅</span><span>${esc(formatDate(event.start_time))}</span></div>
         ${venue ? `<div class="meta-row"><span class="ic">📍</span><span>${esc(venue.name)}${venue.address ? `<br><span class="sub">${esc(venue.address)}</span>` : ''}</span></div>` : ''}
       </div>
-      <div class="price">${esc(priceLabel(event))}</div>
+      ${priceLabel(event) ? `<div class="price">${esc(priceLabel(event))}</div>` : ''}
+      ${priceNote(event) ? `<p class="price-note">${esc(priceNote(event))}</p>` : ''}
       ${rawDesc ? `<p class="desc">${esc(rawDesc)}</p>` : ''}
       ${contactLinks.length ? `<div class="contact">${contactLinks.join('')}</div>` : ''}
       ${venue && venue.id && !venue.merchant_id ? `<div class="claim"><strong>¿Este es tu negocio?</strong><br>Este perfil se creó con información pública. Reclámalo gratis y toma el control de tus eventos.<br><a href="https://socios.enspotz.com/reclamar/${esc(venue.id)}">Reclamar mi negocio →</a></div>` : ''}

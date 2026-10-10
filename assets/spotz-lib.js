@@ -132,11 +132,20 @@ function formatDateTime(iso) {
 
 /* ─── event-card.tsx:21 — formatPrice ─────────────────────────────────────── */
 /* Ojo: el separador es guion largo U+2013 con espacios, no un guion normal. */
+/* Desde 2026-10-10 es copia de `shared/lib/price.ts` (variante 'card'): un precio estimado por rubro
+ * (price_source = 'estimado') se pinta SIEMPRE con su marca; price_label da texto sin cifra. */
 function formatPrice(ev) {
-  if (ev.is_free) return 'Gratis'
-  if (!ev.price_from) return ''
-  if (ev.price_from === ev.price_to) return `$${ev.price_from}`
-  return `$${ev.price_from} – $${ev.price_to}`
+  if (ev.price_label === 'sin_linea') return ''
+  if (ev.is_free) return ev.price_label === 'entrada_libre' ? 'Entrada libre' : 'Gratis'
+  const n = (v) => { const x = Number(v); return v === null || v === undefined || v === '' || !Number.isFinite(x) ? null : x }
+  const from = n(ev.price_from)
+  if (from !== null) {
+    const t = n(ev.price_to)
+    const cifra = t !== null && t > from ? `$${from}–${t}` : `$${from}`
+    if (ev.price_source === 'estimado') return `≈ ${cifra} · estimado`
+    return t === null ? `Desde ${cifra}` : cifra
+  }
+  return ({ segun_funcion: 'Según función', consultar_entrada: 'Consultar entrada', consultar: 'Consultar' })[ev.price_label] || ''
 }
 
 /* ─── availability.ts ─────────────────────────────────────────────────────── */
