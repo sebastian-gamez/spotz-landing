@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spotz — Descubre Caracas</title>
-  <meta name="description" content="La primera app para descubrir todos los eventos y experiencias de Caracas, con un chat de IA que te arma el plan. Únete a la lista de espera y consigue acceso anticipado + promociones de lanzamiento.">
+  <title>Spotz — Todo Caracas, en tu bolsillo</title>
+  <meta name="description" content="Todo Caracas, en tu bolsillo. 1.000 lugares y un chat con IA que te arma el plan. Gratis y sin descargar nada.">
   <meta name="theme-color" content="#0D1B2A">
   <link rel="canonical" href="https://enspotz.com">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z' fill='%23FF6B35'/%3E%3C/svg%3E">
 
-  <!-- Open Graph — TODO: sube assets/og.jpg (1200x630) antes de publicar -->
+  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Spotz">
   <meta property="og:locale" content="es_VE">
   <meta property="og:title" content="Spotz — Todo Caracas, en tu bolsillo">
-  <meta property="og:description" content="Descubre eventos y experiencias en Caracas con ayuda de IA. Acceso anticipado + promos de lanzamiento.">
+  <meta property="og:description" content="Todo Caracas, en tu bolsillo. 1.000 lugares y un chat con IA que te arma el plan.">
   <meta property="og:url" content="https://enspotz.com">
   <meta property="og:image" content="https://enspotz.com/assets/og.jpg">
   <meta property="og:image:width" content="1200">
@@ -22,607 +22,924 @@
   <meta property="og:image:alt" content="Spotz — Todo Caracas, en tu bolsillo">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Spotz — Todo Caracas, en tu bolsillo">
-  <meta name="twitter:description" content="Descubre eventos y experiencias en Caracas con ayuda de IA.">
+  <meta name="twitter:description" content="Todo Caracas, en tu bolsillo. 1.000 lugares y un chat con IA que te arma el plan.">
   <meta name="twitter:image" content="https://enspotz.com/assets/og.jpg">
 
-  <!-- Tailwind CDN — ver ficha 01, punto "Rendimiento": compilar antes de escalar tráfico -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    const SYSTEM_SANS = ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif']
-    const SYSTEM_MONO = ['ui-monospace', '"SF Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace']
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { orange:'#FF6B35', orangeDeep:'#B8420F', navy:'#004E89', cream:'#EFEFD0', ink:'#0D1B2A', ink2:'#111D2C', peach:'#F7C59F' },
-          fontFamily: { display: SYSTEM_SANS, body: SYSTEM_SANS, mono: SYSTEM_MONO, sans: SYSTEM_SANS }
-        }
-      }
-    }
-  </script>
+  <!-- Poppins para títulos y maquetas; el cuerpo va en la fuente del sistema -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+  <!-- Marca que hay JS antes de pintar: el chat del hero arranca vacío en vez de
+       enseñar un instante la conversación completa (sin JS se ve completa). -->
+  <script>document.documentElement.classList.add('js')</script>
 
   <style>
-    * { -webkit-tap-highlight-color: transparent; }
-    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    /* ── Base ─────────────────────────────────────────────────────────────
+       Tokens: navy #0D1B2A, naranja #FF6B35. Botones naranja con texto navy.
+       Sin Tailwind a propósito: la página entera pesa menos que su script. */
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; -webkit-text-size-adjust: 100%; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      margin: 0; background: #0D1B2A; color: #ECEDEE;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
-    .grid-bg {
-      background-image:
-        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
-      background-size: 44px 44px;
+    img, svg { display: block; }
+    a { color: #FF8A5C; }
+    a:focus-visible, summary:focus-visible { outline: 2px solid #FF6B35; outline-offset: 3px; border-radius: 6px; }
+    ul, ol { list-style: none; margin: 0; padding: 0; }
+    h1, h2, h3 { margin: 0; }
+    .sp-page { overflow-x: clip; min-height: 100vh; }
+    .sp-skip { position: absolute; left: 16px; top: -60px; z-index: 50; background: #FF6B35; color: #0D1B2A; padding: 10px 16px; border-radius: 999px; font-weight: 600; text-decoration: none; }
+    .sp-skip:focus { top: 12px; }
+
+    /* ── Layout ── */
+    .sp-wrap { max-width: 1200px; margin: 0 auto; padding-left: 32px; padding-right: 32px; box-sizing: border-box; }
+    .sp-hero { display: flex; flex-wrap: wrap; align-items: center; gap: 56px; }
+    .sp-hero-copy { flex: 1 1 480px; min-width: 0; }
+    .sp-hero-art { flex: 1 1 380px; min-width: 0; display: flex; justify-content: center; position: relative; min-height: 760px; align-items: center; }
+    .sp-split { display: flex; flex-wrap: wrap; align-items: center; gap: 72px; }
+    .sp-split.rev { flex-direction: row-reverse; }
+    .sp-split-copy { flex: 1 1 440px; min-width: 0; }
+    .sp-split-art { flex: 1 1 360px; min-width: 0; display: flex; justify-content: center; position: relative; }
+    .sp-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .sp-grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-top: 40px; }
+    .sp-phones { display: flex; justify-content: center; align-items: flex-end; gap: 32px; }
+    .sp-rel { position: relative; min-width: 0; max-width: 100%; }
+
+    /* ── Animaciones de la página ── */
+    .sp-mq { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+    /* padding-right = gap: así el -50% cae justo en la copia y el bucle no da saltito */
+    .sp-mq-track { display: flex; gap: 12px; padding-right: 12px; width: max-content; animation: spMq 48s linear infinite; }
+    .sp-mq-track.rev { animation-direction: reverse; animation-duration: 60s; }
+    .sp-bob { animation: spBob 5s ease-in-out infinite; }
+    .sp-bob.d2 { animation-delay: -2.5s; }
+    @keyframes spMq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes spBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes spStamp { 0%, 10% { background: transparent; transform: scale(1); } 16% { background: #0D1B2A; transform: scale(1.18); } 22%, 88% { background: #0D1B2A; transform: scale(1); } 100% { background: transparent; } }
+    @keyframes spFeed { 0%, 26% { transform: translateY(0); } 33%, 59% { transform: translateY(-84px); } 66%, 92% { transform: translateY(-168px); } 100% { transform: translateY(0); } }
+    @keyframes spHeart { 0%, 60%, 100% { transform: scale(1); } 70% { transform: scale(1.25); } 80% { transform: scale(.95); } }
+    @keyframes spShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    @keyframes spWheel { 0% { transform: rotate(0deg); } 55%, 100% { transform: rotate(1125deg); } }
+
+    /* ── Nav ── */
+    .sp-header { position: sticky; top: 0; z-index: 20; background: rgba(13, 27, 42, .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, .06); }
+    .sp-nav { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 16px; }
+    .sp-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .sp-logo-mark { width: 32px; height: 32px; border-radius: 10px; background: #FF6B35; display: flex; align-items: center; justify-content: center; }
+    .sp-word { font-family: Poppins, sans-serif; font-weight: 700; font-size: 22px; color: #FFFFFF; letter-spacing: -.5px; }
+    .sp-word span, .sp-z { color: #FF6B35; }
+    .sp-nav-actions { display: flex; align-items: center; gap: 8px; }
+    .sp-nav-link { color: #C7D0DB; text-decoration: none; font-size: 15px; padding: 12px 14px; }
+    .sp-nav-link:hover { color: #FFFFFF; }
+    .sp-nav-cta { background: #FF6B35; color: #0D1B2A; text-decoration: none; font-weight: 600; font-size: 15px; padding: 12px 18px; border-radius: 999px; font-family: Poppins, sans-serif; }
+
+    /* ── Botones ── */
+    .sp-btn-primary { display: inline-flex; align-items: center; gap: 10px; background: #FF6B35; color: #0D1B2A; text-decoration: none; font-family: Poppins, sans-serif; font-weight: 600; font-size: 17px; padding: 16px 26px; border-radius: 999px; box-shadow: 0 10px 40px rgba(255, 107, 53, .35); }
+    .sp-btn-primary, .sp-nav-cta { transition: background-color .2s; }
+    .sp-btn-primary:hover, .sp-nav-cta:hover { background: #FF7C4B; color: #0D1B2A; }
+    .sp-btn-ghost { display: inline-flex; align-items: center; gap: 10px; color: #ECEDEE; text-decoration: none; font-weight: 500; font-size: 16px; padding: 16px 22px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .18); transition: border-color .2s; }
+    .sp-btn-ghost:hover { color: #FFFFFF; border-color: rgba(255, 255, 255, .4); }
+
+    /* ── Hero ── */
+    .sp-hero-sec { padding-top: 56px; padding-bottom: 24px; }
+    .sp-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255, 107, 53, .12); border: 1px solid rgba(255, 107, 53, .35); color: #FFB694; font-size: 14px; font-weight: 500; margin: 0; }
+    .sp-live { width: 8px; height: 8px; border-radius: 50%; background: #4ADE80; }
+    .sp-h1 { font-family: Poppins, sans-serif; font-weight: 700; font-size: clamp(42px, 6vw, 76px); line-height: 1.02; letter-spacing: -2px; margin: 24px 0 0; color: #FFFFFF; }
+    .sp-h1 span { color: #FF6B35; }
+    .sp-lead { font-size: clamp(17px, 1.6vw, 20px); line-height: 1.55; color: #B8C3D0; margin: 24px 0 0; max-width: 540px; }
+    .sp-lead strong { color: #FFFFFF; font-weight: 600; }
+    .sp-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .sp-micro { font-size: 14px; color: #8C99A8; margin: 18px 0 0; }
+    .sp-glow { position: absolute; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 107, 53, .30), rgba(255, 107, 53, 0)); filter: blur(10px); pointer-events: none; }
+    .sp-float { position: absolute; display: flex; align-items: center; gap: 10px; background: #13263A; border: 1px solid rgba(255, 255, 255, .1); border-radius: 16px; padding: 12px 16px; box-shadow: 0 12px 30px rgba(0, 0, 0, .35); font-size: 14px; color: #ECEDEE; }
+    .sp-float strong { font-family: Poppins, sans-serif; }
+    .sp-float.f1 { left: 0; top: 120px; }
+    .sp-float.f2 { right: 0; bottom: 150px; }
+
+    /* Pasos del chat, sincronizados con el teléfono */
+    .sp-howto { margin-top: 40px; }
+    .sp-eyebrow { display: flex; align-items: center; gap: 8px; color: #FF8A5C; font-weight: 600; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+    .sp-howto .sp-eyebrow { margin-bottom: 16px; }
+    .sp-step { display: flex; gap: 14px; padding: 20px; border-radius: 20px; background: #112235; border: 1px solid rgba(255, 255, 255, .07); }
+    .sp-step-n { flex: none; box-sizing: border-box; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .25); color: #8C99A8; display: flex; align-items: center; justify-content: center; font-family: Poppins, sans-serif; font-weight: 600; transition: background-color .25s, color .25s, border-color .25s; }
+    .sp-step.is-on .sp-step-n { background: #FF6B35; border-color: #FF6B35; color: #0D1B2A; font-weight: 700; }
+    .sp-step-b { min-width: 0; }
+    .sp-step-t { font-family: Poppins, sans-serif; font-weight: 600; font-size: 17px; color: #FFFFFF; }
+    .sp-step-d { font-size: 15px; line-height: 1.5; color: #9FAABA; margin: 4px 0 0; }
+
+    /* ── Marquesina ── */
+    .sp-marquee { padding-top: 48px; padding-bottom: 72px; display: flex; flex-direction: column; gap: 12px; }
+    .sp-cat { flex: none; padding: 12px 20px; border-radius: 999px; background: #112235; border: 1px solid rgba(255, 255, 255, .08); color: #ECEDEE; font-size: 15px; font-weight: 500; }
+    .sp-zone { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; border: 1px solid rgba(255, 107, 53, .28); color: #FFB694; font-size: 15px; }
+
+    /* ── Mapa (sección) ── */
+    .sp-band { background: #0A1622; border-top: 1px solid rgba(255, 255, 255, .05); border-bottom: 1px solid rgba(255, 255, 255, .05); }
+    .sp-map-sec { padding: 96px 0; }
+    .sp-map-sec .sp-eyebrow { display: inline-flex; }
+    .sp-h2-big { font-family: Poppins, sans-serif; font-weight: 700; font-size: clamp(32px, 4vw, 48px); line-height: 1.1; letter-spacing: -1px; color: #FFFFFF; margin: 16px 0 0; }
+    .sp-map-p { font-size: 17px; line-height: 1.6; color: #B8C3D0; margin: 18px 0 0; max-width: 480px; }
+    .sp-feats { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; }
+    .sp-feats li { display: flex; align-items: center; gap: 14px; font-size: 16px; color: #ECEDEE; }
+    .sp-ico { flex: none; width: 40px; height: 40px; border-radius: 12px; background: rgba(255, 107, 53, .14); display: flex; align-items: center; justify-content: center; }
+    .sp-glow-map { position: absolute; top: 50%; left: 50%; width: 400px; height: 400px; margin: -200px 0 0 -200px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 107, 53, .22), rgba(255, 107, 53, 0)); pointer-events: none; }
+
+    /* ── Títulos de sección ── */
+    .sp-h2 { font-family: Poppins, sans-serif; font-weight: 700; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.12; letter-spacing: -1px; color: #FFFFFF; }
+    .sp-sub { font-size: 17px; color: #B8C3D0; margin: 14px 0 0; }
+
+    /* ── Qué puedes hacer ── */
+    .sp-what { padding-top: 96px; padding-bottom: 96px; }
+    .sp-what .sp-h2 { max-width: 680px; }
+    .sp-what .sp-sub { max-width: 560px; }
+    .sp-card { background: #112235; border: 1px solid rgba(255, 255, 255, .07); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; }
+    .sp-card-art { height: 200px; background: #0A1622; display: flex; align-items: center; justify-content: center; position: relative; }
+    .sp-card-art.feed { display: block; overflow: hidden; }
+    .sp-card-art.col { flex-direction: column; gap: 12px; }
+    .sp-card-body { padding: 22px; }
+    .sp-card-t { font-family: Poppins, sans-serif; font-weight: 600; font-size: 19px; color: #FFFFFF; }
+    .sp-card-d { font-size: 15px; line-height: 1.5; color: #9FAABA; margin: 6px 0 0; }
+    .sp-feed { position: absolute; left: 16px; right: 16px; top: 16px; display: flex; flex-direction: column; gap: 12px; animation: spFeed 9s ease-in-out infinite; }
+    .sp-feed-i { display: flex; gap: 10px; align-items: center; height: 72px; background: #13263A; border-radius: 14px; padding: 0 10px 0 0; overflow: hidden; font-size: 13px; color: #ECEDEE; font-weight: 500; }
+    .sp-feed-i img { width: 72px; height: 72px; object-fit: cover; }
+    .sp-loyal { width: 78%; background: #FF6B35; border-radius: 18px; padding: 16px; position: relative; overflow: hidden; box-shadow: 0 12px 30px rgba(255, 107, 53, .25); }
+    .sp-shine { position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .28) 50%, transparent 70%); animation: spShine 2.2s ease-in-out infinite; }
+    .sp-loyal-t { font-family: Poppins, sans-serif; font-weight: 700; font-size: 15px; color: #0D1B2A; }
+    .sp-loyal-d { font-size: 12px; color: #3A1A0A; margin-top: 2px; }
+    .sp-stamps { display: flex; gap: 8px; margin-top: 14px; }
+    .sp-stamp { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #0D1B2A; animation: spStamp 7.2s ease-in-out infinite; }
+    .sp-stamp:nth-child(2) { animation-delay: .6s; }
+    .sp-stamp:nth-child(3) { animation-delay: 1.2s; }
+    .sp-stamp:nth-child(4) { animation-delay: 1.8s; }
+    .sp-stamp:nth-child(5) { animation-delay: 2.4s; }
+    .sp-heart { width: 72px; height: 72px; border-radius: 50%; background: rgba(255, 77, 109, .14); display: flex; align-items: center; justify-content: center; animation: spHeart 2.4s ease-in-out infinite; }
+    .sp-avatars { display: flex; }
+    .sp-avatars img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #0A1622; }
+    .sp-avatars img + img { margin-left: -10px; }
+    .sp-wheel-pin { position: absolute; top: 18px; left: 50%; margin-left: -9px; z-index: 1; }
+    .sp-wheel { width: 150px; height: 150px; border-radius: 50%; border: 4px solid #13263A; box-shadow: 0 10px 30px rgba(0, 0, 0, .4); background: conic-gradient(#FF6B35 0 60deg, #1B2B42 60deg 120deg, #FF8A5C 120deg 180deg, #13263A 180deg 240deg, #FF6B35 240deg 300deg, #1B2B42 300deg 360deg); animation: spWheel 6s cubic-bezier(.2, .8, .2, 1) infinite; }
+    .sp-wheel-hub { position: absolute; width: 26px; height: 26px; border-radius: 50%; background: #0D1B2A; border: 3px solid #FFFFFF; }
+
+    /* ── Así se ve (pantallas recreadas, sin marcas reales) ── */
+    .sp-looks { padding: 96px 0 0; overflow: hidden; }
+    .sp-looks .sp-wrap { text-align: center; }
+    .sp-looks .sp-sub { margin: 14px auto 0; max-width: 520px; }
+    .sp-phones { margin-top: 56px; font-family: Poppins, system-ui, sans-serif; text-align: left; }
+    .ph-side { flex: none; width: 250px; height: 530px; box-sizing: border-box; border-radius: 38px; padding: 8px; background: #05080D; box-shadow: 0 30px 60px rgba(0, 0, 0, .45); transform: translateY(40px); }
+    .ph-side > .ph-scr { border-radius: 30px; }
+    .ph-main { flex: none; width: 280px; height: 590px; box-sizing: border-box; border-radius: 42px; padding: 9px; background: #05080D; box-shadow: 0 30px 80px rgba(255, 107, 53, .22); }
+    .ph-main > .ph-scr { border-radius: 33px; }
+    .ph-scr { width: 100%; height: 100%; background: #0D1B2A; overflow: hidden; display: flex; flex-direction: column; }
+    .ph-circ { flex: none; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+    .ph-tabs { display: flex; justify-content: space-around; padding: 8px 4px 12px; border-top: 1px solid rgba(255, 255, 255, .07); font-size: 7px; color: #8C99A8; }
+    .ph-tabs > span { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .ph-main .ph-tabs { font-size: 7.5px; }
+    .ph-tabs .on { color: #FF6B35; }
+    .fv-head { display: flex; align-items: center; gap: 8px; padding: 18px 12px 10px; }
+    .fv-title { font-weight: 700; font-size: 16px; color: #FFFFFF; flex: 1; }
+    .fv-count { font-size: 9px; color: #8C99A8; white-space: nowrap; }
+    .fv-list { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 8px; padding: 0 10px; }
+    .fv-item { display: flex; gap: 8px; padding: 10px; border-radius: 14px; background: #1B2B42; }
+    .fv-txt { flex: 1; min-width: 0; }
+    .fv-date { font-size: 8px; color: #8C99A8; }
+    .fv-name { font-size: 11px; font-weight: 700; color: #FFFFFF; line-height: 1.25; margin-top: 3px; }
+    .fv-row { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
+    .fv-tag { font-size: 8px; padding: 2px 6px; border-radius: 6px; }
+    .fv-price { font-size: 9px; color: #B8C3D0; }
+    .fv-thumb { flex: none; width: 52px; height: 52px; border-radius: 10px; overflow: hidden; position: relative; }
+    .fv-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .fv-thumb svg { position: absolute; right: 3px; top: 3px; }
+    .ch-head { display: flex; align-items: center; gap: 8px; padding: 18px 14px 6px; }
+    .ch-name { font-weight: 700; font-size: 13px; color: #FFFFFF; }
+    .ch-status { font-size: 9px; color: #4ADE80; }
+    .ch-greet { text-align: center; padding: 18px 14px 0; }
+    .ch-hi { font-size: 10px; color: #8C99A8; }
+    .ch-q { font-weight: 700; font-size: 18px; color: #FFFFFF; margin-top: 4px; }
+    .ch-box { margin: 14px 12px 0; padding: 10px; border-radius: 16px; background: #13263A; border: 1px solid rgba(255, 255, 255, .08); }
+    .ch-ph { font-size: 10px; color: #8C99A8; padding: 8px 6px 18px; }
+    .ch-btns { display: flex; justify-content: flex-end; gap: 6px; }
+    .ch-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; padding: 12px 10px 0; }
+    .ch-chips span { font-size: 9px; color: #ECEDEE; padding: 5px 9px; border-radius: 999px; background: #13263A; border: 1px solid rgba(255, 255, 255, .08); }
+    .ch-convs { flex: 1; min-height: 0; padding: 16px 12px 0; display: flex; flex-direction: column; gap: 7px; }
+    .ch-convs-t { font-size: 11px; font-weight: 700; color: #FFFFFF; }
+    .ch-conv { display: flex; gap: 8px; align-items: center; padding: 8px; border-radius: 12px; background: #1B2B42; }
+    .ch-conv img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; }
+    .ch-conv-n { font-size: 10px; font-weight: 600; color: #FFFFFF; }
+    .ch-conv-w { font-size: 8px; color: #8C99A8; }
+    .dt-hero { height: 200px; position: relative; flex: none; }
+    .dt-hero img { width: 100%; height: 100%; object-fit: cover; }
+    .dt-btn { position: absolute; top: 14px; width: 28px; height: 28px; border-radius: 50%; background: rgba(13, 27, 42, .6); display: flex; align-items: center; justify-content: center; }
+    .dt-tag { position: absolute; left: 10px; bottom: 10px; font-size: 9px; font-weight: 700; color: #FFFFFF; background: #6C5CE7; padding: 4px 10px; border-radius: 999px; }
+    .dt-body { padding: 12px 12px 0; flex: 1; min-height: 0; }
+    .dt-title { font-weight: 700; font-size: 15px; color: #FFFFFF; line-height: 1.2; }
+    .dt-meta { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 9px; font-weight: 600; color: #ECEDEE; }
+    .dt-meta.first { margin-top: 10px; }
+    .dt-desc { font-size: 9px; line-height: 1.55; color: #9FAABA; margin-top: 10px; }
+    .dt-enjoy { font-size: 11px; font-weight: 700; color: #FFFFFF; margin-top: 12px; }
+    .dt-box { margin-top: 6px; padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(108, 92, 231, .4); display: flex; flex-direction: column; gap: 6px; }
+    .dt-box > div { display: flex; align-items: center; gap: 6px; font-size: 9px; color: #ECEDEE; }
+    .dt-check { width: 14px; height: 14px; background: #6C5CE7; }
+    .dt-foot { padding: 10px 12px 14px; border-top: 1px solid rgba(255, 255, 255, .07); }
+    .dt-save { height: 34px; border-radius: 12px; background: #FF6B35; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #0D1B2A; }
+
+    /* ── Negocios ── */
+    .sp-biz-sec { padding-top: 96px; padding-bottom: 32px; }
+    .sp-biz { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding: 36px; border-radius: 26px; background: #112235; border: 1px solid rgba(255, 107, 53, .25); }
+    .sp-biz-l { display: flex; gap: 18px; align-items: center; min-width: 0; flex: 1 1 420px; }
+    .sp-biz-ico { flex: none; width: 56px; height: 56px; border-radius: 16px; background: rgba(255, 107, 53, .14); display: flex; align-items: center; justify-content: center; }
+    .sp-biz-t { font-family: Poppins, sans-serif; font-weight: 600; font-size: 22px; color: #FFFFFF; }
+    .sp-biz-d { font-size: 16px; line-height: 1.5; color: #B8C3D0; margin: 4px 0 0; }
+    .sp-btn-line { display: inline-flex; align-items: center; gap: 8px; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 16px; padding: 14px 22px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .25); transition: border-color .2s; }
+    .sp-btn-line:hover { color: #FFFFFF; border-color: rgba(255, 255, 255, .5); }
+
+    /* ── FAQ ── */
+    .sp-faq { padding-top: 64px; padding-bottom: 64px; }
+    .sp-faq-list { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; max-width: 820px; }
+    .sp-faq details { background: #112235; border: 1px solid rgba(255, 255, 255, .07); border-radius: 18px; padding: 20px 24px; }
+    .sp-faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: Poppins, sans-serif; font-weight: 600; font-size: 17px; color: #FFFFFF; }
+    .sp-faq summary::-webkit-details-marker { display: none; }
+    .sp-faq summary svg { flex: none; }
+    .sp-faq details[open] .sp-chev { transform: rotate(180deg); }
+    .sp-faq p { font-size: 16px; line-height: 1.6; color: #B8C3D0; margin: 12px 0 0; }
+    .sp-faq a:hover { color: #FFB694; }
+
+    /* ── CTA final ── */
+    .sp-final-sec { padding-bottom: 96px; }
+    .sp-final { position: relative; overflow: hidden; border-radius: 32px; background: #FF6B35; padding: clamp(36px, 6vw, 72px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 32px; }
+    .sp-final-l { min-width: 0; flex: 1 1 420px; }
+    .sp-final h2 { font-family: Poppins, sans-serif; font-weight: 700; font-size: clamp(32px, 4.4vw, 56px); line-height: 1.05; letter-spacing: -1.5px; color: #0D1B2A; }
+    .sp-final-p { font-size: 18px; color: #3A1A0A; margin: 16px 0 0; max-width: 460px; }
+    .sp-final-r { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .sp-btn-navy { display: inline-flex; align-items: center; gap: 10px; background: #0D1B2A; color: #FFFFFF; text-decoration: none; font-family: Poppins, sans-serif; font-weight: 600; font-size: 18px; padding: 18px 30px; border-radius: 999px; transition: background-color .2s; }
+    .sp-btn-navy:hover { background: #13263A; color: #FFFFFF; }
+    .sp-final-note { font-size: 14px; color: #3A1A0A; }
+    .sp-final a:focus-visible { outline-color: #0D1B2A; }
+
+    /* ── Footer ── */
+    .sp-footer { border-top: 1px solid rgba(255, 255, 255, .07); }
+    .sp-footer .sp-wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 32px; padding-bottom: 40px; }
+    .sp-footer-l { display: flex; align-items: center; gap: 10px; }
+    .sp-footer .sp-word { font-size: 20px; letter-spacing: 0; }
+    .sp-footer-city { font-size: 14px; color: #8C99A8; }
+    .sp-footer-links { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; }
+    .sp-footer-links a { color: #B8C3D0; text-decoration: none; padding: 10px 0; }
+    .sp-footer-links a:hover { color: #FFFFFF; }
+
+    /* ── Chat animado (lo mueve assets/chat-demo.js) ── */
+    @keyframes cdIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+    @keyframes cdDot { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+    @keyframes cdBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    @keyframes cdPop { 0% { transform: scale(.4); } 60% { transform: scale(1.3); } 100% { transform: scale(1); } }
+    @keyframes cdSlide { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+    html.js [data-chat-demo]:not([data-ready]) [data-from] { display: none !important; }
+    .cd-phone { width: 340px; max-width: 100%; height: 700px; box-sizing: border-box; padding: 10px; border-radius: 50px; background: #05080D; box-shadow: 0 40px 90px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(255, 255, 255, .08); font-family: Poppins, system-ui, sans-serif; }
+    .cd-scr { width: 100%; height: 100%; border-radius: 40px; background: #0F1C2B; overflow: hidden; display: flex; flex-direction: column; }
+    .cd-head { display: flex; align-items: center; gap: 10px; padding: 24px 16px 12px; background: #0D1B2A; border-bottom: 1px solid rgba(255, 255, 255, .07); }
+    .cd-head-b { min-width: 0; }
+    .cd-ava { flex: none; width: 26px; height: 26px; border-radius: 50%; background: #FF6B35; display: flex; align-items: center; justify-content: center; }
+    .cd-ava.lg { width: 34px; height: 34px; }
+    .cd-name { font-weight: 700; font-size: 16px; color: #FFFFFF; line-height: 1.2; }
+    .cd-status { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #4ADE80; }
+    .cd-status i { width: 6px; height: 6px; border-radius: 50%; background: #4ADE80; }
+    .cd-msgs { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; padding: 12px 12px 8px; }
+    .cd-user { align-self: flex-end; max-width: 84%; background: #C2410C; color: #FFFFFF; font-size: 13px; line-height: 1.45; padding: 10px 14px; border-radius: 20px 20px 6px 20px; font-weight: 500; animation: cdIn .35s ease both; }
+    .cd-wait { display: flex; align-items: center; gap: 8px; padding-left: 4px; font-size: 12px; color: #9FAABA; }
+    .cd-dot { width: 5px; height: 5px; border-radius: 50%; background: #9FAABA; animation: cdDot 1s infinite; margin-left: -4px; }
+    .cd-dot.lg { width: 6px; height: 6px; margin-left: -3px; }
+    .cd-dot.first { margin-left: 0; }
+    .cd-dot.d1 { animation-delay: .15s; }
+    .cd-dot.d2 { animation-delay: .3s; }
+    .cd-bot-group { display: flex; flex-direction: column; gap: 6px; animation: cdIn .35s ease both; }
+    .cd-meta { display: flex; align-items: center; gap: 6px; padding-left: 34px; font-size: 11px; color: #8C99A8; }
+    .cd-row { display: flex; align-items: flex-end; gap: 8px; }
+    .cd-row.in { animation: cdIn .35s ease both; }
+    .cd-bot { max-width: 84%; font-size: 13px; line-height: 1.45; color: #ECEDEE; padding: 10px 14px; border-radius: 20px 20px 20px 6px; background: #1B2B42; }
+    .cd-bot.with-ico { display: flex; align-items: center; gap: 8px; }
+    .cd-place { margin-left: 34px; display: flex; align-items: center; gap: 6px; font-size: 12px; line-height: 1.4; color: #ECEDEE; padding: 9px 12px; border-radius: 16px; background: #1B2B42; animation: cdIn .35s ease both; }
+    .cd-place svg, .cd-bot svg { flex: none; }
+    .cd-cards { margin-left: 34px; display: flex; gap: 8px; overflow: hidden; animation: cdSlide .45s ease both; }
+    .cd-card { flex: none; width: 150px; border-radius: 16px; overflow: hidden; background: #1B2B42; }
+    .cd-card-img { height: 78px; position: relative; }
+    .cd-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .cd-card-tag { position: absolute; left: 8px; top: 8px; font-size: 9px; font-weight: 700; color: #FFFFFF; background: rgba(13, 27, 42, .75); padding: 3px 8px; border-radius: 999px; }
+    .cd-saved { position: absolute; right: 7px; top: 7px; width: 24px; height: 24px; border-radius: 50%; background: rgba(13, 27, 42, .75); display: flex; align-items: center; justify-content: center; animation: cdPop .5s ease both; }
+    .cd-card-b { padding: 8px 10px 10px; }
+    .cd-card-z { font-size: 10px; color: #9FAABA; }
+    .cd-card-n { font-size: 12px; font-weight: 700; color: #FFFFFF; line-height: 1.3; margin-top: 2px; }
+    .cd-hint { margin-left: 34px; font-size: 10px; color: #7C8896; }
+    .cd-chips { display: flex; gap: 6px; overflow: hidden; padding-top: 2px; }
+    .cd-chips span { flex: none; font-size: 11px; font-weight: 600; color: #FF8A5C; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(255, 107, 53, .35); background: rgba(255, 107, 53, .08); }
+    .cd-bar { display: flex; align-items: center; gap: 8px; padding: 10px 12px 14px; border-top: 1px solid rgba(255, 255, 255, .07); background: #0D1B2A; }
+    .cd-btn { flex: none; width: 38px; height: 38px; border-radius: 50%; background: #1B2B42; display: flex; align-items: center; justify-content: center; }
+    .cd-btn.send-on { background: #C2410C; }
+    .cd-input { flex: 1; min-width: 0; height: 42px; display: flex; align-items: center; padding: 0 14px; border-radius: 16px; background: #1B2B42; font-size: 12.5px; overflow: hidden; white-space: nowrap; }
+    .cd-ph { color: #8C99A8; }
+    .cd-text { color: #ECEDEE; overflow: hidden; min-width: 0; }
+    .cd-caret { flex: none; width: 2px; height: 16px; margin-left: 1px; background: #FF6B35; animation: cdBlink 1s infinite; }
+
+    /* ── Mapa animado: zoom de 12 s en CSS puro ── */
+    .md-phone { width: 340px; max-width: 100%; height: 700px; box-sizing: border-box; padding: 10px; border-radius: 50px; background: #05080D; box-shadow: 0 40px 90px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(255, 255, 255, .08); font-family: Poppins, system-ui, sans-serif; }
+    .md-scr { width: 100%; height: 680px; border-radius: 40px; background: #111821; overflow: hidden; position: relative; }
+    .md-layer { position: absolute; left: 0; top: 0; width: 320px; height: 680px; transform-origin: 200px 280px; animation: mdZoom 12s ease-in-out infinite; }
+    .md-dots { animation: mdDots 12s ease-in-out infinite; }
+    .md-pin { position: absolute; animation: mdPin 12s ease infinite; }
+    .md-pin.p2 { animation-delay: .15s; }
+    .md-pin.p3 { animation-delay: .3s; }
+    .md-pin.p4 { animation-delay: .45s; }
+    .md-pin.p5 { animation-delay: .6s; }
+    .md-label { background: #0D1B2A; color: #FFFFFF; font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 999px; border: 1px solid rgba(255, 107, 53, .5); white-space: nowrap; }
+    .md-mewrap { width: 16px; height: 16px; }
+    .md-me { position: absolute; inset: 0; border-radius: 50%; background: rgba(59, 130, 246, .45); animation: mdMe 2s ease-out infinite; }
+    .md-me-dot { position: absolute; inset: 2px; border-radius: 50%; background: #3B82F6; border: 2px solid #FFFFFF; }
+    .md-top { position: absolute; left: 12px; right: 12px; top: 22px; display: flex; flex-direction: column; gap: 8px; }
+    .md-search { height: 42px; display: flex; align-items: center; gap: 10px; padding: 0 14px; border-radius: 999px; background: rgba(13, 27, 42, .92); border: 1px solid rgba(255, 255, 255, .1); box-shadow: 0 8px 20px rgba(0, 0, 0, .35); font-size: 13px; color: #9FAABA; }
+    .md-chips { display: flex; gap: 6px; overflow: hidden; }
+    .md-chips span { flex: none; font-size: 11px; font-weight: 500; color: #ECEDEE; background: rgba(13, 27, 42, .92); border: 1px solid rgba(255, 255, 255, .1); padding: 6px 12px; border-radius: 999px; }
+    .md-chips span.on { font-weight: 600; color: #0D1B2A; background: #FF6B35; border: 0; }
+    .md-badge { position: absolute; left: 0; right: 0; bottom: 34px; display: flex; justify-content: center; animation: mdBadge 12s ease infinite; }
+    .md-badge span { display: inline-flex; align-items: center; gap: 8px; background: #FF6B35; color: #0D1B2A; font-size: 13px; font-weight: 700; padding: 10px 16px; border-radius: 999px; box-shadow: 0 10px 24px rgba(255, 107, 53, .35); }
+    .md-sheet { position: absolute; left: 12px; right: 12px; bottom: 16px; display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 20px; background: #13263A; border: 1px solid rgba(255, 255, 255, .1); box-shadow: 0 -10px 30px rgba(0, 0, 0, .4); animation: mdSheet 12s ease infinite; }
+    .md-sheet img { flex: none; width: 62px; height: 62px; border-radius: 14px; object-fit: cover; }
+    .md-sheet-txt { min-width: 0; flex: 1; }
+    .md-sheet-m { font-size: 10px; color: #9FAABA; }
+    .md-sheet-n { font-size: 13px; font-weight: 700; color: #FFFFFF; line-height: 1.3; }
+    .md-sheet-d { font-size: 11px; color: #FF8A5C; margin-top: 2px; }
+    .md-go { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #FF6B35; display: flex; align-items: center; justify-content: center; }
+    @keyframes mdZoom { 0%, 16% { transform: scale(1); } 34%, 84% { transform: scale(2.6); } 97%, 100% { transform: scale(1); } }
+    @keyframes mdDots { 0%, 20% { opacity: 1; } 34%, 84% { opacity: .35; } 96%, 100% { opacity: 1; } }
+    @keyframes mdPin { 0%, 34% { opacity: 0; transform: translateY(-16px) scale(.5); } 40%, 84% { opacity: 1; transform: none; } 88%, 100% { opacity: 0; transform: none; } }
+    @keyframes mdSheet { 0%, 48% { transform: translateY(150%); } 54%, 82% { transform: translateY(0); } 88%, 100% { transform: translateY(150%); } }
+    @keyframes mdBadge { 0%, 14% { opacity: 1; transform: none; } 20%, 94% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: none; } }
+    @keyframes mdMe { 0% { transform: scale(.6); opacity: .7; } 100% { transform: scale(2.6); opacity: 0; } }
+
+    /* ── Responsive ── */
+    @media (max-width: 1000px) {
+      .sp-grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sp-side-phone { display: none; }
+    }
+    @media (max-width: 640px) {
+      .sp-wrap { padding-left: 16px; padding-right: 16px; }   /* solo el gutter: el alto lo pone cada sección */
+      .sp-grid4, .sp-steps { grid-template-columns: minmax(0, 1fr); }
+      .sp-hide-sm { display: none; }
+      .sp-hero-art { min-height: 720px; }
+      .sp-float { display: none; }
+      .sp-hero { gap: 32px; }
+      .sp-split { gap: 40px; }
     }
 
-    /* ── Form ── */
-    .input-email {
-      background: rgba(255,255,255,0.08); border: 1px solid transparent;
-      color: #fff; font-family: inherit; font-size: 16px; outline: none; transition: border-color .2s, background .2s;
-    }
-    .input-email::placeholder { color: rgba(255,255,255,0.42); }
-    .input-email:focus { border-color: rgba(255,107,53,0.6); background: rgba(255,255,255,0.11); }
-    .btn-primary {
-      background: #FF6B35; font-family: inherit; font-weight: 800; letter-spacing: -0.01em;
-      box-shadow: 0 6px 20px rgba(255,107,53,0.32);
-      transition: background .2s, transform .1s;
-    }
-    .btn-primary:hover { background: #ff5a20; }
-    .btn-primary:active { transform: scale(0.98); }
-    .btn-primary:disabled { background: #5a3020; color: rgba(255,255,255,0.4); cursor: not-allowed; box-shadow: none; }
-
-    /* ── Animaciones de entrada ── */
-    .fade-in { animation: fadeUp .7s ease both; }
-    .fade-in-2 { animation-delay: .12s; } .fade-in-3 { animation-delay: .24s; }
-    .fade-in-4 { animation-delay: .36s; } .fade-in-5 { animation-delay: .48s; }
-    @keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+    /* ── Movimiento reducido: estado final, sin marquesinas ni bucles ── */
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .fade-in { animation: none; }
-      .live-dot::before { animation: none; }
-    }
-
-    /* ── Prueba social ── */
-    .live-dot { position: relative; width: 8px; height: 8px; flex-shrink: 0; }
-    .live-dot::before, .live-dot::after { content:''; position:absolute; inset:0; border-radius:50%; background:#FF6B35; }
-    .live-dot::before { animation: livePing 2s cubic-bezier(0,0,0.2,1) infinite; opacity:.65; }
-    @keyframes livePing { 0%{transform:scale(1);opacity:.65;} 75%,100%{transform:scale(2.4);opacity:0;} }
-    .seats { font-variant-numeric: tabular-nums; transition: transform .4s cubic-bezier(0.34,1.56,0.64,1); }
-    .seats.pulse { transform: scale(1.1); }
-    .avatar-stack span { width:26px; height:26px; border-radius:999px; border:2px solid #0D1B2A; display:block; }
-    .avatar-stack span + span { margin-left:-9px; }
-
-    /* ── Mockup de teléfono ── */
-    .phone {
-      position: relative; background: #0a111d;
-      border-radius: 36px; padding: 7px; border: 1px solid rgba(255,255,255,0.09);
-      box-shadow: 0 26px 70px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.03);
-    }
-    .phone::before { /* dynamic island */
-      content:''; position:absolute; top:15px; left:50%; transform:translateX(-50%);
-      width:30%; height:9px; background:#000; border-radius:999px; z-index:3;
-    }
-    .phone > img { width:100%; aspect-ratio: 1220 / 2712; object-fit:cover; border-radius:30px; display:block; }
-    .phone-glow::after {
-      content:''; position:absolute; inset:-18% -22%; z-index:-1;
-      background: radial-gradient(closest-side, rgba(255,107,53,0.28), transparent 72%);
-      filter: blur(8px);
+      .sp-mq-track, .sp-bob, .sp-stamp, .sp-feed, .sp-heart, .sp-shine, .sp-wheel { animation: none !important; }
+      .cd-user, .cd-dot, .cd-bot-group, .cd-row.in, .cd-place, .cd-cards, .cd-saved, .cd-caret { animation: none !important; }
+      .md-layer { animation: none; transform: scale(2.6); }
+      .md-dots { animation: none; opacity: .35; }
+      .md-pin { animation: none; opacity: 1; }
+      .md-sheet { animation: none; transform: none; }
+      .md-badge { animation: none; opacity: 0; }
+      .md-me { animation: none; }
     }
   </style>
 </head>
 
-<body id="top" class="bg-ink text-white antialiased overflow-x-hidden">
+<body>
+<!-- Iconos que se repiten. Heredan fill/stroke del <svg> que los usa. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8 3.5 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.5 0 6 3.5 4.5 7.3C19.5 16.4 12 21 12 21z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-place" viewBox="0 0 24 24"><path d="M12 22s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8V20"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-mappin" viewBox="0 0 24 27"><path d="M12 26s-9-8-9-14a9 9 0 0 1 18 0c0 6-9 14-9 14z" fill="#FF6B35" stroke="#0D1B2A" stroke-width="1.5"/><circle cx="12" cy="12" r="3.4" fill="#0D1B2A"/></symbol>
+</svg>
+
+<a class="sp-skip" href="#contenido">Saltar al contenido</a>
+<div class="sp-page">
 
 <!-- ── NAV ── -->
-<nav class="fixed top-0 left-0 right-0 z-50 px-5 py-4 flex items-center justify-between gap-3">
-  <a href="#top" class="bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 flex items-center gap-2.5 border border-white/5">
-    <svg width="20" height="20" viewBox="0 0 80 80" fill="none" aria-hidden="true"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/></svg>
-    <span class="font-display font-extrabold text-[17px] tracking-tight">Spot<span class="text-orange">z</span></span>
-  </a>
-  <div class="flex items-center gap-2">
-    <a href="/comercios" class="hidden sm:block bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 text-sm font-medium text-white/60 hover:text-white border border-white/5 transition-colors">Soy un negocio</a>
-    <a href="/app/welcome" class="bg-ink/80 backdrop-blur-md rounded-2xl px-4 py-2 text-sm font-medium text-white/60 hover:text-white border border-white/5 transition-colors">Entrar</a>
-    <a href="/app/sign-up" class="btn-primary rounded-2xl px-4 py-2.5 text-white text-[13px]">Crear cuenta</a>
-  </div>
-</nav>
+<header class="sp-header">
+  <nav class="sp-wrap sp-nav" aria-label="Principal">
+    <a class="sp-logo" href="/" aria-label="Spotz, inicio">
+      <span class="sp-logo-mark"><svg width="18" height="18" fill="#0D1B2A" aria-hidden="true"><use href="#i-bolt"/></svg></span>
+      <span class="sp-word" aria-hidden="true">spot<span>z</span></span>
+    </a>
+    <div class="sp-nav-actions">
+      <a class="sp-nav-link sp-hide-sm" href="/comercios">Soy un negocio</a>
+      <a class="sp-nav-link sp-hide-sm" href="/app/welcome">Entrar</a>
+      <a class="sp-nav-cta" href="/app/sign-up">Crear cuenta gratis</a>
+    </div>
+  </nav>
+</header>
+
+<main id="contenido">
 
 <!-- ── HERO ── -->
-<section class="relative px-5 pt-28 pb-14 grid-bg overflow-hidden">
-  <div class="absolute top-40 left-1/2 -translate-x-1/2 w-[520px] h-[520px] max-w-[90vw] rounded-full pointer-events-none"
-       style="background: radial-gradient(circle, rgba(255,107,53,0.13) 0%, transparent 70%);"></div>
-
-  <div class="relative z-10 max-w-6xl mx-auto lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
-
-    <!-- Columna texto -->
-    <div class="text-center lg:text-left max-w-lg mx-auto lg:mx-0">
-      <div class="fade-in inline-flex items-center gap-2 mb-5 rounded-full px-3 py-1.5" style="background:rgba(255,107,53,0.14)">
-        <span class="live-dot inline-block align-middle"></span>
-        <span class="font-mono text-[10px] tracking-[0.16em] uppercase" style="color:#FFB694">Día <span id="serie-day">—</span> de <span id="serie-total">45</span> · lanzamos el 10 de octubre</span>
+<section class="sp-wrap sp-hero-sec">
+  <div class="sp-hero">
+    <div class="sp-hero-copy">
+      <p class="sp-badge"><span class="sp-live" aria-hidden="true"></span>Ya disponible · Caracas</p>
+      <h1 class="sp-h1">Todo Caracas,<br><span>en tu bolsillo.</span></h1>
+      <p class="sp-lead"><strong>1.000 lugares</strong> para comer, salir y hacer planes. Pregúntale a la IA lo que quieres hacer y te arma el plan en segundos.</p>
+      <div class="sp-ctas">
+        <a class="sp-btn-primary" href="/app/sign-up">Empieza gratis<svg width="18" height="18" fill="none" stroke="#0D1B2A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="sp-btn-ghost" href="#mapa">Mira el mapa</a>
       </div>
-
-      <h1 class="fade-in fade-in-2 font-display font-black text-[44px] sm:text-[58px] leading-[0.95] tracking-tight mb-5">
-        Todo Caracas,<br><span class="text-orange">en tu bolsillo.</span>
-      </h1>
-
-      <p class="fade-in fade-in-3 text-white/62 text-[16px] sm:text-[17px] leading-relaxed mb-7 max-w-md mx-auto lg:mx-0">
-        Descubre los mejores eventos y experiencias de la ciudad, y deja que un <span class="text-white font-semibold">chat con IA</span> te arme el plan perfecto para esta noche.
-      </p>
-
-      <!-- Los dos números reales: cuánto falta y cuántos comercios llevamos -->
-      <div class="fade-in fade-in-4 grid grid-cols-2 gap-3 max-w-md mx-auto lg:mx-0 mb-5">
-        <div class="rounded-2xl px-[18px] py-4" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.07)">
-          <div class="flex items-baseline gap-1.5">
-            <span id="cd-days" class="seats font-display font-black text-[38px] leading-none tracking-tight">—</span>
-            <span class="font-mono text-[12px] text-white/55">d</span>
-            <span id="cd-hours" class="seats font-bold text-[20px] text-white/80">—</span>
-            <span class="font-mono text-[12px] text-white/55">h</span>
-            <span id="cd-mins" class="seats font-bold text-[20px] text-white/80">—</span>
-            <span class="font-mono text-[12px] text-white/55">m</span>
-          </div>
-          <div class="font-mono text-[10px] tracking-[0.14em] uppercase text-white/40 mt-2">para el lanzamiento</div>
-        </div>
-        <div class="rounded-2xl px-[18px] py-4" style="background:rgba(255,107,53,0.10); border:1px solid rgba(255,107,53,0.25)">
-          <div class="flex items-baseline gap-1">
-            <span id="partners-count" class="seats font-display font-black text-[38px] leading-none tracking-tight text-orange">0</span>
-            <span class="font-display font-black text-[22px] text-white/35">/ <span class="partners-goal">20</span></span>
-          </div>
-          <div class="font-mono text-[10px] tracking-[0.14em] uppercase text-white/40 mt-2">comercios en el mapa</div>
-        </div>
-      </div>
-
-      <!-- Form -->
-      <form id="waitlist-form" class="fade-in fade-in-4 max-w-md mx-auto lg:mx-0 scroll-mt-28" novalidate>
-        <div class="flex flex-col sm:flex-row gap-3">
-          <label for="email-input" class="sr-only">Correo electrónico</label>
-          <input id="email-input" type="email" placeholder="tucorreo@email.com" required autocomplete="email"
-                 class="input-email flex-1 rounded-2xl px-5 py-4 text-base">
-          <button id="submit-btn" type="submit" class="btn-primary rounded-2xl px-6 py-4 text-white text-[15px] whitespace-nowrap">
-            Quiero acceso →
-          </button>
-        </div>
-        <p id="form-error" class="hidden mt-3 text-red-300 text-sm text-center lg:text-left" role="alert"></p>
-      </form>
-
-      <!-- Success state -->
-      <div id="success-state" class="hidden fade-in max-w-md mx-auto lg:mx-0">
-        <div class="bg-orange/10 border border-orange/30 rounded-2xl p-6 text-center">
-          <div class="text-3xl mb-2">🎉</div>
-          <p class="font-display font-black text-xl mb-1">¡Ya estás en la lista!</p>
-          <p class="text-white/60 text-sm">Te avisamos cuando abramos. Prepárate para lo mejor de Caracas.</p>
-        </div>
-      </div>
-
-      <!-- Micro-línea bajo el form: los cupos viven aquí, no compitiendo arriba -->
-      <ul id="social-proof" class="fade-in fade-in-5 flex flex-wrap gap-x-5 gap-y-2 justify-center lg:justify-start mt-3.5 max-w-md mx-auto lg:mx-0 text-white/50 text-[12.5px]">
-        <li>Quedan <span id="seats-left" class="seats text-white/75 font-bold">—</span> cupos</li>
-        <li>Sin spam</li>
-        <li>iOS y Android</li>
-        <li>Gratis</li>
-      </ul>
+      <p class="sp-micro">Gratis · Sin descargar nada · Pronto en App Store y Google Play</p>
     </div>
 
-    <!-- Columna mockups: feed detrás, chat delante -->
-    <div class="fade-in fade-in-5 mt-14 lg:mt-0 flex justify-center items-center">
-      <div class="phone w-[150px] sm:w-[172px]" style="transform: rotate(-8deg) translateX(30px) translateY(14px); z-index:1;">
-        <img src="assets/app-home.webp" alt="Feed de eventos de Caracas en Spotz" loading="eager" width="1220" height="2712">
+    <div class="sp-hero-art">
+      <div class="sp-glow" aria-hidden="true"></div>
+      <div class="sp-rel">
+
+        <!-- Teléfono con el chat animado. El guion lo mueve assets/chat-demo.js
+             (data-from / data-to = pasos en los que se ve cada pieza). Sin JS, o
+             con movimiento reducido, se ve la conversación terminada. -->
+        <div class="cd-phone" data-chat-demo data-chat-steps="#chat-pasos" role="img"
+             aria-label="Demostración del chat de Spotz: le pides algo tranquilo para dos el viernes cerca de Chacao, te propone tres lugares cercanos con distancia y precio, y te guarda en favoritos el que eliges.">
+          <div class="cd-scr" aria-hidden="true">
+            <div class="cd-head">
+              <svg width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#i-back"/></svg>
+              <span class="cd-ava lg"><svg width="16" height="16" fill="#0D1B2A"><use href="#i-bolt"/></svg></span>
+              <div class="cd-head-b">
+                <div class="cd-name">Spot<span class="sp-z">z</span> IA</div>
+                <div class="cd-status"><i></i>En línea · Caracas</div>
+              </div>
+            </div>
+
+            <div class="cd-msgs">
+              <div class="cd-user" data-from="1">algo tranquilo para dos el viernes, cerca de Chacao</div>
+
+              <div class="cd-wait" data-from="2" data-to="2" hidden>
+                <span class="cd-ava"><svg width="13" height="13" fill="#0D1B2A"><use href="#i-bolt"/></svg></span>
+                <span>Buscando entre 1.000 lugares</span>
+                <span class="cd-dot first"></span><span class="cd-dot d1"></span><span class="cd-dot d2"></span>
+              </div>
+
+              <div class="cd-bot-group" data-from="3">
+                <div class="cd-meta"><svg width="12" height="12" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-clock"/></svg>Top 3: vinos, pasta y brunch</div>
+                <div class="cd-row">
+                  <span class="cd-ava"><svg width="13" height="13" fill="#0D1B2A"><use href="#i-bolt"/></svg></span>
+                  <div class="cd-bot">Para algo tranquilo en pareja, estos tres te quedan cerca:</div>
+                </div>
+              </div>
+
+              <div class="cd-place" data-from="4"><svg width="13" height="13" fill="#FF6B6B"><use href="#i-place"/></svg><span>Bar de vinos · a 0,6 km · ~20 $</span></div>
+              <div class="cd-place" data-from="5"><svg width="13" height="13" fill="#FF6B6B"><use href="#i-place"/></svg><span>Trattoria italiana · a 0,9 km · ~18 $</span></div>
+              <div class="cd-place" data-from="6"><svg width="13" height="13" fill="#FF6B6B"><use href="#i-place"/></svg><span>Café con brunch · a 1,2 km · ~12 $</span></div>
+
+              <div class="cd-cards" data-from="7">
+                <div class="cd-card">
+                  <div class="cd-card-img">
+                    <img src="/assets/cat/cat-bar.webp" alt="" width="150" height="78">
+                    <span class="cd-card-tag">Bar</span>
+                    <span class="cd-saved" data-from="11"><svg width="13" height="13" fill="#FF4D6D"><use href="#i-heart"/></svg></span>
+                  </div>
+                  <div class="cd-card-b"><div class="cd-card-z">Los Palos Grandes</div><div class="cd-card-n">Vinos y tapas para dos</div></div>
+                </div>
+                <div class="cd-card">
+                  <div class="cd-card-img">
+                    <img src="/assets/cat/cat-gastronomia.webp" alt="" width="150" height="78">
+                    <span class="cd-card-tag">Gastronomía</span>
+                  </div>
+                  <div class="cd-card-b"><div class="cd-card-z">Altamira</div><div class="cd-card-n">Pasta fresca y cocteles</div></div>
+                </div>
+              </div>
+
+              <div class="cd-hint" data-from="7" data-to="8" hidden>Mantén pulsado un plan para compararlo con otros</div>
+
+              <div class="cd-user" data-from="9">guárdame el bar de vinos</div>
+
+              <div class="cd-wait" data-from="10" data-to="10" hidden>
+                <span class="cd-ava"><svg width="13" height="13" fill="#0D1B2A"><use href="#i-bolt"/></svg></span>
+                <span class="cd-dot lg first"></span><span class="cd-dot lg d1"></span><span class="cd-dot lg d2"></span>
+              </div>
+
+              <div class="cd-row in" data-from="11">
+                <span class="cd-ava"><svg width="13" height="13" fill="#0D1B2A"><use href="#i-bolt"/></svg></span>
+                <div class="cd-bot with-ico"><svg width="16" height="16" fill="#FF4D6D"><use href="#i-heart"/></svg><span>Listo, quedó en tus favoritos para el viernes.</span></div>
+              </div>
+
+              <div class="cd-chips" data-from="11"><span>Algo más económico</span><span>Con música en vivo</span></div>
+            </div>
+
+            <div class="cd-bar">
+              <span class="cd-btn"><svg width="16" height="16" fill="none" stroke="#B8C3D0" stroke-width="2.2" stroke-linecap="round"><use href="#i-plus"/></svg></span>
+              <div class="cd-input">
+                <span class="cd-ph" data-chat-placeholder>Escribe tu mensaje…</span>
+                <span class="cd-text" data-chat-text hidden></span>
+                <span class="cd-caret" data-chat-caret hidden></span>
+              </div>
+              <span class="cd-btn send-on" data-chat-send="on" hidden><svg width="16" height="16" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#i-up"/></svg></span>
+              <span class="cd-btn" data-chat-send="off"><svg width="16" height="16" fill="none" stroke="#7C8896" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#i-up"/></svg></span>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="phone phone-glow w-[176px] sm:w-[200px]" style="transform: rotate(3deg); z-index:2;">
-        <img src="assets/app-ai.webp" alt="Chat con IA de Spotz recomendando planes en Caracas" loading="eager" width="1220" height="2712">
+      <div class="sp-float f1 sp-bob" aria-hidden="true">
+        <svg width="20" height="20" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"><use href="#i-search"/></svg>
+        <span><strong>1.000</strong> lugares</span>
+      </div>
+      <div class="sp-float f2 sp-bob d2" aria-hidden="true">
+        <svg width="20" height="20" fill="#FF4D6D"><use href="#i-heart"/></svg>
+        <span>Guardado en favoritos</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pasos del chat: chat-demo.js enciende el que toca según el paso del teléfono -->
+  <div class="sp-howto">
+    <h2 class="sp-eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="#FF6B35" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>Así se usa el chat</h2>
+    <ol class="sp-steps" id="chat-pasos">
+      <li class="sp-step is-on" data-phase="1" aria-current="step">
+        <span class="sp-step-n" aria-hidden="true">1</span>
+        <div class="sp-step-b">
+          <h3 class="sp-step-t">Pídelo como lo dirías</h3>
+          <p class="sp-step-d">Escríbelo o déjale una nota de voz.</p>
+        </div>
+      </li>
+      <li class="sp-step" data-phase="2">
+        <span class="sp-step-n" aria-hidden="true">2</span>
+        <div class="sp-step-b">
+          <h3 class="sp-step-t">Busca entre 1.000 lugares</h3>
+          <p class="sp-step-d">Y te trae los que encajan, con zona y precio.</p>
+        </div>
+      </li>
+      <li class="sp-step" data-phase="3">
+        <span class="sp-step-n" aria-hidden="true">3</span>
+        <div class="sp-step-b">
+          <h3 class="sp-step-t">Compáralo y guárdalo</h3>
+          <p class="sp-step-d">Compara hasta tres o pídele que te lo guarde.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ── MARQUESINA: categorías y zonas (la segunda mitad de cada pista es la copia del bucle) ── -->
+<section class="sp-marquee" aria-label="Categorías y zonas de Caracas">
+  <div class="sp-mq">
+    <div class="sp-mq-track">
+      <span class="sp-cat">Gastronomía</span><span class="sp-cat">Bares</span><span class="sp-cat">Cafés</span><span class="sp-cat">Brunch</span><span class="sp-cat">Teatro</span><span class="sp-cat">Arte</span><span class="sp-cat">Música en vivo</span><span class="sp-cat">Fiesta</span><span class="sp-cat">Deporte</span><span class="sp-cat">Bienestar</span><span class="sp-cat">Cine</span><span class="sp-cat">Postres</span>
+      <span class="sp-cat" aria-hidden="true">Gastronomía</span><span class="sp-cat" aria-hidden="true">Bares</span><span class="sp-cat" aria-hidden="true">Cafés</span><span class="sp-cat" aria-hidden="true">Brunch</span><span class="sp-cat" aria-hidden="true">Teatro</span><span class="sp-cat" aria-hidden="true">Arte</span><span class="sp-cat" aria-hidden="true">Música en vivo</span><span class="sp-cat" aria-hidden="true">Fiesta</span><span class="sp-cat" aria-hidden="true">Deporte</span><span class="sp-cat" aria-hidden="true">Bienestar</span><span class="sp-cat" aria-hidden="true">Cine</span><span class="sp-cat" aria-hidden="true">Postres</span>
+    </div>
+  </div>
+  <div class="sp-mq">
+    <div class="sp-mq-track rev">
+      <span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>Chacao</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>Altamira</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>Los Palos Grandes</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>Las Mercedes</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>La Castellana</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>Sabana Grande</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>El Hatillo</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>Bello Monte</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>La Candelaria</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>Los Dos Caminos</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>San Bernardino</span><span class="sp-zone"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>La Trinidad</span>
+      <span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>Chacao</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>Altamira</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>Los Palos Grandes</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>Las Mercedes</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>La Castellana</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>Sabana Grande</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>El Hatillo</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>Bello Monte</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>La Candelaria</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>Los Dos Caminos</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>San Bernardino</span><span class="sp-zone" aria-hidden="true"><svg width="14" height="14" fill="none" stroke="#FF6B35" stroke-width="2"><use href="#i-pin"/></svg>La Trinidad</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── MAPA ── -->
+<section id="mapa" class="sp-band sp-map-sec">
+  <div class="sp-wrap">
+    <div class="sp-split rev">
+      <div class="sp-split-copy">
+        <p class="sp-eyebrow"><svg width="16" height="16" fill="none" stroke="#FF6B35" stroke-width="2.2" aria-hidden="true"><use href="#i-pin"/></svg>Mapa</p>
+        <h2 class="sp-h2-big">Toda la ciudad,<br>en un solo mapa.</h2>
+        <p class="sp-map-p">Acércate a tu zona y mira qué tienes cerca: dónde comer, tomarte algo o pasar la tarde, en los cinco municipios.</p>
+        <ul class="sp-feats">
+          <li><span class="sp-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg></span>Filtra por categoría: comida, bares, café, cultura</li>
+          <li><span class="sp-ico"><svg width="20" height="20" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-clock"/></svg></span>Mira a cuánto te queda cada sitio</li>
+          <li><span class="sp-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-8-8 18-2-8z"/></svg></span>Ábrelo en tu app de mapas para llegar</li>
+        </ul>
+      </div>
+      <div class="sp-split-art">
+        <div class="sp-glow-map" aria-hidden="true"></div>
+        <div class="sp-rel">
+
+          <div class="md-phone" role="img" aria-label="Mapa de Spotz: la vista se acerca a tu zona, aparecen los lugares cercanos y sube la tarjeta de uno que te queda a 600 metros.">
+            <div class="md-scr" aria-hidden="true">
+              <div class="md-layer">
+                <svg width="320" height="680" viewBox="0 0 320 680">
+                  <rect width="320" height="680" fill="#111821"/>
+                  <path d="M0 0H320V118C262 140 208 108 152 130C102 150 52 118 0 142Z" fill="#152821"/>
+                  <g stroke="#1B2532" stroke-width="1.2" fill="none">
+                    <path d="M22 150L34 640"/><path d="M52 146L62 640"/><path d="M84 142L92 640"/><path d="M114 138L120 640"/><path d="M144 134L150 640"/><path d="M172 130L180 640"/><path d="M200 128L210 640"/><path d="M230 126L238 640"/><path d="M260 124L266 640"/><path d="M290 122L296 640"/>
+                    <path d="M0 190L320 170"/><path d="M0 225L320 204"/><path d="M0 262L320 238"/><path d="M0 395L320 365"/><path d="M0 440L320 410"/><path d="M0 485L320 455"/><path d="M0 530L320 500"/><path d="M0 575L320 545"/><path d="M0 620L320 590"/>
+                  </g>
+                  <path d="M0 438C100 418 200 412 320 376" stroke="#1C3954" stroke-width="3" fill="none"/>
+                  <path d="M0 302C90 288 180 272 320 246" stroke="#2A3A4E" stroke-width="4" fill="none"/>
+                  <path d="M0 332C100 318 200 302 320 278" stroke="#26364A" stroke-width="3" fill="none"/>
+                  <path d="M0 372C80 352 160 342 320 312" stroke="#34465D" stroke-width="7" fill="none"/>
+                  <path d="M150 342C158 420 176 520 210 680" stroke="#2A3A4E" stroke-width="4" fill="none"/>
+                  <g font-family="Poppins, sans-serif" font-size="7" letter-spacing="1.6" fill="#5B6B7E">
+                    <text x="122" y="72" fill="#3E5A4C">EL ÁVILA</text>
+                    <text x="14" y="318">CENTRO</text>
+                    <text x="58" y="356">SABANA GRANDE</text>
+                    <text x="178" y="282">CHACAO</text>
+                    <text x="240" y="236">ALTAMIRA</text>
+                    <text x="160" y="460">LAS MERCEDES</text>
+                    <text x="210" y="616">EL HATILLO</text>
+                    <text x="40" y="520">EL VALLE</text>
+                    <text x="262" y="330">PETARE</text>
+                  </g>
+                  <g class="md-dots" fill="#FF6B35">
+                    <circle cx="175" cy="265" r="2.4"/><circle cx="215" cy="255" r="2.4"/><circle cx="195" cy="300" r="2.4"/><circle cx="225" cy="320" r="2.4"/><circle cx="160" cy="330" r="2.4"/>
+                    <circle cx="186" cy="244" r="2.2"/><circle cx="242" cy="262" r="2.2"/><circle cx="206" cy="232" r="2.2"/><circle cx="252" cy="246" r="2.2"/><circle cx="232" cy="290" r="2.2"/><circle cx="170" cy="296" r="2.2"/><circle cx="148" cy="312" r="2.2"/>
+                    <circle cx="120" cy="330" r="2.2"/><circle cx="96" cy="342" r="2.2"/><circle cx="74" cy="336" r="2.2"/><circle cx="44" cy="324" r="2.2"/><circle cx="28" cy="300" r="2.2"/><circle cx="58" cy="304" r="2.2"/>
+                    <circle cx="166" cy="430" r="2.2"/><circle cx="186" cy="446" r="2.2"/><circle cx="198" cy="470" r="2.2"/><circle cx="176" cy="480" r="2.2"/><circle cx="150" cy="462" r="2.2"/>
+                    <circle cx="268" cy="300" r="2.2"/><circle cx="290" cy="270" r="2.2"/><circle cx="280" cy="232" r="2.2"/><circle cx="300" cy="300" r="2.2"/>
+                    <circle cx="222" cy="580" r="2.2"/><circle cx="238" cy="600" r="2.2"/><circle cx="208" cy="560" r="2.2"/>
+                    <circle cx="60" cy="500" r="2.2"/><circle cx="86" cy="520" r="2.2"/><circle cx="120" cy="390" r="2.2"/><circle cx="250" cy="390" r="2.2"/><circle cx="270" cy="420" r="2.2"/>
+                    <circle cx="130" cy="250" r="2.2"/><circle cx="104" cy="270" r="2.2"/><circle cx="220" cy="350" r="2.2"/><circle cx="240" cy="200" r="2.2"/>
+                  </g>
+                </svg>
+              </div>
+
+              <div class="md-pin" style="left:120px;top:209px"><svg width="30" height="34"><use href="#i-mappin"/></svg></div>
+              <div class="md-pin md-label" style="left:150px;top:196px">Vinos · 600 m</div>
+              <div class="md-pin p2" style="left:224px;top:181px"><svg width="30" height="34"><use href="#i-mappin"/></svg></div>
+              <div class="md-pin p3" style="left:172px;top:298px"><svg width="30" height="34"><use href="#i-mappin"/></svg></div>
+              <div class="md-pin p4" style="left:250px;top:350px"><svg width="30" height="34"><use href="#i-mappin"/></svg></div>
+              <div class="md-pin p5" style="left:81px;top:376px"><svg width="30" height="34"><use href="#i-mappin"/></svg></div>
+              <div class="md-pin md-mewrap" style="left:166px;top:454px"><span class="md-me"></span><span class="md-me-dot"></span></div>
+
+              <div class="md-top">
+                <div class="md-search"><svg width="16" height="16" fill="none" stroke="#9FAABA" stroke-width="2" stroke-linecap="round"><use href="#i-search"/></svg><span>Descubre Caracas</span></div>
+                <div class="md-chips"><span class="on">Todo</span><span>Gastronomía</span><span>Bar</span><span>Café</span><span>Cultura</span></div>
+              </div>
+
+              <div class="md-badge"><span><svg width="14" height="14" fill="none" stroke="#0D1B2A" stroke-width="2.2"><use href="#i-pin"/></svg>1.000 lugares en el mapa</span></div>
+
+              <div class="md-sheet">
+                <img src="/assets/cat/cat-bar.webp" alt="" width="62" height="62" loading="lazy">
+                <div class="md-sheet-txt">
+                  <div class="md-sheet-m">Bar · Los Palos Grandes</div>
+                  <div class="md-sheet-n">Vinos y tapas para dos</div>
+                  <div class="md-sheet-d">a 600 m · ~20 $</div>
+                </div>
+                <span class="md-go"><svg width="16" height="16" fill="none" stroke="#0D1B2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#i-arrow"/></svg></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── FRANJA DE CATEGORÍAS ── -->
-<section class="px-5 py-4 border-y border-white/[0.06]">
-  <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-    <span class="font-mono text-[10px] tracking-[0.16em] text-white/35 uppercase">Qué vas a encontrar</span>
-    <span class="text-white/20" aria-hidden="true">·</span>
-    <span class="text-white/70 text-sm font-semibold">Conciertos</span>
-    <span class="text-white/70 text-sm font-semibold">Gastronomía</span>
-    <span class="text-white/70 text-sm font-semibold">Arte</span>
-    <span class="text-white/70 text-sm font-semibold">Fiestas</span>
-    <span class="text-white/70 text-sm font-semibold">Deporte</span>
-    <span class="text-white/70 text-sm font-semibold">Teatro</span>
+<!-- ── QUÉ PUEDES HACER ── -->
+<section class="sp-wrap sp-what">
+  <h2 class="sp-h2">Todo lo que haces con Spotz</h2>
+  <p class="sp-sub">Una sola app para saber qué hay, dónde queda y qué te conviene.</p>
+  <div class="sp-grid4">
+
+    <article class="sp-card">
+      <div class="sp-card-art feed" aria-hidden="true">
+        <div class="sp-feed">
+          <div class="sp-feed-i"><img src="/assets/cat/cat-teatro.webp" alt="" width="72" height="72" loading="lazy"><span>Teatro · Chacao</span></div>
+          <div class="sp-feed-i"><img src="/assets/cat/cat-cafe.webp" alt="" width="72" height="72" loading="lazy"><span>Café · Altamira</span></div>
+          <div class="sp-feed-i"><img src="/assets/cat/cat-musica.webp" alt="" width="72" height="72" loading="lazy"><span>Música · Las Mercedes</span></div>
+          <div class="sp-feed-i"><img src="/assets/cat/cat-teatro.webp" alt="" width="72" height="72" loading="lazy"><span>Teatro · Chacao</span></div>
+        </div>
+      </div>
+      <div class="sp-card-body">
+        <h3 class="sp-card-t">Descubre qué hay</h3>
+        <p class="sp-card-d">Restaurantes, bares, cafés, teatros y más, por categoría y por zona.</p>
+      </div>
+    </article>
+
+    <article class="sp-card">
+      <div class="sp-card-art" aria-hidden="true">
+        <div class="sp-loyal">
+          <div class="sp-shine"></div>
+          <div class="sp-loyal-t">Tarjeta de fidelidad</div>
+          <div class="sp-loyal-d">Cada visita suma un sello</div>
+          <div class="sp-stamps"><span class="sp-stamp"></span><span class="sp-stamp"></span><span class="sp-stamp"></span><span class="sp-stamp"></span><span class="sp-stamp"></span></div>
+        </div>
+      </div>
+      <div class="sp-card-body">
+        <h3 class="sp-card-t">Cupones y sellos</h3>
+        <p class="sp-card-d">Activa los cupones de los locales y llena tus tarjetas de fidelidad.</p>
+      </div>
+    </article>
+
+    <article class="sp-card">
+      <div class="sp-card-art col" aria-hidden="true">
+        <div class="sp-heart"><svg width="36" height="36" fill="#FF4D6D"><use href="#i-heart"/></svg></div>
+        <div class="sp-avatars">
+          <img src="/assets/cat/cat-bar.webp" alt="" width="34" height="34" loading="lazy">
+          <img src="/assets/cat/cat-gastronomia.webp" alt="" width="34" height="34" loading="lazy">
+          <img src="/assets/cat/cat-cafe.webp" alt="" width="34" height="34" loading="lazy">
+        </div>
+      </div>
+      <div class="sp-card-body">
+        <h3 class="sp-card-t">Guarda tus favoritos</h3>
+        <p class="sp-card-d">Arma tu lista de sitios y tenla a mano para el fin de semana.</p>
+      </div>
+    </article>
+
+    <article class="sp-card">
+      <div class="sp-card-art" aria-hidden="true">
+        <svg class="sp-wheel-pin" width="18" height="16" viewBox="0 0 18 16"><path d="M9 16 0 0h18z" fill="#FFFFFF"/></svg>
+        <div class="sp-wheel"></div>
+        <span class="sp-wheel-hub"></span>
+      </div>
+      <div class="sp-card-body">
+        <h3 class="sp-card-t">¿No te decides? Gira</h3>
+        <p class="sp-card-d">La ruleta elige por ti entre tus favoritos.</p>
+      </div>
+    </article>
+
   </div>
 </section>
 
-<!-- ── EL TABLERO / MAPA DE SOCIOS ── -->
-<section id="mapa" class="px-5 py-16">
-  <div class="max-w-5xl mx-auto">
+<!-- ── ASÍ SE VE: pantallas recreadas de la app, sin marcas reales ── -->
+<section class="sp-band sp-looks">
+  <div class="sp-wrap">
+    <h2 class="sp-h2">Así se ve Spotz</h2>
+    <p class="sp-sub">Favoritos, chat y cada plan con todos sus detalles.</p>
+    <div class="sp-phones">
 
-    <!-- Cabecera: solo visible cuando ya hay socios -->
-    <div id="map-header" class="hidden items-end justify-between gap-6 mb-5 sm:flex">
-      <div>
-        <div class="font-mono text-[10px] tracking-[0.18em] text-white/35 uppercase mb-2.5">El mapa</div>
-        <h2 class="font-display font-black text-3xl sm:text-4xl tracking-tight">
-          <span class="text-orange" id="map-count">0</span> <span class="text-white/30">/ <span class="partners-goal">20</span></span> comercios firmados
-        </h2>
-      </div>
-      <p class="text-white/55 text-sm leading-relaxed max-w-[340px] text-right">
-        Toca un local para ver su oferta. Cada una existe solo aquí.
-      </p>
-    </div>
-
-    <!-- Contenedor del mapa. Con 0 socios NO se carga mapbox: se ve el tablero. -->
-    <div class="relative rounded-3xl overflow-hidden border border-white/[0.08]" style="background:#0a1421">
-
-      <!-- Tablero vacío (estado por defecto) -->
-      <div id="map-empty" class="relative" style="height:420px">
-        <svg viewBox="0 0 1000 420" class="absolute inset-0 w-full h-full block" aria-hidden="true">
-          <rect width="1000" height="420" fill="#0d1826"/>
-          <path d="M0 96 C 150 58, 320 44, 500 62 C 690 80, 850 66, 1000 40 L1000 0 L0 0 Z" fill="#101f31"/>
-          <path d="M0 96 C 150 58, 320 44, 500 62 C 690 80, 850 66, 1000 40" stroke="rgba(255,255,255,0.10)" stroke-width="1.5" fill="none"/>
-          <g stroke="rgba(255,255,255,0.055)" stroke-width="1">
-            <path d="M40 150 H 960"/><path d="M40 196 H 960"/><path d="M40 242 H 960"/>
-            <path d="M40 288 H 960"/><path d="M40 334 H 960"/>
-            <path d="M140 120 V 400"/><path d="M270 120 V 400"/><path d="M400 120 V 400"/>
-            <path d="M530 120 V 400"/><path d="M660 120 V 400"/><path d="M790 120 V 400"/>
-          </g>
-          <path d="M60 268 C 240 250, 420 286, 620 262 C 780 244, 900 258, 980 246" stroke="rgba(0,78,137,0.5)" stroke-width="3" fill="none"/>
-        </svg>
-        <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at center, transparent 30%, #0D1B2A 88%)"></div>
-
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-10">
-          <div class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-4" style="background:rgba(255,107,53,0.14)">
-            <span class="live-dot inline-block align-middle"></span>
-            <span class="font-mono text-[10px] tracking-[0.16em] uppercase" style="color:#FFB694">Día <span class="serie-day">—</span> de <span class="partners-total">45</span></span>
+      <!-- Favoritos -->
+      <div class="ph-side sp-side-phone sp-bob" role="img" aria-label="Pantalla de favoritos de Spotz con cuatro planes guardados">
+        <div class="ph-scr" aria-hidden="true">
+          <div class="fv-head">
+            <span class="ph-circ" style="width:26px;height:26px;background:#1B2B42"><svg width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"><use href="#i-back"/></svg></span>
+            <span class="fv-title">Favoritos</span>
+            <span class="fv-count">6 guardados</span>
+            <span class="ph-circ" style="width:28px;height:28px;background:#C2410C"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.2" fill="#FFFFFF"/><circle cx="15" cy="15" r="1.2" fill="#FFFFFF"/><circle cx="15" cy="9" r="1.2" fill="#FFFFFF"/><circle cx="9" cy="15" r="1.2" fill="#FFFFFF"/></svg></span>
           </div>
-          <div class="font-display font-black text-[60px] leading-none tracking-tight text-orange">
-            <span class="board-count">0</span> <span class="text-white/30">/ <span class="partners-goal">20</span></span>
+          <div class="fv-list">
+            <div class="fv-item">
+              <div class="fv-txt"><div class="fv-date">vie, 17 oct · 8:00 p. m.</div><div class="fv-name">Vinos y tapas para dos</div><div class="fv-row"><span class="fv-tag" style="color:#F07A8F;background:rgba(192,57,43,.25)">Bar</span><span class="fv-price">$15 – $25</span></div></div>
+              <div class="fv-thumb"><img src="/assets/cat/cat-bar.webp" alt="" width="52" height="52" loading="lazy"><svg width="12" height="12" fill="#FF4D6D"><use href="#i-heart"/></svg></div>
+            </div>
+            <div class="fv-item">
+              <div class="fv-txt"><div class="fv-date">sáb, 18 oct · 1:00 p. m.</div><div class="fv-name">Pasta fresca y cocteles</div><div class="fv-row"><span class="fv-tag" style="color:#FF8DB8;background:rgba(253,121,168,.18)">Gastronomía</span><span class="fv-price">$20</span></div></div>
+              <div class="fv-thumb"><img src="/assets/cat/cat-gastronomia.webp" alt="" width="52" height="52" loading="lazy"><svg width="12" height="12" fill="#FF4D6D"><use href="#i-heart"/></svg></div>
+            </div>
+            <div class="fv-item">
+              <div class="fv-txt"><div class="fv-date">dom, 19 oct · 10:00 a. m.</div><div class="fv-name">Café de especialidad</div><div class="fv-row"><span class="fv-tag" style="color:#C9A38A;background:rgba(121,85,72,.3)">Café</span><span class="fv-price">$5 – $10</span></div></div>
+              <div class="fv-thumb"><img src="/assets/cat/cat-cafe.webp" alt="" width="52" height="52" loading="lazy"><svg width="12" height="12" fill="#FF4D6D"><use href="#i-heart"/></svg></div>
+            </div>
+            <div class="fv-item">
+              <div class="fv-txt"><div class="fv-date">jue, 23 oct · 7:30 p. m.</div><div class="fv-name">Una noche de teatro</div><div class="fv-row"><span class="fv-tag" style="color:#B3A8FF;background:rgba(108,92,231,.25)">Teatro</span><span class="fv-price">$12</span></div></div>
+              <div class="fv-thumb"><img src="/assets/cat/cat-teatro.webp" alt="" width="52" height="52" loading="lazy"><svg width="12" height="12" fill="#FF4D6D"><use href="#i-heart"/></svg></div>
+            </div>
           </div>
-          <div class="font-mono text-[11px] tracking-[0.16em] uppercase text-white/45 mt-2.5">comercios en el mapa</div>
-        </div>
-      </div>
-
-      <!-- Mapa real (se rellena solo si hay socios) -->
-      <div id="map-live" class="hidden" style="height:460px"></div>
-
-      <!-- Copy del tablero -->
-      <div class="px-6 sm:px-10 pt-8 pb-9 text-center border-t border-white/[0.06]">
-        <p id="board-title" class="font-display font-black text-[22px] tracking-tight mb-3">Ningún pin todavía. Y así es como tiene que verse.</p>
-        <p id="board-body" class="text-white/62 text-[15px] leading-relaxed max-w-lg mx-auto mb-6">
-          Cada pin de este mapa es un local de Caracas que firmó de verdad, con una oferta que solo existe aquí. No hay relleno. Cuando veas uno, es real.
-        </p>
-
-        <!-- El marcador: una casilla por socio de la meta -->
-        <div id="board-slots" class="flex flex-wrap gap-2.5 justify-center mb-6" aria-hidden="true"></div>
-
-        <p class="text-white/50 text-[13px]">
-          Estoy recorriendo la ciudad para conseguirlos. Míralo día a día en
-          <a href="https://instagram.com/enspotz" target="_blank" rel="noopener" class="text-orange underline">@enspotz</a>
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── SPOTLIGHT IA ── -->
-<section class="px-5 py-16 sm:py-20">
-  <div class="max-w-5xl mx-auto rounded-3xl p-7 sm:p-10 lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center overflow-hidden"
-       style="background:linear-gradient(135deg, rgba(255,107,53,0.10), rgba(255,107,53,0.02)); border:1px solid rgba(255,107,53,0.18);">
-    <div class="text-center lg:text-left max-w-lg mx-auto lg:mx-0">
-      <div class="font-mono text-[10px] tracking-[0.18em] uppercase mb-3" style="color:#FFB694">✦ Lo que nadie más tiene</div>
-      <h2 class="font-display font-black text-3xl sm:text-4xl leading-[1.05] tracking-tight mb-4">Dile qué quieres.<br>Spotz te arma el plan.</h2>
-      <p class="text-white/62 text-[16px] leading-relaxed mb-7">
-        Un chat que conoce la ciudad, entiende cómo hablas y te devuelve experiencias reales de Caracas — con precio, sitio y hora. Sin buscar en cinco cuentas de Instagram.
-      </p>
-
-      <div class="flex flex-col gap-2.5 max-w-sm mx-auto lg:mx-0">
-        <div class="self-end text-white text-[13.5px] leading-snug rounded-2xl rounded-br-md px-3.5 py-2.5" style="background:#B8420F">
-          algo tranquilo el viernes, cerca de Chacao
-        </div>
-        <div class="flex items-end gap-2">
-          <span class="w-6 h-6 rounded-full bg-orange shrink-0" aria-hidden="true"></span>
-          <div class="text-white/90 text-[13.5px] leading-snug rounded-2xl rounded-bl-md px-3.5 py-2.5 bg-white/[0.08]">
-            Dos que encajan, a 10 min de ti →
+          <div class="ph-tabs">
+            <span><svg width="14" height="14" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-cal"/></svg>Eventos</span>
+            <span><svg width="14" height="14" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-search"/></svg>Buscar</span>
+            <span><svg width="14" height="14" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-chat"/></svg>Chat</span>
+            <span><svg width="14" height="14" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-wallet"/></svg>Cartera</span>
+            <span><svg width="14" height="14" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-user"/></svg>Perfil</span>
           </div>
         </div>
       </div>
-    </div>
-    <div class="mt-12 lg:mt-0 flex justify-center">
-      <div class="phone phone-glow w-[230px] sm:w-[250px]">
-        <img src="assets/app-ai.webp" alt="Chat de IA de Spotz recomendando planes" loading="lazy" width="1220" height="2712">
+
+      <!-- Inicio del chat -->
+      <div class="ph-main" role="img" aria-label="Pantalla de inicio del chat de Spotz: ¿Qué plan buscas hoy?, con sugerencias rápidas y tus conversaciones recientes">
+        <div class="ph-scr" aria-hidden="true">
+          <div class="ch-head">
+            <span class="ph-circ" style="width:30px;height:30px;background:#FF6B35"><svg width="14" height="14" fill="#0D1B2A"><use href="#i-bolt"/></svg></span>
+            <div><div class="ch-name">Spot<span class="sp-z">z</span> IA</div><div class="ch-status">En línea · Caracas</div></div>
+          </div>
+          <div class="ch-greet"><div class="ch-hi">Hola, Ana</div><div class="ch-q">¿Qué plan buscas hoy?</div></div>
+          <div class="ch-box">
+            <div class="ch-ph">Escribe lo que quieres hacer…</div>
+            <div class="ch-btns">
+              <span class="ph-circ" style="width:26px;height:26px;background:#1B2B42"><svg width="12" height="12" fill="none" stroke="#B8C3D0" stroke-width="2.4" stroke-linecap="round"><use href="#i-plus"/></svg></span>
+              <span class="ph-circ" style="width:26px;height:26px;background:#C2410C"><svg width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><use href="#i-up"/></svg></span>
+            </div>
+          </div>
+          <div class="ch-chips"><span>Esta noche</span><span>Con amigos</span><span>Gratis</span><span>Cerca de mí</span><span>Algo nuevo</span></div>
+          <div class="ch-convs">
+            <div class="ch-convs-t">Tus conversaciones</div>
+            <div class="ch-conv"><img src="/assets/cat/cat-bar.webp" alt="" width="34" height="34" loading="lazy"><div class="fv-txt"><div class="ch-conv-n">Plan tranquilo en Chacao</div><div class="ch-conv-w">hace 1 min</div></div></div>
+            <div class="ch-conv"><img src="/assets/cat/cat-fiesta.webp" alt="" width="34" height="34" loading="lazy"><div class="fv-txt"><div class="ch-conv-n">¿Qué hay esta noche?</div><div class="ch-conv-w">hace 2 d</div></div></div>
+          </div>
+          <div class="ph-tabs">
+            <span><svg width="15" height="15" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-cal"/></svg>Eventos</span>
+            <span><svg width="15" height="15" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-search"/></svg>Buscar</span>
+            <span class="on"><svg width="15" height="15" fill="#FF6B35"><use href="#i-chat"/></svg>Chat</span>
+            <span><svg width="15" height="15" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-wallet"/></svg>Cartera</span>
+            <span><svg width="15" height="15" fill="none" stroke="#8C99A8" stroke-width="2"><use href="#i-user"/></svg>Perfil</span>
+          </div>
+        </div>
       </div>
+
+      <!-- Detalle de un plan -->
+      <div class="ph-side sp-side-phone sp-bob d2" role="img" aria-label="Ficha de un plan en Spotz: una noche de teatro en Chacao, con fecha, zona y botón para guardarlo en favoritos">
+        <div class="ph-scr" aria-hidden="true">
+          <div class="dt-hero">
+            <img src="/assets/cat/cat-teatro.webp" alt="" width="234" height="200" loading="lazy">
+            <span class="dt-btn" style="left:10px"><svg width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"><use href="#i-back"/></svg></span>
+            <span class="dt-btn" style="right:44px"><svg width="13" height="13" fill="#FF4D6D"><use href="#i-heart"/></svg></span>
+            <span class="dt-btn" style="right:10px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg></span>
+            <span class="dt-tag">Teatro</span>
+          </div>
+          <div class="dt-body">
+            <div class="dt-title">Una noche de teatro en Chacao</div>
+            <div class="dt-meta first"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#B3A8FF" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16"/></svg>jueves, 23 de octubre · 7:30 p. m.</div>
+            <div class="dt-meta"><svg width="12" height="12" fill="#FF6B6B"><use href="#i-place"/></svg>Chacao</div>
+            <div class="dt-desc">Una sala pequeña, obras de temporada y la ciudad de fondo. Un buen plan para un jueves.</div>
+            <div class="dt-enjoy">Vas a disfrutar</div>
+            <div class="dt-box">
+              <div><span class="ph-circ dt-check"><svg width="8" height="8" fill="none" stroke="#FFFFFF" stroke-width="4"><use href="#i-check"/></svg></span>Obras de temporada</div>
+              <div><span class="ph-circ dt-check"><svg width="8" height="8" fill="none" stroke="#FFFFFF" stroke-width="4"><use href="#i-check"/></svg></span>Ambiente íntimo</div>
+            </div>
+          </div>
+          <div class="dt-foot"><div class="dt-save">Guardar en favoritos</div></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- ── CÓMO FUNCIONA ── -->
-<section class="px-5 pb-16 sm:pb-20 max-w-6xl mx-auto">
-  <div class="text-center mb-12">
-    <div class="font-mono text-[10px] tracking-[0.18em] text-white/35 uppercase mb-3">Cómo funciona</div>
-    <h2 class="font-display font-black text-3xl sm:text-4xl tracking-tight">Tu próximo plan, en tres toques.</h2>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6">
-    <div class="flex flex-col items-center text-center">
-      <div class="phone w-[186px] mb-6"><img src="assets/app-home.webp" alt="Pantalla de descubrir eventos en Caracas" loading="lazy" width="1220" height="2712"></div>
-      <div class="font-mono text-[11px] tracking-[0.1em] text-orange font-bold mb-1.5">01</div>
-      <h3 class="font-display font-bold text-lg mb-1.5">Descubre</h3>
-      <p class="text-white/60 text-sm leading-relaxed max-w-xs">Todo lo que pasa en Caracas en un solo sitio, ordenado por lo que de verdad está pasando esta semana.</p>
-    </div>
-    <div class="flex flex-col items-center text-center">
-      <div class="phone w-[186px] mb-6"><img src="assets/app-mapa.webp" alt="Mapa de eventos de Caracas en Spotz" loading="lazy" width="1220" height="2712"></div>
-      <div class="font-mono text-[11px] tracking-[0.1em] text-orange font-bold mb-1.5">02</div>
-      <h3 class="font-display font-bold text-lg mb-1.5">Explora el mapa</h3>
-      <p class="text-white/60 text-sm leading-relaxed max-w-xs">Mira qué se mueve cerca de ti y filtra por fecha, categoría y precio sin salir del mapa.</p>
-    </div>
-    <div class="flex flex-col items-center text-center">
-      <div class="phone w-[186px] mb-6"><img src="assets/app-favoritos.webp" alt="Pantalla de favoritos guardados" loading="lazy" width="1220" height="2712"></div>
-      <div class="font-mono text-[11px] tracking-[0.1em] text-orange font-bold mb-1.5">03</div>
-      <h3 class="font-display font-bold text-lg mb-1.5">Guarda y ve</h3>
-      <p class="text-white/60 text-sm leading-relaxed max-w-xs">Guarda lo que te interesa, decide después y no te enteres del plan cuando ya pasó.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── BENEFICIOS ── -->
-<section class="px-5 pb-16 sm:pb-20 max-w-5xl mx-auto">
-  <div class="lg:grid lg:grid-cols-[0.85fr_1.15fr] lg:gap-8 lg:items-center">
-    <div class="relative rounded-3xl overflow-hidden mb-8 lg:mb-0 border border-white/[0.08]">
-      <img src="assets/benefit.webp" alt="Amigos disfrutando un evento nocturno en Caracas" loading="lazy" class="w-full h-56 lg:h-[330px] object-cover">
-      <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(13,27,42,0.78), transparent 55%);"></div>
-      <p class="absolute left-5 right-5 bottom-4 font-display font-black text-[19px] leading-tight tracking-tight">Entra antes que<br>el resto de la ciudad.</p>
-    </div>
-
-    <div>
-      <div class="font-mono text-[10px] tracking-[0.18em] text-white/35 uppercase mb-3">Acceso anticipado</div>
-      <h2 class="font-display font-black text-3xl tracking-tight mb-6">Qué llevas por registrarte hoy</h2>
-
-      <div class="flex flex-col gap-3">
-        <div class="bg-white/[0.05] rounded-2xl p-5 flex items-start gap-3.5">
-          <div class="text-xl shrink-0 leading-snug">🎫</div>
-          <div><p class="font-display font-bold text-[15px] mb-1">Acceso antes que nadie</p>
-            <p class="text-white/60 text-[13px] leading-relaxed">Los eventos más buscados, en tus manos primero.</p></div>
-        </div>
-        <div class="bg-orange/[0.10] border border-orange/25 rounded-2xl p-5 flex items-start gap-3.5">
-          <div class="text-xl shrink-0 leading-snug">🏷️</div>
-          <div><p class="font-display font-bold text-[15px] mb-1">Una oferta por cada socio que firmemos</p>
-            <p class="text-white/68 text-[13px] leading-relaxed">Cada local que se suma al mapa trae un descuento que solo existe aquí. Ya puedes tomarlos, sin esperar a la app.</p></div>
-        </div>
-        <div class="bg-white/[0.05] rounded-2xl p-5 flex items-start gap-3.5">
-          <div class="text-xl shrink-0 leading-snug">🤖</div>
-          <div><p class="font-display font-bold text-[15px] mb-1">Tu asistente con IA</p>
-            <p class="text-white/60 text-[13px] leading-relaxed">Sin límite de consultas durante el lanzamiento.</p></div>
-        </div>
+<!-- ── NEGOCIOS ── -->
+<section class="sp-wrap sp-biz-sec">
+  <div class="sp-biz">
+    <div class="sp-biz-l">
+      <span class="sp-biz-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v10h16V10"/><path d="M3 4h18l-1.5 6h-15z"/><path d="M10 20v-5h4v5"/></svg></span>
+      <div class="sp-step-b">
+        <h2 class="sp-biz-t">¿Tienes un local en Caracas?</h2>
+        <p class="sp-biz-d">Puede que ya esté en Spotz. Reclámalo gratis y publica tus experiencias y cupones.</p>
       </div>
     </div>
+    <a class="sp-btn-line" href="/comercios">Soy un negocio<svg width="16" height="16" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg></a>
   </div>
 </section>
 
 <!-- ── FAQ ── -->
-<section class="px-5 pb-16 sm:pb-20 max-w-3xl mx-auto">
-  <h2 class="font-display font-black text-3xl tracking-tight text-center mb-8">Preguntas rápidas</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-    <div class="bg-white/[0.05] rounded-2xl p-5">
-      <p class="font-bold text-[15px] mb-1.5">¿Cuándo sale la app?</p>
-      <p class="text-white/60 text-[13px] leading-relaxed">El 10 de octubre, en iOS y Android. La lista de espera entra una semana antes.</p>
-    </div>
-    <div class="bg-white/[0.05] rounded-2xl p-5">
-      <p class="font-bold text-[15px] mb-1.5">¿Cómo tomo un descuento?</p>
-      <p class="text-white/60 text-[13px] leading-relaxed">Entras al local desde el mapa y activas su oferta. Te damos un código para mostrar en el sitio. No hace falta descargar nada.</p>
-    </div>
-    <div class="bg-white/[0.05] rounded-2xl p-5">
-      <p class="font-bold text-[15px] mb-1.5">¿Cuesta algo?</p>
-      <p class="text-white/60 text-[13px] leading-relaxed">No. Descubrir eventos y usar la IA es gratis. Algunas experiencias tienen su propio precio.</p>
-    </div>
-    <div class="bg-white/[0.05] rounded-2xl p-5">
-      <p class="font-bold text-[15px] mb-1.5">¿Qué hacen con mi correo?</p>
-      <p class="text-white/60 text-[13px] leading-relaxed">Avisarte del lanzamiento. Nada más, y puedes pedir que lo borremos cuando quieras. Ver <a href="/privacidad" class="text-orange underline">Privacidad</a>.</p>
-    </div>
-    <div class="bg-white/[0.05] rounded-2xl p-5">
-      <p class="font-bold text-[15px] mb-1.5">Tengo un local, ¿cómo entro al mapa?</p>
-      <p class="text-white/60 text-[13px] leading-relaxed">Quedan <span class="slots-left">20</span> plazas de las <span class="partners-goal">20</span>. <a href="/comercios" class="text-orange underline">Registra tu negocio</a> — gratis durante el lanzamiento.</p>
-    </div>
+<section class="sp-wrap sp-faq">
+  <h2 class="sp-h2">Preguntas rápidas</h2>
+  <div class="sp-faq-list">
+    <details open>
+      <summary>¿Spotz es gratis?<svg class="sp-chev" width="20" height="20" fill="none" stroke="#8C99A8" stroke-width="2" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+      <p>Sí. Crear tu cuenta, buscar lugares y usar el chat no te cuesta nada.</p>
+    </details>
+    <details>
+      <summary>¿Dónde la uso?<svg class="sp-chev" width="20" height="20" fill="none" stroke="#8C99A8" stroke-width="2" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+      <p>Desde el navegador del teléfono o la computadora, en enspotz.com/app. Pronto también en App Store y Google Play.</p>
+    </details>
+    <details>
+      <summary>¿Cómo funciona el chat?<svg class="sp-chev" width="20" height="20" fill="none" stroke="#8C99A8" stroke-width="2" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+      <p>Le escribes o le dejas una nota de voz con lo que quieres hacer, y te responde con lugares de Caracas: zona, precio aproximado y qué ofrecen. Puedes pedirle que compare opciones o que te las guarde.</p>
+    </details>
+    <details>
+      <summary>¿Qué lugares hay?<svg class="sp-chev" width="20" height="20" fill="none" stroke="#8C99A8" stroke-width="2" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+      <p>1.000 lugares: restaurantes, bares, cafés, teatros, museos, gimnasios y más, en los cinco municipios de Caracas.</p>
+    </details>
+    <details>
+      <summary>Tengo un negocio, ¿cómo aparezco?<svg class="sp-chev" width="20" height="20" fill="none" stroke="#8C99A8" stroke-width="2" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+      <p>Si tu local ya está en Spotz, reclámalo gratis desde su ficha. Si no, regístralo en <a href="/comercios">Soy un negocio</a>.</p>
+    </details>
   </div>
 </section>
 
 <!-- ── CTA FINAL ── -->
-<section id="unirme" class="px-5 pb-20 max-w-md mx-auto text-center scroll-mt-28">
-  <h2 class="font-display font-black text-3xl sm:text-[34px] tracking-tight mb-3">No te quedes fuera.</h2>
-  <p class="text-white/60 text-[14.5px] mb-6">Faltan <span class="cd-days-2 seats text-white font-bold">—</span> días y quedan <span id="seats-left-2" class="seats text-white font-bold">—</span> cupos.</p>
-
-  <form id="waitlist-form-2" novalidate>
-    <div class="flex flex-col sm:flex-row gap-3">
-      <label for="email-input-2" class="sr-only">Correo electrónico</label>
-      <input id="email-input-2" type="email" placeholder="tucorreo@email.com" required autocomplete="email"
-             class="input-email flex-1 rounded-2xl px-5 py-4 text-base">
-      <button id="submit-btn-2" type="submit" class="btn-primary rounded-2xl px-6 py-4 text-white text-[15px] whitespace-nowrap">
-        Quiero acceso →
-      </button>
+<section class="sp-wrap sp-final-sec">
+  <div class="sp-final">
+    <div class="sp-final-l">
+      <h2>Tu próximo plan está a una pregunta.</h2>
+      <p class="sp-final-p">Crea tu cuenta en un minuto y pregúntale a Spotz qué hacer hoy en Caracas.</p>
     </div>
-    <p id="form-error-2" class="hidden mt-3 text-red-300 text-sm" role="alert"></p>
-  </form>
-
-  <div id="success-state-2" class="hidden fade-in">
-    <div class="bg-orange/10 border border-orange/30 rounded-2xl p-6">
-      <div class="text-3xl mb-2">🎉</div>
-      <p class="font-display font-black text-xl mb-1">¡Ya estás en la lista!</p>
-      <p class="text-white/60 text-sm">Te avisamos cuando abramos.</p>
+    <div class="sp-final-r">
+      <a class="sp-btn-navy" href="/app/sign-up">Crear cuenta gratis<svg width="18" height="18" fill="none" stroke="#FF6B35" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <span class="sp-final-note">Gratis · Desde el navegador</span>
     </div>
   </div>
-
-  <p class="mt-4 text-white/50 text-xs">Dos correos: uno ahora y otro el día del lanzamiento. Nada más.</p>
 </section>
 
+</main>
+
 <!-- ── FOOTER ── -->
-<footer class="px-6 py-8 border-t border-white/[0.06]">
-  <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
-    <div class="flex items-center gap-3">
-      <svg width="16" height="16" viewBox="0 0 80 80" fill="none" aria-hidden="true"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#FF6B35"/></svg>
-      <span class="font-display font-black text-[15px] tracking-tight">Spot<span class="text-orange">z</span></span>
-      <span class="text-white/20" aria-hidden="true">·</span>
-      <span class="text-white/50 text-[12.5px]">Caracas · 2026</span>
+<footer class="sp-footer">
+  <div class="sp-wrap">
+    <div class="sp-footer-l">
+      <span class="sp-word">spot<span>z</span></span>
+      <span class="sp-footer-city">Caracas · 2026</span>
     </div>
-    <nav class="flex flex-wrap items-center justify-center gap-4 text-[12.5px] text-white/50">
-      <a href="/privacidad" class="hover:text-white/80 transition">Privacidad</a>
-      <a href="/terminos" class="hover:text-white/80 transition">Términos</a>
-      <a href="/eliminar-cuenta" class="hover:text-white/80 transition">Eliminar cuenta</a>
-      <a href="/comercios" class="rounded-xl px-3.5 py-2 font-bold transition"
-         style="border:1px solid rgba(255,107,53,0.35); background:rgba(255,107,53,0.08); color:#FFB694;">¿Tienes un local? Entra al mapa →</a>
+    <nav class="sp-footer-links" aria-label="Pie de página">
+      <a href="/privacidad">Privacidad</a>
+      <a href="/terminos">Términos</a>
+      <a href="/eliminar-cuenta">Eliminar cuenta</a>
+      <a href="/comercios">Soy un negocio</a>
+      <a href="https://instagram.com/enspotz" target="_blank" rel="noopener">Instagram @enspotz</a>
     </nav>
   </div>
 </footer>
 
-<!-- ── SCRIPTS ── -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/assets/spotz-config.js"></script>
-<script src="/assets/spotz-lib.js"></script>
-<script src="/assets/map.js"></script>
-<script>
-  const { createClient } = supabase
-  const db = createClient(window.SPOTZ.SUPABASE_URL, window.SPOTZ.SUPABASE_ANON_KEY)
-
-  /* ── Cronómetro y día de la serie ───────────────────────────────────────
-     Todo sale de SPOTZ.START y SPOTZ.LAUNCH. Ningún número se escribe a mano:
-     es lo que garantiza que la web diga lo mismo que el video de ese día. */
-  const pad = (n) => String(n).padStart(2, '0')
-
-  function tick() {
-    const c = window.SPOTZ.countdown()
-    const set = (sel, val) => document.querySelectorAll(sel).forEach(el => { el.textContent = val })
-
-    set('#cd-days', c.days)
-    set('#cd-hours', pad(c.hours))
-    set('#cd-mins', pad(c.minutes))
-    set('.cd-days-2', c.days)
-    set('#serie-day', c.day)
-    set('.serie-day', c.day)
-    set('#serie-total', c.total)
-    set('.partners-total', c.total)
-  }
-  tick()
-  setInterval(tick, 30000)
-
-  document.querySelectorAll('.partners-goal').forEach(el => {
-    el.textContent = window.SPOTZ.PARTNER_GOAL
-  })
-
-  /* ── Socios: contador, casillas y mapa ──────────────────────────────────
-     Una sola llamada alimenta las tres cosas. Si falla, la página se queda en
-     el tablero vacío, que es un estado legítimo, no un error. */
-  const PARTNER_GOAL = window.SPOTZ.PARTNER_GOAL
-
-  function renderSlots(partners) {
-    const wrap = document.getElementById('board-slots')
-    if (!wrap) return
-    wrap.innerHTML = ''
-    for (let i = 0; i < PARTNER_GOAL; i++) {
-      const p = partners[i]
-      const el = document.createElement('span')
-      el.className = 'block w-[22px] h-[22px] rounded-full'
-      if (p) {
-        const d = window.SpotzLib.resolveCardDesign(p.name, ((p.offers || [])[0] || {}).design)
-        el.style.background = window.SpotzLib.cardBackground(d)
-        el.title = p.name
-      } else {
-        el.style.border = '1.5px dashed rgba(255,255,255,0.22)'
-      }
-      wrap.appendChild(el)
-    }
-  }
-
-  async function loadPartners() {
-    let partners = []
-    try {
-      const { data, error } = await db.rpc('public_partners')
-      if (!error && Array.isArray(data)) partners = data
-    } catch (e) {
-      console.warn('[socios]', e)
-    }
-
-    const n = partners.length
-    const left = Math.max(0, PARTNER_GOAL - n)
-    document.querySelectorAll('#partners-count, .board-count, #map-count')
-      .forEach(el => { el.textContent = n })
-    document.querySelectorAll('.slots-left').forEach(el => { el.textContent = left })
-
-    renderSlots(partners)
-
-    if (n === 0) return   // tablero vacío: mapbox NI se descarga
-
-    // Hay socios: el tablero da paso al mapa real.
-    document.getElementById('map-empty')?.classList.add('hidden')
-    document.getElementById('map-live')?.classList.remove('hidden')
-    document.getElementById('map-header')?.classList.remove('hidden')
-    document.getElementById('map-header')?.classList.add('flex')
-
-    const title = document.getElementById('board-title')
-    const body  = document.getElementById('board-body')
-    if (title) title.textContent = n >= PARTNER_GOAL
-      ? '20 de 20. Lo prometido.'
-      : `${n} ${n === 1 ? 'local firmado' : 'locales firmados'}. Faltan ${left}.`
-    if (body) body.textContent = 'Cada pin es un local de Caracas que firmó de verdad, con una oferta que solo existe aquí. Toca uno para verla.'
-
-    const section = document.getElementById('mapa')
-    const container = document.getElementById('map-live')
-    if (section && container) window.SpotzMap.mountWhenVisible(section, container, partners)
-  }
-  loadPartners()
-
-  const GOAL = window.SPOTZ.WAITLIST_GOAL
-  const seatEls = [document.getElementById('seats-left'), document.getElementById('seats-left-2')]
-  let currentCount = 0
-
-  // Marco de escasez: mostramos los cupos QUE QUEDAN, no los ocupados.
-  // Una barra al 3% dice "nadie se apuntó"; "quedan 486" dice "corre".
-  function render(n, animate = false) {
-    currentCount = n
-    const left = Math.max(0, GOAL - n)
-    const txt = left.toLocaleString('es-VE')
-    seatEls.forEach(el => {
-      if (!el) return
-      el.textContent = txt
-      if (animate) { el.classList.add('pulse'); setTimeout(() => el.classList.remove('pulse'), 400) }
-    })
-  }
-
-  async function loadCount() {
-    // Cuenta vía RPC SECURITY DEFINER (no expone los emails de la lista).
-    const { data, error } = await db.rpc('waitlist_count')
-    if (error) { console.warn('contador:', error.message); render(0); return }
-    render(typeof data === 'number' ? data : 0)
-  }
-  loadCount()
-
-  // ── Formularios (hero + CTA final) ──
-  function wireForm({ formId, inputId, btnId, errorId, successId }) {
-    const form = document.getElementById(formId)
-    const input = document.getElementById(inputId)
-    const btn = document.getElementById(btnId)
-    const errorEl = document.getElementById(errorId)
-    const successEl = document.getElementById(successId)
-    if (!form) return
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const email = input.value.trim().toLowerCase()
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errorEl.textContent = 'Revisa el correo, parece incompleto.'
-        errorEl.classList.remove('hidden'); return
-      }
-      btn.disabled = true; btn.textContent = 'Guardando...'; errorEl.classList.add('hidden')
-
-      const { error } = await db.from('waitlist').insert({ email })
-
-      // El duplicado (23505) es una BUENA noticia: ya está dentro. No es un error rojo.
-      if (error && error.code !== '23505') {
-        btn.disabled = false; btn.textContent = 'Quiero acceso →'
-        errorEl.textContent = 'Algo salió mal. Inténtalo de nuevo.'
-        errorEl.classList.remove('hidden'); return
-      }
-
-      form.classList.add('hidden')
-      successEl.classList.remove('hidden')
-      const proof = document.getElementById('social-proof')
-      if (proof && formId === 'waitlist-form') proof.classList.add('hidden')
-      if (!error) render(currentCount + 1, true)
-    })
-  }
-
-  wireForm({ formId:'waitlist-form',   inputId:'email-input',   btnId:'submit-btn',   errorId:'form-error',   successId:'success-state' })
-  wireForm({ formId:'waitlist-form-2', inputId:'email-input-2', btnId:'submit-btn-2', errorId:'form-error-2', successId:'success-state-2' })
-</script>
-
+</div>
+<script src="/assets/chat-demo.js" defer></script>
 </body>
 </html>
