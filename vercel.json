@@ -2,7 +2,21 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/event/:id", "destination": "/api/event?id=:id" },
-    { "source": "/local/:id", "destination": "/api/local?id=:id" }
+    {
+      "source": "/event/:id",
+      "destination": "/api/event?id=:id"
+    },
+    {
+      "source": "/local/:id",
+      "destination": "/api/local?id=:id"
+    },
+    {
+      "source": "/app",
+      "destination": "https://spotz-mvp.vercel.app/"
+    },
+    {
+      "source": "/app/:path*",
+      "destination": "https://spotz-mvp.vercel.app/:path*"
+    }
   ]
 }

@@ -12,9 +12,9 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // Links de descarga. Mientras la app no esté en las tiendas apuntan al home
 // (lista de espera). Actualizar cuando estén publicadas.
-const APP_STORE_URL = 'https://enspotz.com'
-const PLAY_STORE_URL = 'https://enspotz.com'
 const HOME_URL = 'https://enspotz.com'
+// La app de usuario vive en enspotz.com/app (la landing la proxea; ver vercel.json).
+const APP_URL = HOME_URL + '/app'
 
 const ORANGE = '#FF6B35'
 const INK = '#0D1B2A'
@@ -67,21 +67,23 @@ const BOLT = '<svg width="22" height="22" viewBox="0 0 80 80" fill="none"><path 
 const BOLT_WHITE = '<svg width="22" height="22" viewBox="0 0 80 80" fill="none"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#fff"/></svg>'
 const FAVICON = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="' + ORANGE + '"/></svg>')
 
-function downloadBanner() {
+// `appUrl`: adónde lleva "Abrir en Spotz" (la ficha de este evento dentro de la
+// app, o la app a secas si no hay evento).
+function downloadBanner(appUrl) {
   return `
     <section class="dl">
       <div class="dl-logo">${BOLT_WHITE}<span class="wm">Spotz</span></div>
       <h2 class="dl-title">Descubre todos los planes de Caracas</h2>
       <p class="dl-sub">Eventos, conciertos y experiencias en un solo lugar. Recomendaciones con IA según tus gustos.</p>
       <div class="dl-btns">
-        <a class="store" href="${esc(APP_STORE_URL)}">Descargar para iPhone</a>
-        <a class="store" href="${esc(PLAY_STORE_URL)}">Descargar para Android</a>
+        <a class="store" href="${esc(appUrl || APP_URL)}">Abrir en Spotz →</a>
+        <a class="store store-alt" href="${esc(APP_URL)}">Ver todos los planes</a>
       </div>
-      <p class="dl-note">Próximamente en App Store y Google Play</p>
+      <p class="dl-note">Gratis, desde el navegador. Pronto en App Store y Google Play.</p>
     </section>`
 }
 
-function pageShell({ title, desc, image, url, body }) {
+function pageShell({ title, desc, image, url, body, app }) {
   const ogImage = image ? `<meta property="og:image" content="${esc(image)}">
   <meta name="twitter:image" content="${esc(image)}">` : ''
   return `<!DOCTYPE html>
@@ -140,6 +142,7 @@ function pageShell({ title, desc, image, url, body }) {
     .dl-btns { display:flex; flex-direction:column; gap:10px; max-width:320px; margin:0 auto; }
     .store { display:block; background:${INK}; color:#fff; font-weight:800; font-size:15px;
              padding:14px; border-radius:14px; text-decoration:none; }
+    .store-alt { background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.35); }
     .dl-note { margin-top:14px; color:rgba(255,255,255,0.6); font-size:12px; }
     .foot { text-align:center; padding:28px 20px 8px; }
     .foot a { color:#7E8C9E; font-size:13px; text-decoration:none; }
@@ -149,7 +152,7 @@ function pageShell({ title, desc, image, url, body }) {
   <div class="wrap">
     <div class="topbar">${BOLT}<span class="wm">Spot<span style="color:${ORANGE}">z</span></span></div>
     ${body}
-    ${downloadBanner()}
+    ${downloadBanner(app)}
     <div class="foot"><a href="${HOME_URL}">enspotz.com · Eventos en Caracas</a></div>
   </div>
 </body>
@@ -237,5 +240,6 @@ module.exports = async function handler(req, res) {
     image: event.cover_image_url || '',
     url: canonical,
     body,
+    app: `${APP_URL}/event/${encodeURIComponent(id)}`,
   }))
 }
