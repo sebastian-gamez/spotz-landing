@@ -13,16 +13,8 @@
   <link rel="canonical" href="https://enspotz.com/eliminar-cuenta">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z' fill='%23FF6B35'/%3E%3C/svg%3E">
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    const SYSTEM_SANS = ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif']
-    tailwind.config = {
-      theme: { extend: {
-        colors: { orange: '#FF6B35', navy: '#004E89', ink: '#0D1B2A', ink2: '#111D2C' },
-        fontFamily: { display: SYSTEM_SANS, body: SYSTEM_SANS, sans: SYSTEM_SANS },
-      } }
-    }
-  </script>
+  <!-- Estilos propios, sin el CDN de Tailwind (ver la cabecera de paginas.css). -->
+  <link rel="stylesheet" href="/assets/paginas.css">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
            -webkit-font-smoothing: antialiased; }
@@ -78,7 +70,7 @@
 
       <div>
         <label class="block text-sm font-semibold text-white/80 mb-1.5" for="email">Correo</label>
-        <input id="email" name="email" type="email" autocomplete="email" required
+        <input id="email" name="email" type="email" autocomplete="email" required maxlength="254"
           class="w-full rounded-xl bg-white/[0.04] border border-white/12 px-4 py-3 text-[15px] outline-none focus:border-orange"
           placeholder="tu@correo.com">
       </div>
@@ -155,97 +147,11 @@
     <p class="font-mono text-[10px] tracking-[0.12em] text-white/20 uppercase">Spotz · Caracas · enspotz.com</p>
   </footer>
 
-  <script>
-    const $ = (id) => document.getElementById(id)
-    const form = $('form'), modal = $('modal'), done = $('done')
-    const confirmInput = $('confirmInput'), confirmBtn = $('confirmBtn')
-
-    function mode() { return form.querySelector('input[name=mode]:checked').value }
-    function creds() { return { email: $('email').value.trim(), password: $('password').value } }
-
-    function showFormError(msg) { const e = $('formError'); e.textContent = msg; e.classList.remove('hidden') }
-    function hideFormError() { $('formError').classList.add('hidden') }
-
-    // Paso 1: verificar credenciales → abrir modal.
-    form.addEventListener('submit', async (ev) => {
-      ev.preventDefault()
-      hideFormError()
-      const { email, password } = creds()
-      if (!email || !password) { showFormError('Completa tu correo y contraseña.'); return }
-      $('submitBtn').disabled = true
-      $('submitBtn').textContent = 'Verificando…'
-      try {
-        const r = await fetch('/api/delete-account', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'verify', email, password }),
-        })
-        if (r.status === 401) { showFormError('Correo o contraseña incorrectos.'); return }
-        if (!r.ok) { showFormError('No pudimos verificar tus datos. Intenta de nuevo.'); return }
-        openModal()
-      } catch {
-        showFormError('Error de conexión. Intenta de nuevo.')
-      } finally {
-        $('submitBtn').disabled = false
-        $('submitBtn').textContent = 'Continuar'
-      }
-    })
-
-    function openModal() {
-      const isAccount = mode() === 'account'
-      $('modalTitle').textContent = isAccount ? 'Eliminar tu cuenta' : 'Borrar tus datos'
-      $('modalBody').textContent = isAccount
-        ? 'Vamos a eliminar de forma permanente tu cuenta de Spotz y todos tus datos (perfil, favoritos e historial). Esta acción no se puede deshacer.'
-        : 'Vamos a borrar tus datos de navegación, favoritos y gustos. Tu cuenta seguirá activa. Esta acción no se puede deshacer.'
-      confirmInput.value = ''
-      confirmBtn.disabled = true
-      $('modalError').classList.add('hidden')
-      modal.classList.remove('hidden')
-      confirmInput.focus()
-    }
-    function closeModal() { modal.classList.add('hidden') }
-
-    confirmInput.addEventListener('input', () => {
-      confirmBtn.disabled = confirmInput.value.trim().toLowerCase() !== 'borrar'
-    })
-    $('cancelBtn').addEventListener('click', closeModal)
-
-    // Paso 2: ejecutar el borrado.
-    confirmBtn.addEventListener('click', async () => {
-      confirmBtn.disabled = true
-      confirmBtn.textContent = 'Borrando…'
-      const { email, password } = creds()
-      try {
-        const r = await fetch('/api/delete-account', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'delete', email, password, mode: mode(),
-            reason: $('reason').value, confirm: confirmInput.value.trim(),
-          }),
-        })
-        const data = await r.json().catch(() => ({}))
-        if (!r.ok || !data.ok) {
-          const e = $('modalError')
-          e.textContent = r.status === 401 ? 'Correo o contraseña incorrectos.' : 'No se pudo completar. Intenta de nuevo o escríbenos.'
-          e.classList.remove('hidden')
-          confirmBtn.disabled = false
-          confirmBtn.textContent = 'Borrar'
-          return
-        }
-        closeModal()
-        const isAccount = data.mode === 'account'
-        $('doneTitle').textContent = isAccount ? 'Cuenta eliminada' : 'Datos borrados'
-        $('doneBody').textContent = isAccount
-          ? 'Tu cuenta y tus datos fueron eliminados de Spotz. Gracias por haber usado la app.'
-          : 'Tus datos de navegación y gustos fueron borrados. Tu cuenta sigue activa.'
-        done.classList.remove('hidden')
-      } catch {
-        const e = $('modalError')
-        e.textContent = 'Error de conexión. Intenta de nuevo.'
-        e.classList.remove('hidden')
-        confirmBtn.disabled = false
-        confirmBtn.textContent = 'Borrar'
-      }
-    })
-  </script>
+  <!-- La contraseña se comprueba AQUÍ, en el navegador, contra Supabase Auth
+       (así aplican sus límites por IP). Al servidor solo viaja el access_token.
+       Ver assets/eliminar-cuenta.js y api/delete-account.js. -->
+  <script src="/assets/vendor/supabase-js-2.103.0.js"></script>
+  <script src="/assets/spotz-config.js"></script>
+  <script src="/assets/eliminar-cuenta.js"></script>
 </body>
 </html>

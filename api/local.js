@@ -284,6 +284,11 @@ function pageShell({ title, desc, image, url, body }) {
     .sheet-err { color:#FFB694; font-size:14px; line-height:1.5; margin-top:16px; }
     .sheet-btn { width:100%; margin-top:18px; padding:14px; border:0; border-radius:14px; cursor:pointer;
                  background:${ORANGE}; color:#fff; font:inherit; font-size:15px; font-weight:800; }
+    /* Panel "Crea tu cuenta" (sin sesiones anonimas): los botones son enlaces a /app. */
+    .sheet-lead { color:#fff; font-size:16px; font-weight:600; line-height:1.45; margin-top:18px; }
+    a.sheet-btn { display:block; text-align:center; text-decoration:none; }
+    .sheet-link { display:block; margin-top:10px; padding:13px; border-radius:14px; text-align:center;
+                  border:1px solid ${BORDER}; color:#fff; font-size:15px; font-weight:700; text-decoration:none; }
     .sheet-spin { width:34px; height:34px; margin:30px auto 6px; border-radius:50%;
                   border:3px solid rgba(255,255,255,0.14); border-top-color:${ORANGE};
                   animation:spin .8s linear infinite; }

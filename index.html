@@ -31,7 +31,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 
   <!-- Marca que hay JS antes de pintar: el chat del hero arranca vacío en vez de
-       enseñar un instante la conversación completa (sin JS se ve completa). -->
+       enseñar un instante la conversación completa (sin JS se ve completa).
+       OJO: es el ÚNICO script inline del sitio y la CSP de vercel.json lo deja
+       pasar por su hash ('sha256-Du+OJ…', el sha256 en base64 del texto entre
+       las dos etiquetas). Si cambias un solo carácter de esa línea, recalcula
+       el hash en vercel.json o el navegador la bloqueará en producción. -->
   <script>document.documentElement.classList.add('js')</script>
 
   <style>

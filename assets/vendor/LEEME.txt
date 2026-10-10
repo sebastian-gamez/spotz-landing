@@ -1,0 +1,31 @@
+Librerías de terceros alojadas aquí, en vez de pedirlas a jsDelivr
+=================================================================
+
+Por qué: un <script> de un CDN corre con los mismos permisos que el resto de
+enspotz.com, que es el mismo origen que la app (/app). Si el CDN sirve otra
+cosa, esa cosa lee la sesión de la app. Con la copia aquí, la CSP de
+vercel.json puede limitarse a script-src 'self'.
+
+Los dos archivos son el original del paquete de npm, byte a byte, SIN tocar.
+La versión va en el nombre: para actualizar, se baja la nueva versión, se
+añade con su nombre nuevo, se cambian las referencias y se borra la vieja.
+
+  supabase-js-2.103.0.js
+    paquete:  @supabase/supabase-js@2.103.0  (archivo dist/umd/supabase.js)
+    licencia: MIT (Supabase)
+    sha256:   dad3f133627ca100d367e77ea9cdcbae36ff8747da9325e35d615f270ea8ff5b
+    lo usan:  comercios.html, eliminar-cuenta.html, assets/offer-island.js
+    misma versión que la app Spotz (Spotz/package.json del monorepo).
+
+  qrcode-generator-1.4.4.js
+    paquete:  qrcode-generator@1.4.4  (archivo qrcode.js)
+    licencia: MIT (Kazuhiko Arase; la cabecera del archivo lo dice)
+    sha256:   18ae399f81182bc9de916e9c77b195df20cc58d6f2d55a62b085a299f1bf1780
+    lo usa:   assets/offer-island.js (QR del cupón en /local/:id)
+
+Cómo se bajaron (npm comprueba la integridad contra el registro):
+
+  npm pack @supabase/supabase-js@2.103.0 qrcode-generator@1.4.4
+  tar -xzf supabase-supabase-js-2.103.0.tgz   -> package/dist/umd/supabase.js
+  tar -xzf qrcode-generator-1.4.4.tgz         -> package/qrcode.js
+  sha256sum <archivo>   (tiene que dar lo de arriba)

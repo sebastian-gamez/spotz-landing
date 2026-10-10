@@ -19,25 +19,16 @@
   <meta property="og:image" content="https://enspotz.com/assets/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Tailwind CDN — misma config que index.html. Esta pagina se quedo fuera
-       del rediseno y usaba webfonts de Fontshare y una paleta recortada, asi
-       que no coincidia visualmente con el resto del sitio. -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    const SYSTEM_SANS = ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif']
-    const SYSTEM_MONO = ['ui-monospace', '"SF Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace']
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { orange:'#FF6B35', orangeDeep:'#B8420F', navy:'#004E89', cream:'#EFEFD0', ink:'#0D1B2A', ink2:'#111D2C', peach:'#F7C59F' },
-          fontFamily: { display: SYSTEM_SANS, body: SYSTEM_SANS, mono: SYSTEM_MONO, sans: SYSTEM_SANS }
-        }
-      }
-    }
-  </script>
+  <!-- Estilos propios, sin el CDN de Tailwind (ver la cabecera de paginas.css):
+       las mismas clases de antes, compiladas una vez y servidas desde aqui. -->
+  <link rel="stylesheet" href="/assets/paginas.css">
 
   <style>
     * { -webkit-tap-highlight-color: transparent; }
+
+    /* Campo trampa para bots (ver assets/comercios.js). Fuera de pantalla y no
+       display:none: muchos bots se saltan los campos ocultos con display:none. */
+    .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
     body { font-family: 'DM Sans', sans-serif; }
 
     .input-field {
@@ -140,6 +131,7 @@
           type="text"
           placeholder="ej. La Candelaria Bistró"
           required
+          maxlength="120"
           class="input-field"
         >
       </div>
@@ -152,6 +144,8 @@
           type="text"
           placeholder="Tu nombre"
           required
+          maxlength="80"
+          autocomplete="name"
           class="input-field"
         >
       </div>
@@ -164,6 +158,7 @@
           type="email"
           placeholder="hola@tunegocio.com"
           required
+          maxlength="254"
           autocomplete="email"
           class="input-field"
         >
@@ -176,6 +171,8 @@
           id="phone"
           type="tel"
           placeholder="+58 412 000 0000"
+          maxlength="30"
+          autocomplete="tel"
           class="input-field"
         >
       </div>
@@ -205,10 +202,18 @@
           rows="4"
           placeholder="Cuéntanos qué tipo de experiencias o eventos organizas, qué hace especial tu negocio..."
           required
+          maxlength="1000"
           class="input-field resize-none"
           style="border-radius: 14px;"
         ></textarea>
       </div>
+    </div>
+
+    <!-- Trampa para bots: una persona no lo ve ni llega con el tabulador; un bot
+         que rellena todo, sí. Si trae algo, no se guarda nada. -->
+    <div class="hp" aria-hidden="true">
+      <label for="sitio_web">No llenes este campo</label>
+      <input id="sitio_web" name="sitio_web" type="text" tabindex="-1" autocomplete="off" maxlength="200">
     </div>
 
     <!-- Submit -->
@@ -260,50 +265,9 @@
 
 
 <!-- SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/vendor/supabase-js-2.103.0.js"></script>
 <script src="/assets/spotz-config.js"></script>
-<script>
-  // ── Configuración Supabase (mismos valores que index.html) ──
-  const SUPABASE_URL      = window.SPOTZ.SUPABASE_URL
-  const SUPABASE_ANON_KEY = window.SPOTZ.SUPABASE_ANON_KEY
-
-  const { createClient } = supabase
-  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-  const form      = document.getElementById('business-form')
-  const submitBtn = document.getElementById('submit-btn')
-  const errorEl   = document.getElementById('form-error')
-  const successEl = document.getElementById('success-state')
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-
-    const data = {
-      business_name: document.getElementById('business_name').value.trim(),
-      contact_name:  document.getElementById('contact_name').value.trim(),
-      email:         document.getElementById('contact_email').value.trim().toLowerCase(),
-      phone:         document.getElementById('phone').value.trim() || null,
-      category:      document.getElementById('category').value,
-      description:   document.getElementById('description').value.trim(),
-    }
-
-    submitBtn.disabled = true
-    submitBtn.textContent = 'Enviando...'
-    errorEl.classList.add('hidden')
-
-    const { error } = await db.from('business_interest').insert(data)
-
-    if (error) {
-      submitBtn.disabled = false
-      submitBtn.textContent = 'Registrar mi negocio en Spotz →'
-      errorEl.textContent = 'Algo salió mal. Inténtalo de nuevo.'
-      errorEl.classList.remove('hidden')
-    } else {
-      form.classList.add('hidden')
-      successEl.classList.remove('hidden')
-    }
-  })
-</script>
+<script src="/assets/comercios.js"></script>
 
 </body>
 </html>

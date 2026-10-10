@@ -31,18 +31,29 @@
  * ========================================================================== */
 
 module.exports = async function handler(req, res) {
-  const token = process.env.MAPBOX_TOKEN || ''
+  const token = String(process.env.MAPBOX_TOKEN || '').trim()
 
-  // Cache larga: el token no cambia casi nunca, y `map.js` solo pide esto
-  // cuando ya hay al menos un socio que pintar.
-  res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')
   res.setHeader('Content-Type', 'application/json')
 
   if (!token) {
     // 200 con token vacio, no 500: la landing degrada al tablero estatico, que
     // es un estado legitimo. Un error aqui no debe romper la pagina.
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')
     return res.status(200).json({ token: '', configured: false })
   }
 
+  // SOLO tokens publicos (`pk.`). Si alguien pega en MAPBOX_TOKEN un token
+  // secreto (`sk.`, con permisos de escritura y de descarga) o uno temporal
+  // (`tk.`), esta URL publica se lo regalaria a cualquiera. Se corta aqui, con
+  // un error generico que no dice que token hay ni por que, y sin cache para
+  // que el arreglo en el panel de Vercel se note al instante.
+  if (!token.startsWith('pk.')) {
+    console.error('[mapbox-token] MAPBOX_TOKEN no es un token publico (pk.); no se sirve')
+    res.setHeader('Cache-Control', 'no-store')
+    return res.status(500).json({ error: 'server_error' })
+  }
+
+  // Cache larga: el token no cambia casi nunca.
+  res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')
   return res.status(200).json({ token, configured: true })
 }

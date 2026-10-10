@@ -6,25 +6,37 @@
  * los 45 días de video no venden nada.
  *
  * COMO FUNCIONA
- *   1. Sesión ANÓNIMA de Supabase (POST /auth/v1/signup con body vacío). No
- *      pide correo: el primer roce con el usuario es el cupón, no un formulario.
+ *   1. La sesión, en este orden:
+ *      a. La de la app (/app), si esta persona ya entró en Spotz en este
+ *         navegador: la app vive en el mismo origen (enspotz.com/app) y guarda
+ *         su sesión en localStorage con la clave por defecto de supabase-js.
+ *         Se lee con supabase-js, que la renueva y la vuelve a guardar igual
+ *         que la app (con su candado entre pestañas). El cupón queda en SU
+ *         cuenta y lo ve en la app.
+ *      b. La sesión anónima que este archivo ya hubiera creado antes
+ *         (localStorage `spotz.web.session`), para no perder cupones viejos.
+ *      c. Una sesión anónima nueva (POST /auth/v1/signup con body vacío).
  *   2. activate_offer(p_offer_id) — la MISMA RPC que usa la app. Devuelve el id
  *      de la fila en user_coupons o loyalty_cards.
  *   3. Se lee `qr_token` de esa fila (RLS: user_id = auth.uid()).
  *   4. QR + código corto. El comercio escanea, o teclea el código.
  *
+ * SIN SESIONES ANÓNIMAS (decisión del 2026-10-10: para activar un cupón hay
+ * que tener cuenta). Cuando se apaguen en el panel de Supabase, el paso 1c
+ * falla (422). Ese fallo — o CUALQUIER fallo del alta anónima, o un rechazo de
+ * la base por ser anónimo — enseña "Crea tu cuenta gratis para activar este
+ * cupón" con botones a /app/sign-up y /app/welcome. Al volver con la cuenta
+ * abierta, el paso 1a la encuentra y el cupón se activa. No hace falta tocar
+ * este archivo el día que se apaguen.
+ *
  * LO QUE ESTO NO ES
- * No hay lógica de negocio aquí. Las siete razones por las que una oferta puede
- * no activarse las decide Postgres dentro de activate_offer; este archivo solo
+ * No hay lógica de negocio aquí. Las razones por las que una oferta puede no
+ * activarse las decide Postgres dentro de activate_offer; este archivo solo
  * TRADUCE la excepción. Si algún día cambian, cambian en un sitio.
  *
- * ⚠️ DEPENDE DE UN AJUSTE DEL PANEL: Authentication → Providers → Anonymous
- * sign-ins ENABLED. Sin eso el paso 1 devuelve 422 y no hay cupón. El error se
- * distingue y se dice en voz alta en vez de morir en la consola.
- *
- * ⚠️ EL CUPÓN VIVE EN ESTE NAVEGADOR. Una sesión anónima no se puede recuperar
- * desde otro dispositivo. Por eso el panel lo dice y ofrece copiar el código.
- * Enlazar la sesión anónima a un correo al lanzar la app es tarea aparte.
+ * ⚠️ UN CUPÓN ANÓNIMO VIVE EN ESTE NAVEGADOR. Una sesión anónima no se puede
+ * recuperar desde otro dispositivo. Por eso el panel lo dice y ofrece copiar el
+ * código. Con la sesión de la app (1a) el aviso cambia: queda en su cuenta.
  * ========================================================================== */
 
 (function () {
@@ -34,8 +46,54 @@
   var AUTH = S.SUPABASE_URL + '/auth/v1'
   var REST = S.SUPABASE_URL + '/rest/v1'
   var KEY = 'spotz.web.session'
+  /* Clave por defecto de supabase-js (sb-<ref>-auth-token): la que usa la app. */
+  var APP_KEY = 'sb-' + new URL(S.SUPABASE_URL).hostname.split('.')[0] + '-auth-token'
+  var SUPABASE_JS = '/assets/vendor/supabase-js-2.103.0.js'
+  var QRCODE_JS = '/assets/vendor/qrcode-generator-1.4.4.js'
 
-  /* ─── Sesión anónima ─────────────────────────────────────────────────── */
+  /* ─── Carga diferida de librerías (mismo origen, ver assets/vendor/) ──── */
+
+  var loaded = {}
+  function loadScript(src, globalName) {
+    if (loaded[src]) return loaded[src]
+    loaded[src] = new Promise(function (resolve, reject) {
+      if (window[globalName]) return resolve(window[globalName])
+      var s = document.createElement('script')
+      s.src = src
+      s.onload = function () { window[globalName] ? resolve(window[globalName]) : reject(new Error(globalName)) }
+      s.onerror = function () { reject(new Error(globalName)) }
+      document.head.appendChild(s)
+    })
+    /* Si falla, que el siguiente intento lo vuelva a probar. */
+    loaded[src].catch(function () { delete loaded[src] })
+    return loaded[src]
+  }
+
+  /* ─── 1a. La sesión de la app ────────────────────────────────────────── */
+
+  var appClient = null
+  /** { access_token, cuenta: true } si hay sesión de la app; null si no. Nunca falla. */
+  function appSession() {
+    var hay = null
+    try { hay = localStorage.getItem(APP_KEY) } catch (e) { /* modo privado */ }
+    if (!hay) return Promise.resolve(null)
+    return loadScript(SUPABASE_JS, 'supabase')
+      .then(function (lib) {
+        if (!appClient) {
+          appClient = lib.createClient(S.SUPABASE_URL, S.SUPABASE_ANON_KEY, {
+            auth: { persistSession: true, autoRefreshToken: false, detectSessionInUrl: false },
+          })
+        }
+        return appClient.auth.getSession()
+      })
+      .then(function (res) {
+        var s = res && res.data && res.data.session
+        return s && s.access_token ? { access_token: s.access_token, cuenta: true } : null
+      })
+      .catch(function () { return null })
+  }
+
+  /* ─── 1b/1c. Sesión anónima ──────────────────────────────────────────── */
 
   function load() {
     try { return JSON.parse(localStorage.getItem(KEY) || 'null') } catch (e) { return null }
@@ -63,8 +121,8 @@
     })
   }
 
-  /** Devuelve un access_token válido, creando o renovando la sesión anónima. */
-  function session() {
+  /** Devuelve un access_token válido, reusando, renovando o creando la sesión anónima. */
+  function anonSession() {
     var s = load()
     var now = Math.floor(Date.now() / 1000)
 
@@ -75,30 +133,33 @@
         .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('refresh')) })
         .then(function (j) { return save(shape(j)) })
         /* Un refresh_token caducado o revocado no es un error del usuario:
-         * se tira la sesión y se abre una nueva. El cupón anterior sigue en la
-         * base a nombre del usuario viejo, pero ya era irrecuperable. */
+         * se tira la sesión y se intenta una nueva. El cupón anterior sigue en
+         * la base a nombre del usuario viejo, pero ya era irrecuperable. */
         .catch(function () { try { localStorage.removeItem(KEY) } catch (e) {} ; return signUp() })
     }
 
     return signUp()
   }
 
+  /** Alta anónima. CUALQUIER fallo (422 por apagadas, 429, red, 5xx) = ANON_OFF:
+   *  el panel pasa a pedir cuenta, que es el camino que siempre funciona. */
   function signUp() {
     return authFetch('/signup', { data: {}, gotrue_meta_security: {} })
       .then(function (r) {
-        if (r.ok) return r.json()
-        return r.json().catch(function () { return {} }).then(function (j) {
-          var msg = String(j.msg || j.error_description || j.message || '')
-          if (r.status === 422 || /anonymous/i.test(msg)) {
-            throw new Error('ANON_OFF')
-          }
-          throw new Error(msg || ('signup ' + r.status))
-        })
+        if (!r.ok) throw new Error('ANON_OFF')
+        return r.json()
+      }, function () { throw new Error('ANON_OFF') })
+      .then(function (j) {
+        if (!j || !j.access_token) throw new Error('ANON_OFF')
+        return save(shape(j))
       })
-      .then(function (j) { return save(shape(j)) })
   }
 
-  /* ─── Las siete puertas de activate_offer ────────────────────────────── */
+  function session() {
+    return appSession().then(function (app) { return app || anonSession() })
+  }
+
+  /* ─── Las puertas de activate_offer ──────────────────────────────────── */
   /* Copiadas de 20260916000000_merchant_members.sql, que redefinió la función
    * (antes: 20260805000000_fase8_profiles_rls_hardening.sql). El texto es el del
    * `raise exception`; si cambia allí, deja de traducirse aquí y el usuario ve
@@ -122,8 +183,6 @@
       'Este local todavía no está dado de alta en Spotz.',
     'merchant not verified':
       'Este comercio está pendiente de verificación por el equipo de Spotz.',
-    'ANON_OFF':
-      'Activar cupones desde la web está desactivado en este momento. Escríbenos por Instagram y te lo damos a mano.',
   }
 
   function traducir(err) {
@@ -136,18 +195,26 @@
     return 'No pudimos activar el cupón. Inténtalo de nuevo en un momento.'
   }
 
+  /** ¿Este fallo se arregla teniendo cuenta? Alta anónima imposible, o la base
+   *  que rechaza a un usuario anónimo (una sesión anónima vieja). */
+  function pideCuenta(err) {
+    var m = String((err && err.message) || err || '')
+    return m === 'ANON_OFF' || /anonymous|an[oó]nim/i.test(m)
+  }
+
   /* ─── Activación ─────────────────────────────────────────────────────── */
 
+  /** Resuelve con { fila, cuenta } — `cuenta`: true si va a la cuenta de la app. */
   function activate(offerId, type) {
-    var tok
+    var ses
     return session()
       .then(function (s) {
-        tok = s.access_token
+        ses = s
         return fetch(REST + '/rpc/activate_offer', {
           method: 'POST',
           headers: {
             apikey: S.SUPABASE_ANON_KEY,
-            Authorization: 'Bearer ' + tok,
+            Authorization: 'Bearer ' + ses.access_token,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ p_offer_id: offerId }),
@@ -167,7 +234,7 @@
         return fetch(REST + '/' + tabla + '?id=eq.' + encodeURIComponent(id) + '&select=' + cols, {
           headers: {
             apikey: S.SUPABASE_ANON_KEY,
-            Authorization: 'Bearer ' + tok,
+            Authorization: 'Bearer ' + ses.access_token,
             Accept: 'application/vnd.pgrst.object+json',
           },
         })
@@ -176,6 +243,7 @@
         if (!r.ok) throw new Error('no se pudo leer el cupón')
         return r.json()
       })
+      .then(function (fila) { return { fila: fila, cuenta: !!ses.cuenta } })
   }
 
   /** Mismo corte que Spotz/app/coupon/[id].tsx:68 — 14 caracteres, sin guiones. */
@@ -184,26 +252,12 @@
   }
 
   /* ─── QR ─────────────────────────────────────────────────────────────── */
-  /* qrcode-generator (kazuhikoarase) va por CDN, igual que supabase-js y
-   * Tailwind en index.html: no es una clase de riesgo nueva. Si no carga, el
-   * código corto se agranda y sigue sirviendo — ese es el camino que Partner
-   * ya soporta a mano. Por eso el QR nunca es un requisito duro. */
-  var qrReady = null
-  function loadQr() {
-    if (qrReady) return qrReady
-    qrReady = new Promise(function (resolve, reject) {
-      if (window.qrcode) return resolve(window.qrcode)
-      var s = document.createElement('script')
-      s.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js'
-      s.onload = function () { window.qrcode ? resolve(window.qrcode) : reject(new Error('qr')) }
-      s.onerror = function () { reject(new Error('qr')) }
-      document.head.appendChild(s)
-    })
-    return qrReady
-  }
-
+  /* qrcode-generator (kazuhikoarase) se sirve desde /assets/vendor (antes iba
+   * por jsDelivr). Si no carga, el código corto se agranda y sigue sirviendo —
+   * ese es el camino que Partner ya soporta a mano. Por eso el QR nunca es un
+   * requisito duro. */
   function pintarQr(el, token) {
-    return loadQr().then(function (qrcode) {
+    return loadScript(QRCODE_JS, 'qrcode').then(function (qrcode) {
       /* typeNumber 0 = que la librería elija el tamaño mínimo. 'M' es el nivel
        * de corrección que usa la app. */
       var q = qrcode(0, 'M')
@@ -272,7 +326,21 @@
     cuerpo().querySelector('[data-retry]').onclick = reintentar
   }
 
-  function pintarCupon(card, fila, meta) {
+  /** Sin cuenta no hay cupón: a crearla (o a entrar) en la app. */
+  function pintarCuenta(meta) {
+    var esFidelidad = meta.type === 'loyalty'
+    cuerpo().innerHTML =
+      '<p class="sheet-kicker">Un paso más</p>' +
+      '<p class="sheet-title">' + esc(meta.title) + '</p>' +
+      '<p class="sheet-venue">' + esc(meta.venue) + '</p>' +
+      '<p class="sheet-lead">Crea tu cuenta gratis para activar ' + (esFidelidad ? 'esta tarjeta' : 'este cupón') + '.</p>' +
+      '<p class="sheet-note">Así queda guardado en tu cuenta, no en este navegador. ' +
+        'Cuando la tengas, vuelve aquí y tócalo otra vez.</p>' +
+      '<a class="sheet-btn" href="/app/sign-up">Crear cuenta gratis</a>' +
+      '<a class="sheet-link" href="/app/welcome">Ya tengo cuenta</a>'
+  }
+
+  function pintarCupon(card, fila, meta, cuenta) {
     var code = shortCode(fila.qr_token)
     var esFidelidad = meta.type === 'loyalty'
     var usado = fila.status === 'redeemed'
@@ -294,7 +362,9 @@
           : 'Enséñalo en el local antes de pagar. ') +
         'Si no pueden escanear, vale el código.' +
       '</p>' +
-      '<p class="sheet-warn">Guardado en <b>este navegador</b>. Si lo borras o cambias de teléfono, se pierde — copia el código por si acaso.</p>'
+      (cuenta
+        ? '<p class="sheet-warn">Guardado en <b>tu cuenta de Spotz</b>: también lo tienes en la app.</p>'
+        : '<p class="sheet-warn">Guardado en <b>este navegador</b>. Si lo borras o cambias de teléfono, se pierde — copia el código por si acaso.</p>')
 
     var qr = cuerpo().querySelector('.sheet-qr')
     if (qr) pintarQr(qr, fila.qr_token)
@@ -336,12 +406,17 @@
     var intentar = function () {
       pintarCargando(meta.title)
       activate(meta.id, meta.type).then(
-        function (fila) { pintarCupon(card, fila, meta) },
+        function (out) { pintarCupon(card, out.fila, meta, out.cuenta) },
         function (err) {
+          if (pideCuenta(err)) { pintarCuenta(meta); return }
           if (window.console) console.warn('[spotz] activate_offer:', err)
           pintarError(meta.title, traducir(err), intentar)
         }
-      )
+      ).catch(function (err) {
+        /* Un fallo al PINTAR (no al activar) no puede dejar el panel en blanco. */
+        if (window.console) console.warn('[spotz] panel:', err)
+        pintarError(meta.title, traducir(err), intentar)
+      })
     }
     intentar()
   })
