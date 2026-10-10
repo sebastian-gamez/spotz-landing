@@ -12,11 +12,11 @@
     },
     {
       "source": "/app",
-      "destination": "https://spotz-mvp.vercel.app/"
+      "destination": "https://spotz-app.pages.dev/app/"
     },
     {
       "source": "/app/:path*",
-      "destination": "https://spotz-mvp.vercel.app/:path*"
+      "destination": "https://spotz-app.pages.dev/app/:path*"
     }
   ]
 }
