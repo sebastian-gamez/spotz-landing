@@ -72,6 +72,33 @@ function priceNote(ev) {
   return ''
 }
 
+// Variante pequeña de una imagen ya comprimida (-1200.webp → -400.webp). Espejo de
+// `small()` en api/local.js y de `thumb()` en shared/image-url.ts del monorepo: las
+// fotos migradas existen en los dos tamaños. Cualquier otra URL se deja igual.
+function small(url) {
+  return typeof url === 'string' ? url.replace(/-1200\.webp(\?|$)/, '-400.webp$1') : url
+}
+
+// Misma foto aunque cambie la query o el hash (p. ej. un cache-buster).
+function sameImage(a, b) {
+  return String(a || '').split(/[?#]/)[0] === String(b || '').split(/[?#]/)[0]
+}
+
+// Fotos de la ficha: la portada primero y, detrás, hasta 3 de `event_media`
+// (solo imágenes, por `position`), sin repetir la portada. Igual que la app
+// (components/events/event-media-carousel.tsx), donde la portada es la posición 0.
+function photosOf(event) {
+  const out = []
+  if (event.cover_image_url) out.push(event.cover_image_url)
+  const media = Array.isArray(event.media) ? event.media : []
+  media
+    .filter(m => m && m.url && (m.type === 'image' || !m.type))
+    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+    .slice(0, 3)
+    .forEach(m => { if (!out.some(u => sameImage(u, m.url))) out.push(m.url) })
+  return out
+}
+
 function igHandle(raw) {
   const h = String(raw).trim()
     .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
@@ -109,6 +136,37 @@ function downloadBanner(appUrl) {
     </section>`
 }
 
+// Una foto por `<picture>`: en móvil (< 600 px) el navegador pide la -400.webp y solo
+// en pantallas anchas la -1200.webp. Es media query de viewport, no de densidad, a
+// propósito: cuida el egress de Supabase (la ficha se abre casi siempre desde WhatsApp).
+// Solo la primera carga con prioridad; el resto, perezosas.
+function photoTag(url, alt, index) {
+  const first = index === 0
+  const big = esc(url)
+  const sm = esc(small(url))
+  const source = sm !== big ? `<source media="(min-width: 600px)" srcset="${big}">` : ''
+  return `<picture class="slide">${source}<img src="${sm}" width="1200" height="750" alt="${esc(alt)}"` +
+    (first ? ' loading="eager" fetchpriority="high"' : ' loading="lazy" decoding="async"') + '></picture>'
+}
+
+// Galería de la ficha. Con una sola foto es el héroe de siempre; con varias, un
+// carrusel SOLO con CSS (scroll-snap) y puntos indicadores. Sin JavaScript: la CSP de
+// vercel.json no permite scripts en línea. El punto activo se mueve con la posición
+// del carrusel vía scroll-timeline (Chrome/Edge); donde no hay soporte queda estático
+// sobre la primera foto, que sigue siendo una señal honesta de "hay más fotos".
+function gallery(photos, title) {
+  if (!photos.length) return ''
+  if (photos.length === 1) return `<div class="hero">${photoTag(photos[0], title, 0)}</div>`
+  const n = photos.length
+  const slides = photos.map((u, i) => photoTag(u, `${title} · foto ${i + 1} de ${n}`, i)).join('')
+  const dots = '<i></i>'.repeat(n)
+  return `
+    <section class="gal" aria-roledescription="carrusel" aria-label="${esc(`Fotos de ${title}`)}">
+      <div class="gal-track" tabindex="0" role="region" aria-label="${esc(`${n} fotos, desliza para ver más`)}">${slides}</div>
+      <div class="gal-dots" style="--n:${n}" aria-hidden="true">${dots}</div>
+    </section>`
+}
+
 function pageShell({ title, desc, image, url, body, app }) {
   const ogImage = image ? `<meta property="og:image" content="${esc(image)}">
   <meta name="twitter:image" content="${esc(image)}">` : ''
@@ -138,7 +196,25 @@ function pageShell({ title, desc, image, url, body, app }) {
     .wrap { max-width:560px; margin:0 auto; padding-bottom:48px; }
     .topbar { display:flex; align-items:center; gap:8px; padding:18px 20px; }
     .topbar .wm { font-weight:900; font-size:18px; letter-spacing:-0.02em; }
-    .hero { width:100%; aspect-ratio:16/10; object-fit:cover; background:${INK2}; display:block; }
+    .hero, .gal { position:relative; width:100%; max-width:100%; background:${INK2}; overflow:hidden; }
+    .slide { display:block; flex:0 0 100%; width:100%; min-width:0; scroll-snap-align:start; scroll-snap-stop:always; }
+    .slide img { display:block; width:100%; height:auto; aspect-ratio:16/10; object-fit:cover; background:${INK2}; }
+    .gal { timeline-scope:--gal; }
+    .gal-track { display:flex; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory;
+                 scroll-timeline:--gal x; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+                 scrollbar-width:none; outline:none; }
+    .gal-track::-webkit-scrollbar { display:none; }
+    .gal-track:focus-visible { box-shadow:inset 0 0 0 2px ${ORANGE}; }
+    .gal-dots { position:absolute; left:50%; bottom:12px; transform:translateX(-50%); display:flex; gap:6px;
+                padding:6px 8px; border-radius:999px; background:rgba(13,27,42,.45); pointer-events:none; }
+    .gal-dots i { display:block; width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.4); }
+    .gal-dots::after { content:''; position:absolute; left:8px; top:6px; width:6px; height:6px; border-radius:50%; background:#fff; }
+    /* Solo donde hay scroll-driven animations: fuera del @supports la animación correría
+       por tiempo y dejaría el punto activo clavado en el último. */
+    @supports (animation-timeline: scroll()) {
+      .gal-dots::after { animation:gal-dot 1s linear both; animation-timeline:--gal; }
+    }
+    @keyframes gal-dot { to { transform:translateX(calc((var(--n) - 1) * 12px)); } }
     .content { padding:24px 20px; }
     .cat { display:inline-block; font-size:11px; font-weight:700; text-transform:uppercase;
            letter-spacing:0.06em; color:${ORANGE}; margin-bottom:10px; }
@@ -211,11 +287,15 @@ module.exports = async function handler(req, res) {
 
   let event = null
   try {
+    // La galería va embebida en la misma petición (`media`), ya filtrada y acotada en el
+    // servidor: solo imágenes, por `position`, máximo 3. RLS: event_media_public_read.
     const select = 'id,title,description,start_time,cover_image_url,is_free,price_from,price_to,' +
       'price_source,price_label,price_evidence,' +
-      'venue:venues(id,name,address,instagram,whatsapp,merchant_id),category:categories(name)'
+      'venue:venues(id,name,address,instagram,whatsapp,merchant_id),category:categories(name),' +
+      'media:event_media(url,type,position)'
     const r = await fetch(
-      `${SUPABASE_URL}/rest/v1/events?id=eq.${encodeURIComponent(id)}&select=${encodeURIComponent(select)}&limit=1`,
+      `${SUPABASE_URL}/rest/v1/events?id=eq.${encodeURIComponent(id)}&select=${encodeURIComponent(select)}` +
+      '&media.type=eq.image&media.order=position.asc&media.limit=3&limit=1',
       { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } },
     )
     if (r.ok) {
@@ -246,7 +326,7 @@ module.exports = async function handler(req, res) {
   if (venue && venue.instagram) contactLinks.push(`<a href="${esc(igUrl(venue.instagram))}">${esc(igHandle(venue.instagram))}</a>`)
 
   const body = `
-    ${event.cover_image_url ? `<img class="hero" src="${esc(event.cover_image_url)}" alt="${esc(event.title)}">` : ''}
+    ${gallery(photosOf(event), event.title)}
     <div class="content">
       ${cat && cat.name ? `<span class="cat">${esc(cat.name)}</span>` : ''}
       <h1>${esc(event.title)}</h1>
