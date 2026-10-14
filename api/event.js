@@ -120,6 +120,12 @@ const BOLT = '<svg width="22" height="22" viewBox="0 0 80 80" fill="none"><path 
 const BOLT_WHITE = '<svg width="22" height="22" viewBox="0 0 80 80" fill="none"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="#fff"/></svg>'
 const FAVICON = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><path d="M44 8 L20 44 L34 44 L28 72 L58 32 L42 32 L52 8 Z" fill="' + ORANGE + '"/></svg>')
 
+// Los dos botones llevan utm_source=share: quien entra a la app desde una ficha
+// compartida queda atribuido a "compartido" si no traía ya un primer contacto
+// (attribution.js lo guarda antes; la app no lo pisa).
+const UTM_FICHA = 'utm_source=share&utm_medium=event'
+function conUtm(url) { return url + (url.indexOf('?') >= 0 ? '&' : '?') + UTM_FICHA }
+
 // `appUrl`: adónde lleva "Abrir en Spotz" (la ficha de este evento dentro de la
 // app, o la app a secas si no hay evento).
 function downloadBanner(appUrl) {
@@ -129,8 +135,8 @@ function downloadBanner(appUrl) {
       <h2 class="dl-title">Descubre todos los planes de Caracas</h2>
       <p class="dl-sub">Eventos, conciertos y experiencias en un solo lugar. Recomendaciones con IA según tus gustos.</p>
       <div class="dl-btns">
-        <a class="store" href="${esc(appUrl || APP_URL)}">Abrir en Spotz →</a>
-        <a class="store store-alt" href="${esc(APP_URL)}">Ver todos los planes</a>
+        <a class="store" href="${esc(conUtm(appUrl || APP_URL))}">Abrir en Spotz →</a>
+        <a class="store store-alt" href="${esc(conUtm(APP_URL))}">Ver todos los planes</a>
       </div>
       <p class="dl-note">Gratis, desde el navegador. Pronto en App Store y Google Play.</p>
     </section>`
@@ -258,6 +264,8 @@ function pageShell({ title, desc, image, url, body, app }) {
     ${downloadBanner(app)}
     <div class="foot"><a href="${HOME_URL}">enspotz.com · Eventos en Caracas</a></div>
   </div>
+  <script src="/assets/spotz-config.js"></script>
+  <script src="/assets/attribution.js" defer></script>
 </body>
 </html>`
 }

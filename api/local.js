@@ -307,6 +307,7 @@ function pageShell({ title, desc, image, url, body }) {
   </div>
   <script src="/assets/spotz-config.js"></script>
   <script src="/assets/offer-island.js" defer></script>
+  <script src="/assets/attribution.js" defer></script>
 </body>
 </html>`
 }
